@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1000116117931",
+    "firebase_url": "https://gcm-marketplace.firebaseio.com",
+    "project_id": "gcm-marketplace",
+    "storage_bucket": "gcm-marketplace.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1000116117931:android:355c6e36f788411215b2ee",
+        "android_client_info": {
+          "package_name": "com.enseval.gcmuser"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1000116117931-f8kqvbmhlpcdf8s8ku2olotv4dk3hoo3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAy507ptuzaRalmkCZoSVpPaRGzRFxk-U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1000116117931-f8kqvbmhlpcdf8s8ku2olotv4dk3hoo3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

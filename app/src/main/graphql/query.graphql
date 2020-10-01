@@ -1,0 +1,10 @@
+query getAllProduct{
+  GetAllProduct{
+    id,
+    nama,
+    price,
+    foto,
+    category_id,
+    company_id
+  }
+}

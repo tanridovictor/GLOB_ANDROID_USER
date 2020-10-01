@@ -1,0 +1,420 @@
+{
+  "-LnuOLOYmv3zO1kfA9q2" : {
+    "message" : {
+      "-Lox2mdLBhlSX7SrBwry" : {
+        "contain" : "Halo selamat siang, saya ingin bertanya mengenai Acesulfame",
+        "read" : true,
+        "receiver" : 5,
+        "sender" : 1,
+        "timestamp" : {
+          "date" : 17,
+          "day" : 2,
+          "hours" : 9,
+          "minutes" : 31,
+          "month" : 8,
+          "seconds" : 7,
+          "time" : 1568687467104,
+          "timezoneOffset" : -420,
+          "year" : 119
+        },
+        "type" : "text"
+      },
+      "-Lox5RHx0C34ziUCquGk" : {
+        "contain" : "Tes",
+        "read" : true,
+        "receiver" : 5,
+        "sender" : 1,
+        "timestamp" : {
+          "date" : 17,
+          "day" : 2,
+          "hours" : 9,
+          "minutes" : 42,
+          "month" : 8,
+          "seconds" : 40,
+          "time" : 1568688160597,
+          "timezoneOffset" : -420,
+          "year" : 119
+        },
+        "type" : "text"
+      },
+      "-Lox5zRVtvNGSipuO7sQ" : {
+        "contain" : "Hai",
+        "read" : true,
+        "receiver" : 5,
+        "sender" : 1,
+        "timestamp" : {
+          "date" : 17,
+          "day" : 2,
+          "hours" : 9,
+          "minutes" : 45,
+          "month" : 8,
+          "seconds" : 4,
+          "time" : 1568688304496,
+          "timezoneOffset" : -420,
+          "year" : 119
+        },
+        "type" : "text"
+      },
+      "-Lox7yvixtL1m8WcSdzc" : {
+        "contain" : "Hai",
+        "read" : true,
+        "receiver" : 1,
+        "sender" : 5,
+        "timestamp" : {
+          "date" : 17,
+          "day" : 2,
+          "hours" : 9,
+          "minutes" : 53,
+          "month" : 8,
+          "seconds" : 47,
+          "time" : 1568688827179,
+          "timezoneOffset" : -420,
+          "year" : 119
+        },
+        "type" : "text"
+      },
+      "-LoxJvCFtpnZaj9542Xx" : {
+        "contain" : "Tes",
+        "read" : true,
+        "receiver" : 5,
+        "sender" : 1,
+        "timestamp" : {
+          "date" : 17,
+          "day" : 2,
+          "hours" : 10,
+          "minutes" : 45,
+          "month" : 8,
+          "seconds" : 58,
+          "time" : 1568691958618,
+          "timezoneOffset" : -420,
+          "year" : 119
+        },
+        "type" : "text"
+      },
+      "-Lp22gZ7ztrl2nIKYsKn" : {
+        "contain" : "Hello",
+        "read" : true,
+        "receiver" : 5,
+        "sender" : 1,
+        "timestamp" : {
+          "date" : 18,
+          "day" : 3,
+          "hours" : 13,
+          "minutes" : 28,
+          "month" : 8,
+          "seconds" : 23,
+          "time" : 1568788103758,
+          "timezoneOffset" : -420,
+          "year" : 119
+        },
+        "type" : "text"
+      },
+      "-LpRRlWE0GGaqYLDGXp2" : {
+        "contain" : "Hai",
+        "read" : true,
+        "receiver" : 5,
+        "sender" : 1,
+        "timestamp" : {
+          "date" : 23,
+          "day" : 1,
+          "hours" : 11,
+          "minutes" : 48,
+          "month" : 8,
+          "seconds" : 28,
+          "time" : 1569214108779,
+          "timezoneOffset" : -420,
+          "year" : 119
+        },
+        "type" : "text"
+      },
+      "-LpSEv1oO2j9_-b_diuc" : {
+        "barang_id" : 2,
+        "contain" : "Ini ready?",
+        "read" : true,
+        "receiver" : 5,
+        "sender" : 1,
+        "timestamp" : {
+          "date" : 23,
+          "day" : 1,
+          "hours" : 15,
+          "minutes" : 31,
+          "month" : 8,
+          "seconds" : 58,
+          "time" : 1569227518661,
+          "timezoneOffset" : -420,
+          "year" : 119
+        },
+        "type" : "barang"
+      },
+      "-LpaSXv2hQDOrIPEYguG" : {
+        "barang_id" : 1,
+        "contain" : "Turunin 200 lg dong",
+        "harga_terakhir" : 2000000,
+        "read" : true,
+        "receiver" : 5,
+        "sender" : 1,
+        "timestamp" : {
+          "date" : 25,
+          "day" : 3,
+          "hours" : 10,
+          "minutes" : 28,
+          "month" : 8,
+          "seconds" : 3,
+          "time" : 1569382083898,
+          "timezoneOffset" : -420,
+          "year" : 119
+        },
+        "type" : "nego"
+      },
+      "-Lpzx3Dwr0ogoh8Bdroi" : {
+        "contain" : "Tes",
+        "read" : true,
+        "receiver" : 5,
+        "sender" : 1,
+        "timestamp" : {
+          "date" : 30,
+          "day" : 1,
+          "hours" : 9,
+          "minutes" : 16,
+          "month" : 8,
+          "seconds" : 16,
+          "time" : 1569809776725,
+          "timezoneOffset" : -420,
+          "year" : 119
+        },
+        "type" : "text"
+      },
+      "-LqATJAkXzYdcghkuPhA" : {
+        "contain" : "Hai",
+        "read" : true,
+        "receiver" : 1,
+        "sender" : 5,
+        "timestamp" : {
+          "date" : 2,
+          "day" : 3,
+          "hours" : 14,
+          "minutes" : 57,
+          "month" : 9,
+          "seconds" : 22,
+          "time" : 1570003042760,
+          "timezoneOffset" : -420,
+          "year" : 119
+        },
+        "type" : "text"
+      },
+      "-LqZ6BZclVtHY1is0s_1" : {
+        "contain" : "Halo, selamat pagi.",
+        "read" : true,
+        "receiver" : 5,
+        "sender" : 1,
+        "timestamp" : {
+          "date" : 7,
+          "day" : 1,
+          "hours" : 9,
+          "minutes" : 46,
+          "month" : 9,
+          "seconds" : 52,
+          "time" : 1570416412059,
+          "timezoneOffset" : -420,
+          "year" : 119
+        },
+        "type" : "text"
+      },
+      "-Lqd0eJd6YAIc2bqL_gP" : {
+        "contain" : "Tes",
+        "read" : true,
+        "receiver" : 1,
+        "sender" : 5,
+        "timestamp" : {
+          "date" : 8,
+          "day" : 2,
+          "hours" : 8,
+          "minutes" : 40,
+          "month" : 9,
+          "seconds" : 47,
+          "time" : 1570498847349,
+          "timezoneOffset" : -420,
+          "year" : 119
+        },
+        "type" : "text"
+      },
+      "-Lqd0iEY6wDwbXJeESZc" : {
+        "contain" : "Halo",
+        "read" : true,
+        "receiver" : 1,
+        "sender" : 5,
+        "timestamp" : {
+          "date" : 8,
+          "day" : 2,
+          "hours" : 8,
+          "minutes" : 41,
+          "month" : 9,
+          "seconds" : 3,
+          "time" : 1570498863403,
+          "timezoneOffset" : -420,
+          "year" : 119
+        },
+        "type" : "text"
+      },
+      "-Lqd0kCOIoj0_pPjn5eo" : {
+        "contain" : "Ya",
+        "read" : true,
+        "receiver" : 1,
+        "sender" : 5,
+        "timestamp" : {
+          "date" : 8,
+          "day" : 2,
+          "hours" : 8,
+          "minutes" : 41,
+          "month" : 9,
+          "seconds" : 11,
+          "time" : 1570498871458,
+          "timezoneOffset" : -420,
+          "year" : 119
+        },
+        "type" : "text"
+      },
+      "-Lqd0mp65RZPiM3PwmsA" : {
+        "contain" : "Hello",
+        "read" : true,
+        "receiver" : 1,
+        "sender" : 5,
+        "timestamp" : {
+          "date" : 8,
+          "day" : 2,
+          "hours" : 8,
+          "minutes" : 41,
+          "month" : 9,
+          "seconds" : 22,
+          "time" : 1570498882191,
+          "timezoneOffset" : -420,
+          "year" : 119
+        },
+        "type" : "text"
+      },
+      "-LqnPWqNenVUnsR5Tmmc" : {
+        "barang_id" : 1,
+        "contain" : "Tes",
+        "harga_terakhir" : 2000000,
+        "read" : true,
+        "receiver" : -1,
+        "sender" : 1,
+        "timestamp" : {
+          "date" : 10,
+          "day" : 4,
+          "hours" : 9,
+          "minutes" : 5,
+          "month" : 9,
+          "seconds" : 37,
+          "time" : 1570673137287,
+          "timezoneOffset" : -420,
+          "year" : 119
+        },
+        "type" : "nego"
+      },
+      "-LqnP_Dj4jH8ZdSvhjuN" : {
+        "barang_id" : 1,
+        "contain" : "Tes",
+        "harga_terakhir" : 2000000,
+        "read" : true,
+        "receiver" : -1,
+        "sender" : 1,
+        "timestamp" : {
+          "date" : 10,
+          "day" : 4,
+          "hours" : 9,
+          "minutes" : 5,
+          "month" : 9,
+          "seconds" : 51,
+          "time" : 1570673151132,
+          "timezoneOffset" : -420,
+          "year" : 119
+        },
+        "type" : "nego"
+      },
+      "-LqnP_iTG_UtjU53q-rs" : {
+        "barang_id" : 1,
+        "contain" : "Tes",
+        "harga_terakhir" : 2000000,
+        "read" : true,
+        "receiver" : -1,
+        "sender" : 1,
+        "timestamp" : {
+          "date" : 10,
+          "day" : 4,
+          "hours" : 9,
+          "minutes" : 5,
+          "month" : 9,
+          "seconds" : 53,
+          "time" : 1570673153164,
+          "timezoneOffset" : -420,
+          "year" : 119
+        },
+        "type" : "nego"
+      },
+      "-Lvhm6Kb_MNE8MWhaRWw" : {
+        "contain" : "Haloo",
+        "read" : false,
+        "receiver" : 5,
+        "sender" : 1,
+        "timestamp" : {
+          "date" : 10,
+          "day" : 2,
+          "hours" : 10,
+          "minutes" : 9,
+          "month" : 11,
+          "seconds" : 27,
+          "time" : 1575947367215,
+          "timezoneOffset" : -420,
+          "year" : 119
+        },
+        "type" : "text"
+      },
+      "-Lvhm7b2k88eC3oqBlxQ" : {
+        "contain" : "Sudah lama tidak berjumpa",
+        "read" : false,
+        "receiver" : 5,
+        "sender" : 1,
+        "timestamp" : {
+          "date" : 10,
+          "day" : 2,
+          "hours" : 10,
+          "minutes" : 9,
+          "month" : 11,
+          "seconds" : 32,
+          "time" : 1575947372425,
+          "timezoneOffset" : -420,
+          "year" : 119
+        },
+        "type" : "text"
+      },
+      "-LviDMeklB--5J-Y3lOX" : {
+        "contain" : "Ulalala aku terharu",
+        "read" : false,
+        "receiver" : 5,
+        "sender" : 1,
+        "timestamp" : {
+          "date" : 10,
+          "day" : 2,
+          "hours" : 12,
+          "minutes" : 12,
+          "month" : 11,
+          "seconds" : 53,
+          "time" : 1575954773085,
+          "timezoneOffset" : -420,
+          "year" : 119
+        },
+        "type" : "text"
+      }
+    },
+    "type" : "user_to_sales",
+    "user1" : {
+      "company_id" : 5,
+      "user_id" : 1
+    },
+    "user2" : {
+      "company_id" : 7,
+      "user_id" : 5
+    }
+  }
+}

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Toolbar
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/toolbar"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="3dp"
+    android:background="@color/bg">
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnBack"
+        android:layout_marginEnd="15dp"
+        android:tint="@color/colorPrimary"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="left"
+        android:background="@color/bg"
+        android:src="@drawable/ic_arrow_back_black_24dp"/>
+
+    <TextView
+        android:id="@+id/namaToolbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="20sp"/>
+    <TextView
+        android:id="@+id/aksi"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="16sp"
+        android:layout_gravity="right"
+        android:layout_marginRight="10dp"
+        android:textColor="@color/colorPrimary"/>
+
+</Toolbar>

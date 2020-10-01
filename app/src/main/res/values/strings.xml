@@ -1,0 +1,78 @@
+<resources>
+    <string name="app_name">GLOB</string>
+    <string name="norek">BCA 8990407721 a/n Frenzel Timothy</string>
+    <string name="notelp">081310695040</string>
+
+    <string-array name="spinfilter1">
+        <item>Berlangganan</item>
+        <item>Tidak Berlangganan</item>
+    </string-array>
+
+    <string name="status_transaksi_waiting">Menunggu konfirmasi sales</string>
+    <string name="status_transaksi_ongoing">Pesanan sedang diproses</string>
+    <string name="status_transaksi_received">Pesanan telah diterima</string>
+    <string name="status_transaksi_complained">Komplain sedang diproses</string>
+    <string name="status_transaksi_finished">Selesai</string>
+
+    <string name="status_payment_paid">Lunas</string>
+    <string name="status_payment_unpaid">Belum Lunas</string>
+
+    <string name="otp_title_input">Masukkan kode OTP yang diterima.</string>
+    <string name="otp_title_resend">Belum mendapatkan OTP? RESEND OTP.</string>
+    <string name="otp_title_sukses">Terimakasih, kode OTP Sukses diterima. Mohon Menunggu</string>
+    <string name="otp_timecountdown_remaining">  seconds remaining...</string>
+    <string name="otp_timesup">Times Up, Please Resend OTP.</string>
+    <string name="otp_request">Request OTP</string>
+    <string name="otp_submit">SUBMIT OTP.</string>
+    <string name="otp_resend">RESEND OTP.</string>
+    <string name="otp_match">OTP MATCHED.</string>
+    <string name="otp_unmatch">OTP UNMATCHED.</string>
+    <string name="otp_phone">Phone Number</string>
+    <string name="otp_verify">Number Verification</string>
+    <string name="otp_text">Enter your mobile number</string>
+    <string name="otp_msg_number">Apakah anda yakin ingin mendapatkan OTP dari nomer </string>
+    <string name="otp_format_1">Yth. Pelanggan GLOB di nomor</string>
+    <string name="otp_format_2">Berikut OTP anda</string>
+    <string name="otp_format_3">.Gunakan OTP ini untuk proses validasi no handphone Anda. Terimakasih.</string>
+    <string name="otp_verified_label">Account Phone  Verified</string>
+    <string name="otp_verified_att">Attention, You must verified account</string>
+    <string name="attention_label">Attention</string>
+    <string name="on_failure">Sorry, onFailure getting data, please contact your Admin.</string>
+    <string name="on_sucess_verified_phone">Congratulations, you have successfully verified your mobile number. Please check your profile</string>
+
+    <string name="attention_offline_mode">Anda sedang tidak terkoneksi internet.</string>
+    <string name="status_otp_delivered_1">Status Kode OTP yang dikirimkan ke nomor :</string>
+    <string name="status_otp_delivered_2"> dengan status </string>
+
+    <!--    Want to try the PALUGADA feature? Click here -->
+    <string name="palugada_feature_offer">Want to try the PALUGADA feature? Click here</string>
+
+    <string-array name="tipe_register">
+        <item>---- Pilih Tipe Registrasi ----</item>
+        <item>Buyer</item>
+        <item>Seller</item>
+    </string-array>
+    <string name="prompt_type_regster"> ---- Select Register Type ---- </string>
+    <string-array name="otp_via">
+        <item>---- Pengiriman Tipe OTP ----</item>
+        <item>SMS</item>
+        <item>WA</item>
+    </string-array>
+    <string name="prompt_otp_via"> ---- Select OTP Via ---- </string>
+
+    <string name="attention_expired_otp">OTP Anda sudah Expired, Silahkan untuk resend OTP kembali</string>
+    <string name="attention_leave_verfiy_otp">Apakah Anda yakin ingin meninggalkan Prosesi Verifikasi Telepon</string>
+    <string name="attention_leave_app">Apakah Anda yakin ingin keluar dari aplikasi ini ?</string>
+    <string name="status_deliver">Status OTP yang dikirimkan ke nomor anda  :</string>
+    <string name="alert_sellert_list">Tidak ada list seller di tipe bisnis yang anda pilih, jadi lah distibutor pertama di tipe bisnis yang anda pilih</string>
+    <string name="error_register_type">Mohon untuk memilih tipe register anda</string>
+
+    <string name="label_history_nego"><u>History Negosiasi</u></string>
+
+    <string name="attention_no_seller">Mohon maaf, saat ini belum ada seller untuk tipe bisnis yang anda pilih</string>
+    <string name="attention_no_seller_couverage"> Mohon maaf, saat ini belum ada seller untuk wilayah anda. \nMendaftarlah untuk menjadi seller. \nHubungi CallCenter : (021) 7434522 </string>
+
+    <string name="attention_incorrect_number"> Masukan nomor Handphone yang sama saat pendaftaran </string>
+
+    <string name="maxNego">Tidak dapat melakukan nego! Nego barang hanya dapat dilakukan <b>2x/hari</b> untuk barang yang sama.</string>
+</resources>

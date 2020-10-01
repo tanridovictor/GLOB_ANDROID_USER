@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/navbar_home"
+        android:title="Beranda"
+        android:icon="@drawable/outline_home_black_24"/>
+
+    <item
+        android:id="@+id/navbar_nego"
+        android:title="Nego"
+        android:icon="@drawable/outline_question_answer_black_24"/>
+
+    <item
+        android:id="@+id/navbar_order"
+        android:title="Transaksi"
+        android:icon="@drawable/outline_swap_horiz_black_24"/>
+
+    <item
+        android:id="@+id/navbar_profile"
+        android:title="Profil"
+        android:icon="@drawable/outline_person_black_24"/>
+
+</menu>

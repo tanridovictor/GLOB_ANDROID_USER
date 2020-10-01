@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="preloaded_fonts" translatable="false">
+        <item>@font/amiri</item>
+        <item>@font/karla</item>
+        <item>@font/montserrat</item>
+        <item>@font/montserrat_bold</item>
+        <item>@font/oswald_bold</item>
+        <item>@font/quicksand</item>
+        <item>@font/quicksand_bold</item>
+        <item>@font/quicksand_medium</item>
+        <item>@font/roboto_medium</item>
+    </array>
+</resources>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--<color name="colorPrimary">#58bc9e</color>-->
+    <!--<color name="colorPrimaryDark">#000000</color>-->
+    <!--<color name="colorAccent">#D81B60</color>-->
+    <!--<color name="bg">#f3f8f9</color>-->
+    <!--<color name="editTextBg">#fcfcfc</color>-->
+    <!--<color name="btnDisabled">#a2d6c6</color>-->
+    <color name="colorPrimary">#8CC63E</color>
+    <color name="buttonColor">#58bc9e</color>
+    <color name="colorPrimaryDark">#356859</color>
+    <color name="colorSecondary">#F87E45</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="divider">#D5D5D5</color>
+    <color name="grey">#686868</color>
+
+    <color name="bg">#f3f8f9</color>
+    <color name="lightBg">#fcfcfc</color>
+    <color name="white">#ffffff</color>
+
+    <color name="textColor">#272828</color>
+
+    <color name="btnDisabled">#bddb97</color>
+    <color name="btnSecondaryDisabled">#EEB79B</color>
+    <color name="btnAccentDisabled">#DDA7BA</color>
+
+    <color name="shimmer">#dddddd</color>
+    <color name="color_warning">#FF0000</color>
+
+    <color name="DarkGray">#A9A9A9</color>
+    <color name="Gainsboro">#DCDCDC</color>
+    
+    <color name="yellow">#F1C40F</color>
+    <color name="abu">#ECF0F1</color>
+
+</resources>

@@ -563,12 +563,13 @@
             android:background="@color/lightBg">
             <ScrollView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                >
+                android:layout_height="match_parent">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
+
                     <LinearLayout
                         android:id="@+id/layoutNego1"
                         android:layout_width="match_parent"
@@ -583,71 +584,54 @@
 
                         <TextView
                             android:id="@+id/tvTitleNego1"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="20dp"
                             android:layout_marginTop="26dp"
                             android:layout_marginEnd="20dp"
+                            android:layout_marginBottom="16dp"
                             android:textColor="@color/textColor"
                             android:textSize="16sp"
                             app:layout_goneMarginTop="25dp"
                             android:textStyle="bold"
-                            android:text="Nego Pertama"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintVertical_bias="0.0" />
+                            android:text="Nego Pertama"/>
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:layout_gravity="right"
-                            android:gravity="right"
-                            android:layout_marginRight="25dp">
+                            android:layout_marginHorizontal="20dp">
+
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/textColor"
                                 android:textSize="10sp"
-                                android:text="Diperbarui "/>
-                            <TextView
-                                android:layout_width="15dp"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/textColor"
-                                android:textSize="10sp"
-                                android:text=":"/>
+                                android:text="Diperbarui : "/>
                             <TextView
                                 android:id="@+id/tvDateNego1"
-                                android:layout_width="60dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/textColor"
                                 android:textSize="10sp"
                                 android:text="24/12/2020"/>
                         </LinearLayout>
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:layout_gravity="right"
-                            android:gravity="right"
-                            android:layout_marginRight="25dp">
+                            android:layout_marginHorizontal="20dp"
+                            android:layout_marginBottom="16dp">
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/textColor"
                                 android:textSize="10sp"
-                                android:text="Oleh "/>
-                            <TextView
-                                android:layout_width="15dp"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/textColor"
-                                android:textSize="10sp"
-                                android:text=":"/>
+                                android:text="Oleh : "/>
                             <TextView
                                 android:id="@+id/tvUpdateByNego1"
-                                android:layout_width="60dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:textColor="@color/textColor"
                                 android:textSize="10sp"
@@ -658,7 +642,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:layout_margin="20dp">
+                            android:layout_marginHorizontal="20dp"
+                            android:layout_marginBottom="4dp">
                             <TextView
                                 android:layout_width="170dp"
                                 android:layout_height="wrap_content"
@@ -684,8 +669,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginRight="20dp">
+                            android:layout_marginHorizontal="20dp"
+                            android:layout_marginBottom="4dp">
                             <TextView
                                 android:layout_width="170dp"
                                 android:layout_height="wrap_content"
@@ -712,7 +697,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:layout_margin="20dp">
+                            android:layout_marginHorizontal="20dp">
                             <TextView
                                 android:layout_width="170dp"
                                 android:layout_height="wrap_content"
@@ -736,8 +721,16 @@
                                 android:textSize="12sp"
                                 android:textStyle="bold"
                                 android:text="Lorem Ipsum"/>
+
                         </LinearLayout>
+
                     </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="16dp"
+                        android:background="@color/divider"/>
 
                     <LinearLayout
                         android:id="@+id/layoutNego2"
@@ -907,6 +900,12 @@
                                 android:text="Lorem Ipsum"/>
                         </LinearLayout>
                     </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="16dp"
+                        android:background="@color/divider"/>
 
                     <LinearLayout
                         android:id="@+id/layoutNego3"

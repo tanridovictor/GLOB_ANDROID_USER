@@ -19,7 +19,7 @@
     <color name="lightBg">#fcfcfc</color>
     <color name="white">#ffffff</color>
 
-    <color name="textColor">#272828</color>
+    <color name="textColor">#000000</color>
 
     <color name="btnDisabled">#bddb97</color>
     <color name="btnSecondaryDisabled">#EEB79B</color>
@@ -33,5 +33,6 @@
     
     <color name="yellow">#F1C40F</color>
     <color name="abu">#ECF0F1</color>
+    <color name="orange">#FF5733</color>
 
 </resources>

@@ -20,7 +20,8 @@
     </style>
 
     <style name="btn_style" parent="Widget.AppCompat.Button">
-        <item name="android:fontFamily">@font/montserrat</item>
+        <item name="android:fontFamily">@font/karla</item>
+        <item name="android:textSize">16dp</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textColor">@color/lightBg</item>
         <item name="android:background">@drawable/button_main</item>
@@ -37,6 +38,13 @@
         <item name="android:fontFamily">@font/montserrat</item>
         <item name="boxStrokeColor">@color/colorPrimary</item>
         <item name="boxBackgroundColor">@color/lightBg</item>
+        <item name="boxBackgroundMode">outline</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="PembayaranTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="android:fontFamily">@font/karla</item>
+        <item name="boxStrokeColor">@color/colorPrimary</item>
         <item name="boxBackgroundMode">outline</item>
         <item name="android:textSize">14sp</item>
     </style>
@@ -66,6 +74,14 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorSecondary">@color/textColor</item>
         <item name="android:textColor">@color/textColor</item>
+    </style>
+
+    <style name="tanggal" parent="CardView.Light">
+        <item name="android:fontFamily">@font/karla</item>
+        <item name="boxStrokeColor">@color/colorPrimary</item>
+        <item name="boxBackgroundColor">@color/shimmer</item>
+        <item name="boxBackgroundMode">outline</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
 </resources>

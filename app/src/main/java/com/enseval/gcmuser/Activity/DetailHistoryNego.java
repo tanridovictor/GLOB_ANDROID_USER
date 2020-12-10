@@ -45,6 +45,8 @@ public class DetailHistoryNego extends AppCompatActivity {
     private ShimmerFrameLayout shimmerFrameLayout, shimmerFrameLayout2, shimmerFrameLayout3, shimmerFrameNego;
     private ImageView appbarimg, backBtn;
 
+    SimpleDateFormat time = new SimpleDateFormat("d MMM yyyy");
+
     private LoadingDialog loadingDialog;
 
     private List<StepBean> listNego = new ArrayList<>();
@@ -356,7 +358,7 @@ public class DetailHistoryNego extends AppCompatActivity {
                                 int deal = jsonObject.get("harga_final").getAsInt();
                                 String tanggal = jsonObject.get("created_date").getAsString();
 
-                                tvDateNego1.setText(String.valueOf(Helper.convertStringToDateSimple(jsonObject.get("created_date").getAsString())));
+//                                tvDateNego1.setText(String.valueOf(Helper.convertStringToDateSimple(jsonObject.get("created_date").getAsString())));
                                 tvUpdateByNego1.setText(String.valueOf(createdby));
                                 tvHargaKonsumen1.setText(String.valueOf(Helper.getCurrencyFormat().format(harganego)));
                                 if (TimeRespon.after(dateTime)) {
@@ -375,6 +377,12 @@ public class DetailHistoryNego extends AppCompatActivity {
                                 }
 
                                 printCompanyName("nego_pertama",createdby);
+
+                                //timestamp update date
+                                long timestamp_update_1 = jsonObject.get("timestamp_updated_date").getAsLong();
+                                String timestamp_update1 = time.format(timestamp_update_1);
+
+                                tvDateNego1.setText(String.valueOf(timestamp_update1));
                             }else {
                                 Log.d("", "onResponse: NOT success ");
                             }
@@ -434,8 +442,14 @@ public class DetailHistoryNego extends AppCompatActivity {
                                 if (jsonObject.get("harga_sales_2").toString().equals("null")) { hargasales2 = 0; }
                                     else { hargasales2 = jsonObject.get("harga_sales_2").getAsInt(); }
 
-                                tvDateNego1.setText(String.valueOf(Helper.convertStringToDateSimple(tanggal)));
-                                tvDateNego2.setText(String.valueOf(Helper.convertStringToDateSimple(tanggal2)));
+//                                tvDateNego1.setText(String.valueOf(Helper.convertStringToDateSimple(tanggal)));
+                                long timestamp_update_1 = jsonObject.get("timestamp_updated_date").getAsLong();
+                                String timestamp_update1 = time.format(timestamp_update_1);
+                                tvDateNego1.setText(timestamp_update1);
+//                                tvDateNego2.setText(String.valueOf(Helper.convertStringToDateSimple(tanggal2)));
+                                long timestamp_update_2 = jsonObject.get("timestamp_updated_date_2").getAsLong();
+                                String timestamp_update2 = time.format(timestamp_update_2);
+                                tvDateNego2.setText(timestamp_update2);
                                 tvUpdateByNego1.setText(String.valueOf(createdby));
                                 tvHargaKonsumen1.setText(String.valueOf(Helper.getCurrencyFormat().format(harganego)));
                                 tvHargaSales1.setText(String.valueOf(Helper.getCurrencyFormat().format(hargasales)));
@@ -520,9 +534,18 @@ public class DetailHistoryNego extends AppCompatActivity {
                                 String tanggal2 = jsonObject.get("updated_date_2").getAsString();
                                 String tanggal3 = jsonObject.get("updated_date_3").getAsString();
 
-                                tvDateNego1.setText(String.valueOf(Helper.convertStringToDateSimple(tanggal)));
-                                tvDateNego2.setText(String.valueOf(Helper.convertStringToDateSimple(tanggal2)));
-                                tvDateNego3.setText(String.valueOf(Helper.convertStringToDateSimple(tanggal3)));
+//                                tvDateNego1.setText(String.valueOf(Helper.convertStringToDateSimple(tanggal)));
+                                long timestamp_update_1 = jsonObject.get("timestamp_updated_date").getAsLong();
+                                String timestamp_update1 = time.format(timestamp_update_1);
+                                tvDateNego1.setText(timestamp_update1);
+//                                tvDateNego2.setText(String.valueOf(Helper.convertStringToDateSimple(tanggal2)));
+                                long timestamp_update_2 = jsonObject.get("timestamp_updated_date_2").getAsLong();
+                                String timestamp_update2 = time.format(timestamp_update_2);
+                                tvDateNego2.setText(timestamp_update2);
+//                                tvDateNego3.setText(String.valueOf(Helper.convertStringToDateSimple(tanggal3)));
+                                long timestamp_update_3 = jsonObject.get("timestamp_updated_date_3").getAsLong();
+                                String timestamp_update3 = time.format(timestamp_update_3);
+                                tvDateNego3.setText(timestamp_update3);
                                 tvUpdateByNego1.setText(String.valueOf(createdby));
                                 tvHargaKonsumen1.setText(String.valueOf(Helper.getCurrencyFormat().format(harganego)));
                                 tvHargaSales1.setText(String.valueOf(Helper.getCurrencyFormat().format(hargasales)));

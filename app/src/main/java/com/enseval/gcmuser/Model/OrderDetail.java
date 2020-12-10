@@ -29,10 +29,11 @@ public class OrderDetail implements Parcelable {
     private String notes_complain;
     private String note;
     private String flag_foto;
+    private String barang_id;
 
 
 
-    public OrderDetail(int id, String transactionId, String namaBarang, String fotoUrl, int qty, long harga, String berat, String alias, int shipto_id, int billto_id, int payment_id, String batchNumber, String expDate, int qtyDiterima, int harga_final, String note, String flag_foto) {
+    public OrderDetail(int id, String transactionId, String namaBarang, String fotoUrl, int qty, long harga, String berat, String alias, int shipto_id, int billto_id, int payment_id, String batchNumber, String expDate, int qtyDiterima, int harga_final, String note, String flag_foto, String barang_id) {
         this.id = id;
         this.transactionId = transactionId;
         this.namaBarang = namaBarang;
@@ -50,9 +51,10 @@ public class OrderDetail implements Parcelable {
         this.harga_final = harga_final;
         this.note = note;
         this.flag_foto = flag_foto;
+        this.barang_id = barang_id;
     }
 
-    public OrderDetail(int id, String transactionId, String namaBarang, String fotoUrl, int qty, long harga, String berat, String alias, String notes_complain, String batchNumber, String expDate, int qtyDiterima, int harga_final, String note) {
+    public OrderDetail(int id, String transactionId, String namaBarang, String fotoUrl, int qty, long harga, String berat, String alias, String notes_complain, String batchNumber, String expDate, int qtyDiterima, int harga_final, String note, String flag_foto) {
         this.id = id;
         this.transactionId = transactionId;
         this.namaBarang = namaBarang;
@@ -67,6 +69,7 @@ public class OrderDetail implements Parcelable {
         this.qtyDiterima = qtyDiterima;
         this.harga_final = harga_final;
         this.note = note;
+        this.flag_foto = flag_foto;
     }
 
     public OrderDetail(int id, String transactionId, String namaBarang, String fotoUrl, int qty, String berat, long harga, String batchNumber, String expDate, int qtyDiterima, String alias) {
@@ -147,6 +150,10 @@ public class OrderDetail implements Parcelable {
 
     public long getHarga() {
         return harga;
+    }
+
+    public String getBarang_id() {
+        return barang_id;
     }
 
     public int getId() {

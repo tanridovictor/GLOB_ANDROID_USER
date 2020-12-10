@@ -128,99 +128,99 @@ public class OrderBottomSheetDialogFragment extends BottomSheetDialogFragment {
 
     /**Method untuk request detail pesanan*/
     private void orderDetailRequest(){
-        String query = "select a.id, a.transaction_id, c.nama, f.nama_perusahaan, (select concat('https://www.glob.co.id/admin/assets/images/product/', f.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, a.qty, a.harga, c.berat, d.alias, to_char(e.tgl_permintaan_kirim, 'dd-MON-YYYY') tgl_permintaan_kirim, a.batch_number, a.exp_date, a.qty_dipenuhi, a.harga_final , e.shipto_id, e.billto_id, e.payment_id, case when note is null then '' else note end "+
-                "from gcm_transaction_detail a inner join gcm_list_barang b on a.barang_id=b.id inner join gcm_master_barang c on c.id = b.barang_id "+
-                "inner join gcm_master_satuan d on d.id = c.satuan inner join gcm_master_transaction e on e.id_transaction = a.transaction_id inner join gcm_master_company f on b.company_id = f.id "+
-                "where a.transaction_id= '"+transactionId+"' order by c.category_id asc, c.nama asc";
-        Log.d("ido", "orderDetailRequest: "+query);
-        try {
-            Call<JsonObject> orderDetailCall = RetrofitClient
-                    .getInstance()
-                    .getApi()
-                    .request(new JSONRequest(QueryEncryption.Encrypt(query)));
-
-            orderDetailCall.enqueue(new Callback<JsonObject>() {
-                @Override
-                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                    if(response.isSuccessful()){
-                        Log.d("ido", "onResponse: sukses nembak");
-                        String status = response.body().getAsJsonObject().get("status").getAsString();
-                        if(status.equals("success")){
-                            Log.d("ido", "onResponse: sukses get data");
-                            orderDetailList = new ArrayList<>();
-                            JsonArray jsonArray = response.body().getAsJsonObject().get("data").getAsJsonArray();
-                            for(int i=0; i<jsonArray.size(); i++) {
-                                JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
-                                if(jsonObject.get("batch_number").isJsonNull() && jsonObject.get("exp_date").isJsonNull() && jsonObject.get("qty_dipenuhi").isJsonNull() && jsonObject.get("harga_final").isJsonNull()){
-                                    Log.d("ido", "onResponse: pertama");
-                                    orderDetailList.add(new OrderDetail(
-                                            jsonObject.get("id").getAsInt(),
-                                            jsonObject.get("transaction_id").getAsString(),
-                                            jsonObject.get("nama").getAsString(),
-                                            jsonObject.get("foto").getAsString(),
-                                            jsonObject.get("qty").getAsInt(),
-                                            jsonObject.get("harga").getAsLong(),
-                                            jsonObject.get("berat").getAsString(),
-                                            jsonObject.get("alias").getAsString(),
-                                            jsonObject.get("shipto_id").getAsInt(),
-                                            jsonObject.get("billto_id").getAsInt(),
-                                            jsonObject.get("payment_id").getAsInt(),
-                                            "",
-                                            "",
-                                            0,
-                                            0,
-                                            jsonObject.get("note").getAsString(),
-                                            jsonObject.get("flag_foto").getAsString()
-                                    ));
-                                }else{
-                                    Log.d("ido", "onResponse: kedua");
-                                    orderDetailList.add(new OrderDetail(
-                                            jsonObject.get("id").getAsInt(),
-                                            jsonObject.get("transaction_id").getAsString(),
-                                            jsonObject.get("nama").getAsString(),
-                                            jsonObject.get("foto").getAsString(),
-                                            jsonObject.get("qty").getAsInt(),
-                                            jsonObject.get("harga").getAsLong(),
-                                            jsonObject.get("berat").getAsString(),
-                                            jsonObject.get("alias").getAsString(),
-                                            jsonObject.get("shipto_id").getAsInt(),
-                                            jsonObject.get("billto_id").getAsInt(),
-                                            jsonObject.get("payment_id").getAsInt(),
-                                            jsonObject.get("batch_number").getAsString(),
-                                            jsonObject.get("exp_date").getAsString(),
-                                            jsonObject.get("qty_dipenuhi").getAsInt(),
-                                            jsonObject.get("harga_final").getAsInt(),
-                                            jsonObject.get("note").getAsString(),
-                                            jsonObject.get("flag_foto").getAsString()
-                                    ));
-                                }
-                                penjual.setText(jsonArray.get(0).getAsJsonObject().get("nama_perusahaan").getAsString());
-                                if(jsonArray.get(0).getAsJsonObject().get("tgl_permintaan_kirim").isJsonNull()){
-                                    tglPermintaanKirim.setText("-");
-                                }else{
-                                    tglPermintaanKirim.setText(jsonArray.get(0).getAsJsonObject().get("tgl_permintaan_kirim").getAsString());
-                                }
-                            }
-                        }
-                        //buat adapter untuk masing-masing barang pesanan
-                        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-                        recyclerView.setItemAnimator(new DefaultItemAnimator());
-                        orderDetailAdapter = new OrderDetailAdapter(getActivity(), orderDetailList, Status);
-                        recyclerView.setAdapter(orderDetailAdapter);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<JsonObject> call, Throwable t) {
-                    Log.d("", "onFailure: "+t.getMessage());
-                    Log.d("ido", "onFailure: gagal");
-                    orderDetailRequest();
-                }
-            });
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        String query = "select a.id, a.transaction_id, c.nama, f.nama_perusahaan, (select concat('https://www.glob.co.id/admin/assets/images/product/', f.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, a.qty, a.harga, c.berat, d.alias, to_char(e.tgl_permintaan_kirim, 'dd-MON-YYYY') tgl_permintaan_kirim, a.batch_number, a.exp_date, a.qty_dipenuhi, a.harga_final , e.shipto_id, e.billto_id, e.payment_id, case when note is null then '' else note end "+
+//                "from gcm_transaction_detail a inner join gcm_list_barang b on a.barang_id=b.id inner join gcm_master_barang c on c.id = b.barang_id "+
+//                "inner join gcm_master_satuan d on d.id = c.satuan inner join gcm_master_transaction e on e.id_transaction = a.transaction_id inner join gcm_master_company f on b.company_id = f.id "+
+//                "where a.transaction_id= '"+transactionId+"' order by c.category_id asc, c.nama asc";
+//        Log.d("ido", "orderDetailRequest: "+query);
+//        try {
+//            Call<JsonObject> orderDetailCall = RetrofitClient
+//                    .getInstance()
+//                    .getApi()
+//                    .request(new JSONRequest(QueryEncryption.Encrypt(query)));
+//
+//            orderDetailCall.enqueue(new Callback<JsonObject>() {
+//                @Override
+//                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+//                    if(response.isSuccessful()){
+//                        Log.d("ido", "onResponse: sukses nembak");
+//                        String status = response.body().getAsJsonObject().get("status").getAsString();
+//                        if(status.equals("success")){
+//                            Log.d("ido", "onResponse: sukses get data");
+//                            orderDetailList = new ArrayList<>();
+//                            JsonArray jsonArray = response.body().getAsJsonObject().get("data").getAsJsonArray();
+//                            for(int i=0; i<jsonArray.size(); i++) {
+//                                JsonObject jsonObject = jsonArray.get(i).getAsJsonObject();
+//                                if(jsonObject.get("batch_number").isJsonNull() && jsonObject.get("exp_date").isJsonNull() && jsonObject.get("qty_dipenuhi").isJsonNull() && jsonObject.get("harga_final").isJsonNull()){
+//                                    Log.d("ido", "onResponse: pertama");
+//                                    orderDetailList.add(new OrderDetail(
+//                                            jsonObject.get("id").getAsInt(),
+//                                            jsonObject.get("transaction_id").getAsString(),
+//                                            jsonObject.get("nama").getAsString(),
+//                                            jsonObject.get("foto").getAsString(),
+//                                            jsonObject.get("qty").getAsInt(),
+//                                            jsonObject.get("harga").getAsLong(),
+//                                            jsonObject.get("berat").getAsString(),
+//                                            jsonObject.get("alias").getAsString(),
+//                                            jsonObject.get("shipto_id").getAsInt(),
+//                                            jsonObject.get("billto_id").getAsInt(),
+//                                            jsonObject.get("payment_id").getAsInt(),
+//                                            "",
+//                                            "",
+//                                            0,
+//                                            0,
+//                                            jsonObject.get("note").getAsString(),
+//                                            jsonObject.get("flag_foto").getAsString()
+//                                    ));
+//                                }else{
+//                                    Log.d("ido", "onResponse: kedua");
+//                                    orderDetailList.add(new OrderDetail(
+//                                            jsonObject.get("id").getAsInt(),
+//                                            jsonObject.get("transaction_id").getAsString(),
+//                                            jsonObject.get("nama").getAsString(),
+//                                            jsonObject.get("foto").getAsString(),
+//                                            jsonObject.get("qty").getAsInt(),
+//                                            jsonObject.get("harga").getAsLong(),
+//                                            jsonObject.get("berat").getAsString(),
+//                                            jsonObject.get("alias").getAsString(),
+//                                            jsonObject.get("shipto_id").getAsInt(),
+//                                            jsonObject.get("billto_id").getAsInt(),
+//                                            jsonObject.get("payment_id").getAsInt(),
+//                                            jsonObject.get("batch_number").getAsString(),
+//                                            jsonObject.get("exp_date").getAsString(),
+//                                            jsonObject.get("qty_dipenuhi").getAsInt(),
+//                                            jsonObject.get("harga_final").getAsInt(),
+//                                            jsonObject.get("note").getAsString(),
+//                                            jsonObject.get("flag_foto").getAsString()
+//                                    ));
+//                                }
+//                                penjual.setText(jsonArray.get(0).getAsJsonObject().get("nama_perusahaan").getAsString());
+//                                if(jsonArray.get(0).getAsJsonObject().get("tgl_permintaan_kirim").isJsonNull()){
+//                                    tglPermintaanKirim.setText("-");
+//                                }else{
+//                                    tglPermintaanKirim.setText(jsonArray.get(0).getAsJsonObject().get("tgl_permintaan_kirim").getAsString());
+//                                }
+//                            }
+//                        }
+//                        //buat adapter untuk masing-masing barang pesanan
+//                        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//                        recyclerView.setItemAnimator(new DefaultItemAnimator());
+//                        orderDetailAdapter = new OrderDetailAdapter(getActivity(), orderDetailList, Status);
+//                        recyclerView.setAdapter(orderDetailAdapter);
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<JsonObject> call, Throwable t) {
+//                    Log.d("", "onFailure: "+t.getMessage());
+//                    Log.d("ido", "onFailure: gagal");
+//                    orderDetailRequest();
+//                }
+//            });
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
 
     private void shiptoReq(){
@@ -362,7 +362,7 @@ public class OrderBottomSheetDialogFragment extends BottomSheetDialogFragment {
     }
 
     private void getComplain(){
-        String query = "select a.id, a.transaction_id, c.nama, f.nama_perusahaan, b.foto, a.qty, a.harga, c.berat, d.alias, e.tgl_permintaan_kirim, a.batch_number, a.exp_date, a.qty_dipenuhi, a.harga_final, g.notes_complain, case when note is null then '' else note end " +
+        String query = "select a.id, a.transaction_id, c.nama, f.nama_perusahaan, (select concat('https://www.glob.co.id/admin/assets/images/product/', f.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, a.qty, a.harga, c.berat, d.alias, to_char(e.tgl_permintaan_kirim, 'dd-Mon-YYYY') tgl_permintaan_kirim, a.batch_number, a.exp_date, a.qty_dipenuhi, a.harga_final, g.notes_complain, case when note is null then '' else note end " +
                 "from gcm_transaction_detail a inner join gcm_list_barang b on a.barang_id=b.id inner join gcm_master_barang c on c.id = b.barang_id " +
                 "inner join gcm_master_satuan d on d.id = c.satuan inner join gcm_master_transaction e on e.id_transaction = a.transaction_id " +
                 "inner join gcm_master_company f on b.company_id = f.id inner join gcm_transaction_complain g on g.detail_transaction_id = a.id " +
@@ -400,7 +400,8 @@ public class OrderBottomSheetDialogFragment extends BottomSheetDialogFragment {
                                             "",
                                             0,
                                             0,
-                                            jsonObject.get("note").getAsString()
+                                            jsonObject.get("note").getAsString(),
+                                            jsonObject.get("flag_foto").getAsString()
                                     ));
                                 }else{
                                     Log.d("ido", "onResponse: kedua");
@@ -418,7 +419,8 @@ public class OrderBottomSheetDialogFragment extends BottomSheetDialogFragment {
                                             jsonObject.get("exp_date").getAsString(),
                                             jsonObject.get("qty_dipenuhi").getAsInt(),
                                             jsonObject.get("harga_final").getAsInt(),
-                                            jsonObject.get("note").getAsString()
+                                            jsonObject.get("note").getAsString(),
+                                            jsonObject.get("flag_foto").getAsString()
                                     ));
                                 }
                                 penjual.setText(jsonArray.get(0).getAsJsonObject().get("nama_perusahaan").getAsString());

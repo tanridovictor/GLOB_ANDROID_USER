@@ -19,7 +19,9 @@ import com.enseval.gcmuser.Fragment.NegoFragment;
 import com.enseval.gcmuser.Model.Notifikasi;
 import com.enseval.gcmuser.R;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class NotifikasiAdapter extends RecyclerView.Adapter<NotifikasiAdapter.ViewHolder> {
 
@@ -58,17 +60,23 @@ public class NotifikasiAdapter extends RecyclerView.Adapter<NotifikasiAdapter.Vi
 
     @Override
     public void onBindViewHolder(@NonNull NotifikasiAdapter.ViewHolder holder, final int position) {
-        Log.d(TAG, "onBindViewHolder: "+listNotif.get(position).getBarang_nama());
+        long timee = Long.parseLong(listNotif.get(position).getTimestamp_kirim());
+        SimpleDateFormat time = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        String dateTime = time.format(timee);
+
+        Log.d(TAG, "onBindViewHolder: "+dateTime);
         if (listNotif.get(position).getStatus().equals("nego")) {
             holder.tvJudulNotif.setText("Balasan Negosiasi");
             holder.tvNamaBarang.setText(listNotif.get(position).getBarang_nama());
             holder.tvNamaSeller.setText(listNotif.get(position).getSeller_nama());
-            holder.tvWaktu.setText(listNotif.get(position).getDate());
+//            holder.tvWaktu.setText(listNotif.get(position).getDate());
+            holder.tvWaktu.setText(dateTime);
         }else if (listNotif.get(position).getStatus().equals("approve")){
             holder.tvJudulNotif.setText("Negosiasi berhasil disepakati");
             holder.tvNamaBarang.setText(listNotif.get(position).getBarang_nama());
             holder.tvNamaSeller.setText(listNotif.get(position).getSeller_nama());
-            holder.tvWaktu.setText(listNotif.get(position).getDate());
+//            holder.tvWaktu.setText(listNotif.get(position).getDate());
+            holder.tvWaktu.setText(dateTime);
         }
 
         holder.cvNotif.setOnClickListener(new View.OnClickListener() {
@@ -76,7 +84,7 @@ public class NotifikasiAdapter extends RecyclerView.Adapter<NotifikasiAdapter.Vi
             public void onClick(View v) {
                 Intent i = new Intent(_context, MainActivity.class);
                 i.putExtra("fragment", "negoFragment");
-                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 _context.startActivity(i);
             }
         });

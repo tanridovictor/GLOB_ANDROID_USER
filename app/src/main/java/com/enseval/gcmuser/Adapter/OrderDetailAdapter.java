@@ -2,6 +2,7 @@ package com.enseval.gcmuser.Adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,7 +24,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
     private String Status;
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvNama, tvHarga, tvHargaPerKg, tvJumlah, tvNoBatch, tvExpDate, tvQtyPenuhi, tvComplain, tvCatatan;
+        private TextView tvNama, tvHarga, tvHargaPerKg, tvJumlah, tvNoBatch, tvExpDate, kuantitasDipenuhi, tvQtyPenuhi, tvComplain, tvCatatan;
         private ImageView imgBarang;
 
         public ViewHolder(@NonNull View itemView) {
@@ -35,6 +36,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
             imgBarang = itemView.findViewById(R.id.imageView);
             tvNoBatch = itemView.findViewById(R.id.noBatch);
             tvExpDate = itemView.findViewById(R.id.exp);
+            kuantitasDipenuhi = itemView.findViewById(R.id.kuantitasDipenuhi);
             tvQtyPenuhi = itemView.findViewById(R.id.qtypenuhi);
             tvComplain = itemView.findViewById(R.id.complain);
             tvCatatan = itemView.findViewById(R.id.tvCatatan);
@@ -71,10 +73,10 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
             holder.tvExpDate.setVisibility(View.GONE);
             holder.tvQtyPenuhi.setVisibility(View.GONE);
             holder.tvComplain.setVisibility(View.GONE);
-
+            holder.kuantitasDipenuhi.setVisibility(View.GONE);
             holder.tvNama.setText(orderDetailList.get(position).getNamaBarang());
-            holder.tvHargaPerKg.setText("Harga : "+Currency.getCurrencyFormat().format(orderDetailList.get(position).getHarga() / (orderDetailList.get(position).getQty() * Integer.parseInt(orderDetailList.get(position).getBerat())))+"/"+orderDetailList.get(position).getAlias());
-            holder.tvHarga.setText("Subtotal : "+Currency.getCurrencyFormat().format(orderDetailList.get(position).getHarga()));
+            holder.tvHargaPerKg.setText(Currency.getCurrencyFormat().format(orderDetailList.get(position).getHarga() / (orderDetailList.get(position).getQty() * Integer.parseInt(orderDetailList.get(position).getBerat())))+"/"+orderDetailList.get(position).getAlias());
+            holder.tvHarga.setText(Currency.getCurrencyFormat().format(orderDetailList.get(position).getHarga()));
             holder.tvJumlah.setText(String.format("Kuantitas : %d "+orderDetailList.get(position).getAlias(), orderDetailList.get(position).getQty() * Integer.parseInt(orderDetailList.get(position).getBerat())));
             holder.tvCatatan.setText(orderDetailList.get(position).getNote());
         }else if(Status.equals("diproses")){
@@ -82,9 +84,9 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
             holder.tvNama.setText(orderDetailList.get(position).getNamaBarang());
             holder.tvNoBatch.setText("No Batch : "+orderDetailList.get(position).getBatchNumber());
             holder.tvExpDate.setText("Tgl exp : "+orderDetailList.get(position).getExpDate());
-            holder.tvQtyPenuhi.setText(String.format("Kuantitas dipenuhi : %d "+orderDetailList.get(position).getAlias(), orderDetailList.get(position).getQtyDiterima() * Integer.parseInt(orderDetailList.get(position).getBerat())));
-            holder.tvHargaPerKg.setText("Harga : "+Currency.getCurrencyFormat().format(orderDetailList.get(position).getHarga() / (orderDetailList.get(position).getQty() * Integer.parseInt(orderDetailList.get(position).getBerat())))+"/"+orderDetailList.get(position).getAlias());
-            holder.tvHarga.setText("Subtotal : "+Currency.getCurrencyFormat().format(orderDetailList.get(position).getHarga_final()));
+            holder.tvQtyPenuhi.setText(String.format("%d "+orderDetailList.get(position).getAlias(), orderDetailList.get(position).getQtyDiterima() * Integer.parseInt(orderDetailList.get(position).getBerat())));
+            holder.tvHargaPerKg.setText(Currency.getCurrencyFormat().format(orderDetailList.get(position).getHarga() / (orderDetailList.get(position).getQty() * Integer.parseInt(orderDetailList.get(position).getBerat())))+"/"+orderDetailList.get(position).getAlias());
+            holder.tvHarga.setText(Currency.getCurrencyFormat().format(orderDetailList.get(position).getHarga_final()));
             holder.tvJumlah.setText(String.format("Kuantitas : %d "+orderDetailList.get(position).getAlias(), orderDetailList.get(position).getQty() * Integer.parseInt(orderDetailList.get(position).getBerat())));
             holder.tvCatatan.setText(orderDetailList.get(position).getNote());
         }else if(Status.equals("dibatalkan")) {
@@ -93,19 +95,20 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
             holder.tvQtyPenuhi.setVisibility(View.GONE);
             holder.tvComplain.setVisibility(View.GONE);
             holder.tvNama.setText(orderDetailList.get(position).getNamaBarang());
-            holder.tvHargaPerKg.setText("Harga : "+Currency.getCurrencyFormat().format(orderDetailList.get(position).getHarga() / (orderDetailList.get(position).getQty() * Integer.parseInt(orderDetailList.get(position).getBerat())))+"/"+orderDetailList.get(position).getAlias());
-            holder.tvHarga.setText("Subtotal : "+Currency.getCurrencyFormat().format(orderDetailList.get(position).getHarga()));
+            holder.tvHargaPerKg.setText(Currency.getCurrencyFormat().format(orderDetailList.get(position).getHarga() / (orderDetailList.get(position).getQty() * Integer.parseInt(orderDetailList.get(position).getBerat())))+"/"+orderDetailList.get(position).getAlias());
+            holder.tvHarga.setText(Currency.getCurrencyFormat().format(orderDetailList.get(position).getHarga()));
             holder.tvJumlah.setText(String.format("Kuantitas : %d "+orderDetailList.get(position).getAlias(), orderDetailList.get(position).getQty() * Integer.parseInt(orderDetailList.get(position).getBerat())));
             holder.tvCatatan.setText(orderDetailList.get(position).getNote());
         }else if(Status.equals("complain")){
             //detail informasi transaksi
             holder.tvNama.setText(orderDetailList.get(position).getNamaBarang());
-            holder.tvComplain.setText("Keterangan : "+orderDetailList.get(position).getNotes_complain());
+            holder.tvComplain.setText("*"+orderDetailList.get(position).getNotes_complain());
+            holder.tvComplain.setTextColor(ContextCompat.getColor(_context, R.color.color_warning));
             holder.tvNoBatch.setText("No Batch : "+orderDetailList.get(position).getBatchNumber());
             holder.tvExpDate.setText("Tgl exp : "+orderDetailList.get(position).getExpDate());
-            holder.tvQtyPenuhi.setText(String.format("Kuantitas dipenuhi : %d "+orderDetailList.get(position).getAlias(), orderDetailList.get(position).getQtyDiterima() * Integer.parseInt(orderDetailList.get(position).getBerat())));
-            holder.tvHargaPerKg.setText("Harga : "+Currency.getCurrencyFormat().format(orderDetailList.get(position).getHarga() / (orderDetailList.get(position).getQty() * Integer.parseInt(orderDetailList.get(position).getBerat())))+"/"+orderDetailList.get(position).getAlias());
-            holder.tvHarga.setText("Subtotal : "+Currency.getCurrencyFormat().format(orderDetailList.get(position).getHarga_final()));
+            holder.tvQtyPenuhi.setText(String.format("%d "+orderDetailList.get(position).getAlias(), orderDetailList.get(position).getQtyDiterima() * Integer.parseInt(orderDetailList.get(position).getBerat())));
+            holder.tvHargaPerKg.setText(Currency.getCurrencyFormat().format(orderDetailList.get(position).getHarga() / (orderDetailList.get(position).getQty() * Integer.parseInt(orderDetailList.get(position).getBerat())))+"/"+orderDetailList.get(position).getAlias());
+            holder.tvHarga.setText(Currency.getCurrencyFormat().format(orderDetailList.get(position).getHarga_final()));
             holder.tvJumlah.setText(String.format("Kuantitas : %d "+orderDetailList.get(position).getAlias(), orderDetailList.get(position).getQty() * Integer.parseInt(orderDetailList.get(position).getBerat())));
             holder.tvCatatan.setText(orderDetailList.get(position).getNote());
         }else {
@@ -114,9 +117,9 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<OrderDetailAdapter.
             holder.tvNama.setText(orderDetailList.get(position).getNamaBarang());
             holder.tvNoBatch.setText("No Batch : "+orderDetailList.get(position).getBatchNumber());
             holder.tvExpDate.setText("Tgl exp : "+orderDetailList.get(position).getExpDate());
-            holder.tvQtyPenuhi.setText(String.format("Kuantitas dipenuhi : %d "+orderDetailList.get(position).getAlias(), orderDetailList.get(position).getQtyDiterima() * Integer.parseInt(orderDetailList.get(position).getBerat())));
-            holder.tvHargaPerKg.setText("Harga : "+Currency.getCurrencyFormat().format(orderDetailList.get(position).getHarga() / (orderDetailList.get(position).getQty() * Integer.parseInt(orderDetailList.get(position).getBerat())))+"/"+orderDetailList.get(position).getAlias());
-            holder.tvHarga.setText("Subtotal : "+Currency.getCurrencyFormat().format(orderDetailList.get(position).getHarga_final()));
+            holder.tvQtyPenuhi.setText(String.format("%d "+orderDetailList.get(position).getAlias(), orderDetailList.get(position).getQtyDiterima() * Integer.parseInt(orderDetailList.get(position).getBerat())));
+            holder.tvHargaPerKg.setText(Currency.getCurrencyFormat().format(orderDetailList.get(position).getHarga() / (orderDetailList.get(position).getQty() * Integer.parseInt(orderDetailList.get(position).getBerat())))+"/"+orderDetailList.get(position).getAlias());
+            holder.tvHarga.setText(Currency.getCurrencyFormat().format(orderDetailList.get(position).getHarga_final()));
             holder.tvJumlah.setText(String.format("Kuantitas : %d "+orderDetailList.get(position).getAlias(), orderDetailList.get(position).getQty() * Integer.parseInt(orderDetailList.get(position).getBerat())));
             holder.tvCatatan.setText(orderDetailList.get(position).getNote());
         }

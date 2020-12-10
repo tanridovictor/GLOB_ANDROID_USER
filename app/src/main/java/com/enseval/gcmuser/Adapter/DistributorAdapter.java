@@ -58,6 +58,9 @@ public class DistributorAdapter extends RecyclerView.Adapter<DistributorAdapter.
         }else if (listDistributor.get(position).getStatus().equals("I")){
             holder.status.setText("Menunggu Verivikasi");
             holder.status.setTextColor(Color.rgb(241, 196, 15));
+        }else if (listDistributor.get(position).getStatus().equals("R")){
+            holder.status.setText("Dinonaktifkan");
+            holder.status.setTextColor(Color.rgb(255, 0, 0));
         }
     }
 

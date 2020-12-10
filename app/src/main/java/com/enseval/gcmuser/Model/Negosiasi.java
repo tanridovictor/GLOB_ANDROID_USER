@@ -21,6 +21,7 @@ public class Negosiasi implements Parcelable {
     private boolean responSales;
     private String time_respon;
     private int harga_final;
+    private String timestamp_respon;
 
     public Negosiasi(Barang barang, int hargaKonsumen, int hargaSales, int negoCount, int idCart, int history_id, int qty) {
         this.barang = barang;
@@ -32,10 +33,14 @@ public class Negosiasi implements Parcelable {
         this.qty = qty;
     }
 
+    public String getTimestamp_respon() {
+        return timestamp_respon;
+    }
+
     public Negosiasi(Barang barang, int berat, int hargaKonsumen, int hargaSales, int negoCount,
                      int harga_nego, int harga_nego_2, int harga_nego_3,
                      int harga_sales_1, int harga_sales_2, int harga_sales_3,
-                     boolean responSales, int idCart, int history_id, int qty, String time_respon, int harga_final) {
+                     boolean responSales, int idCart, int history_id, int qty, String time_respon, int harga_final, String timestamp_respon) {
         this.barang = barang;
         this.berat = berat;
         this.hargaKonsumen = hargaKonsumen;
@@ -53,6 +58,7 @@ public class Negosiasi implements Parcelable {
         this.qty = qty;
         this.time_respon = time_respon;
         this.harga_final = harga_final;
+        this.timestamp_respon = timestamp_respon;
     }
 
     public int getBerat() {

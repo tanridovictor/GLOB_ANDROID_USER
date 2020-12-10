@@ -17,7 +17,13 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         android:windowSoftInputMode="adjustResize">
-        <activity android:name=".Activity.TentangKamiActivity"></activity>
+        <activity android:name=".Activity.UploadBuktiActivity"></activity>
+        <activity android:name=".Activity.TestMainActivity" />
+        <activity android:name=".Activity.KonfirmasiPembayaranActivity" />
+        <activity android:name=".Activity.DetailOrderActivity" />
+        <activity android:name=".Activity.ResetPasswordActivity" />
+        <activity android:name=".Activity.KodeResetPassActivity" />
+        <activity android:name=".Activity.TentangKamiActivity" />
         <activity android:name=".Activity.DistributorActivity" />
         <activity android:name=".Activity.TambahAkunActivity" />
         <activity android:name=".Activity.PengaturanAkunActivity" />

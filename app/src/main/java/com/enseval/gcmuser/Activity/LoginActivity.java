@@ -1,13 +1,16 @@
 package com.enseval.gcmuser.Activity;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -39,14 +42,20 @@ import com.enseval.gcmuser.OTP.OTPActivity;
 import com.enseval.gcmuser.OTP.SendOTPActivity;
 import com.enseval.gcmuser.R;
 import com.enseval.gcmuser.SharedPrefManager;
+import com.enseval.gcmuser.Utilities.Helper;
+import com.enseval.gcmuser.Utilities.Regex;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import org.json.JSONObject;
+
 import java.util.HashMap;
+import java.util.regex.Matcher;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -194,7 +203,7 @@ public class LoginActivity extends AppCompatActivity {
 //                                        " and gcl.status = 'A' and gmc.seller_status = 'A'")));
                         .request(new JSONRequest(QueryEncryption.Encrypt(
                                 "select string_agg(distinct cast(gcl.seller_id as varchar), ',') as seller FROM gcm_master_company gmc, gcm_company_listing gcl " +
-                                        "where gcl.seller_id = gmc.id and gcl.buyer_id = "+SharedPrefManager.getInstance(getApplicationContext()).getUser().getCompanyId()+" and gmc.seller_status = 'A'")));
+                                        "where gcl.seller_id = gmc.id and gcl.buyer_id = "+SharedPrefManager.getInstance(getApplicationContext()).getUser().getCompanyId()+" and gmc.seller_status = 'A' and gcl.status = 'A'")));
 
                 statusCall.enqueue(new Callback<JsonObject>() {
                     @Override
@@ -374,7 +383,7 @@ public class LoginActivity extends AppCompatActivity {
     private void CheckLogin() {
         loadingDialog.showDialog();
         try {
-            String check = "SELECT a.id, password, b.type FROM gcm_master_user a inner join " +
+            String check = "SELECT a.id, password, b.type, a.email FROM gcm_master_user a inner join " +
                     "gcm_master_company b on a.company_id = b.id WHERE " +
                     "username = '"+usernameLayout.getEditText().getText().toString()+"'";
             Log.d("ido", "CheckLogin: "+check);
@@ -391,6 +400,7 @@ public class LoginActivity extends AppCompatActivity {
                             JsonArray jsonArray = response.body().getAsJsonObject().get("data").getAsJsonArray();
                             String password = jsonArray.get(0).getAsJsonObject().get("password").getAsString();
                             String type = jsonArray.get(0).getAsJsonObject().get("type").getAsString();
+                            String email = jsonArray.get(0).getAsJsonObject().get("email").getAsString();
                             int id = jsonArray.get(0).getAsJsonObject().get("id").getAsInt();
                             try {
                                 if(QueryEncryption.Decrypt(password).equals(passwordLayout.getEditText().getText().toString()) && type.equals("B")){
@@ -399,6 +409,7 @@ public class LoginActivity extends AppCompatActivity {
                                         i.putExtra("id", id);
                                         i.putExtra("username", usernameLayout.getEditText().getText().toString());
                                         i.putExtra("password", passwordLayout.getEditText().getText().toString());
+                                        i.putExtra("email", email);
                                         startActivity(i);
                                 }else if(!QueryEncryption.Decrypt(password).equals(passwordLayout.getEditText().getText().toString()) && type.equals("B")){
                                     loadingDialog.hideDialog();
@@ -480,27 +491,62 @@ public class LoginActivity extends AppCompatActivity {
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         final TextInputEditText email = dialog.findViewById(R.id.EMAIL);
-        Button simpan = dialog.findViewById(R.id.btnKirimPassword);
-        ImageButton close = dialog.findViewById(R.id.close);
-//
-//        close.setOnClickListener(new View.OnClickListener() {
+        final TextInputLayout mail = dialog.findViewById(R.id.email);
+        final Button simpan = dialog.findViewById(R.id.btnKirimPassword);
+        ImageButton close = dialog.findViewById(R.id.btnClose);
+
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+//        TextWatcher textWatcher = new TextWatcher() {
 //            @Override
-//            public void onClick(View v) {
-//                dialog.dismiss();
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
 //            }
-//        });
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                if(mail.getEditText().getText().hashCode()==s.hashCode()){
+//                    Matcher mEmailPerusahaan = Regex.emailPattern.matcher(mail.getEditText().getText());
+//                    if (!mEmailPerusahaan.find()){
+//                        simpan.setEnabled(false);
+//                        mail.setErrorEnabled(true);
+//                        mail.setError("Harap masukkan email yang valid");
+//                    }
+//                    else{
+//                        mail.setErrorEnabled(false);
+//                    }
+//                }
+//            }
+//        };
+
+//        mail.getEditText().addTextChangedListener(textWatcher);
 
         simpan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkEmailterdaftar(email.getText().toString());
-                dialog.dismiss();
+                if(SystemClock.elapsedRealtime()-lastClickTime<1000){
+                    return;
+                }
+                else {
+                    checkEmailterdaftar(email.getText().toString(), mail);
+                }
+                lastClickTime=SystemClock.elapsedRealtime();
             }
         });
         dialog.show();
     }
 
-    private void checkEmailterdaftar(final String email){
+    private void checkEmailterdaftar(final String email, final TextInputLayout mail){
         loadingDialog.showDialog();
         String query = "select count (email) as check_email from gcm_master_user gmu where email like '"+email+"'";
         try {
@@ -517,10 +563,12 @@ public class LoginActivity extends AppCompatActivity {
                             JsonArray jsonArray = response.body().getAsJsonObject().get("data").getAsJsonArray();
                             int emailcheck = jsonArray.get(0).getAsJsonObject().get("check_email").getAsInt();
                             if (emailcheck==0){
-                                Toast.makeText(getApplicationContext(), "Email tidak terdaftar", Toast.LENGTH_LONG).show();
                                 loadingDialog.hideDialog();
+                                mail.setErrorEnabled(true);
+                                mail.setError("Email tidak terdaftar");
                             }else{
-                                Toast.makeText(getApplicationContext(), "Email sukses", Toast.LENGTH_LONG).show();
+                                //Toast.makeText(getApplicationContext(), "Email sukses", Toast.LENGTH_LONG).show();
+                                mail.setErrorEnabled(false);
                                 getDataAkun(email);
                             }
                         }else {
@@ -557,7 +605,16 @@ public class LoginActivity extends AppCompatActivity {
                             JsonArray jsonArray = response.body().getAsJsonObject().get("data").getAsJsonArray();
                             String username = jsonArray.get(0).getAsJsonObject().get("username").getAsString();
                             String password = jsonArray.get(0).getAsJsonObject().get("password").getAsString();
-                            sendDataAkun(email, password, username);
+
+                            // CODE INI UNTUK TEST TANPA PERLU KIRIM KODE KE EMAIL
+                            loadingDialog.hideDialog();
+                            Intent i = new Intent(getApplicationContext(), KodeResetPassActivity.class);
+                            i.putExtra("email", email);
+                            i.putExtra("username", username);
+                            startActivity(i);
+                            finish();
+
+//                            sendDataAkun(email, password, username);
                         }else{
                             loadingDialog.hideDialog();
                         }
@@ -576,31 +633,42 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    private void sendDataAkun(String email, String password, String username){
+    private void sendDataAkun(final String email, String password, final String username){
         try {
-            HashMap<String, String> requestBody = new HashMap<>();
-            requestBody.put("password", password);
-            requestBody.put("email_receiver", email);
-            requestBody.put("username", username);
+            final String kode = String.valueOf(Helper.sendGenerateForgetPass(6));
 
-            Log.d("ido", "sendDataAkun: "+String.valueOf(requestBody));
-
-            Call<ModelDataAkun> call = mApi.sendDataAkun(requestBody);
-            call.enqueue(new Callback<ModelDataAkun>() {
+            Call<JsonObject> callSendDataAkun = RetrofitClient
+                    .getInstanceGLOB()
+                    .getApi()
+                    .reqsenddataakun(new JSONRequest(email, kode, username));
+            callSendDataAkun.enqueue(new Callback<JsonObject>() {
                 @Override
-                public void onResponse(Call<ModelDataAkun> call, Response<ModelDataAkun> response) {
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                     if (response.isSuccessful()){
-                        loadingDialog.hideDialog();
-                        Toast.makeText(getApplicationContext(), "Sukses mengirim data akun", Toast.LENGTH_LONG).show();
+                        String status_insert = response.body().getAsJsonObject().get("status_insert").getAsString();
+                        String status_kirim = response.body().getAsJsonObject().get("status_kirim").getAsString();
+                        if (status_insert.equals("success") && status_kirim.equals("success")){
+                            loadingDialog.hideDialog();
+                            Intent i = new Intent(getApplicationContext(), KodeResetPassActivity.class);
+                            i.putExtra("kode",kode);
+                            i.putExtra("email", email);
+                            i.putExtra("username", username);
+                            Log.d("ido", "onResponse: "+kode);
+                            startActivity(i);
+                            finish();
+                        }else{
+                            Toast.makeText(getApplicationContext(), "Gagal mengirim email", Toast.LENGTH_LONG).show();
+                            loadingDialog.hideDialog();
+                        }
                     }else{
-                        Log.d("ido", "gagal kirim data akun");
+                        Toast.makeText(getApplicationContext(), "not successfull", Toast.LENGTH_LONG).show();
                         loadingDialog.hideDialog();
                     }
                 }
 
                 @Override
-                public void onFailure(Call<ModelDataAkun> call, Throwable t) {
-                    Toast.makeText(getApplicationContext(), "send Email sukses", Toast.LENGTH_LONG).show();
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+                    Toast.makeText(getApplicationContext(), "Koneksi GAGAL", Toast.LENGTH_LONG).show();
                     loadingDialog.hideDialog();
                 }
             });
@@ -608,4 +676,32 @@ public class LoginActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
+//    private void dialogAlert(){
+//        final Dialog dialog = new Dialog(LoginActivity.this);
+//        dialog.setContentView(R.layout.alert_dialog);
+//        Window window = dialog.getWindow();
+//        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//        dialog.show();
+//
+//// Hide after some seconds
+//        final Handler handler  = new Handler();
+//        final Runnable runnable = new Runnable() {
+//            @Override
+//            public void run() {
+//                if (dialog.isShowing()) {
+//                    dialog.dismiss();
+//                }
+//            }
+//        };
+//
+//        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//            @Override
+//            public void onDismiss(DialogInterface dialog) {
+//                handler.removeCallbacks(runnable);
+//            }
+//        });
+//
+//        handler.postDelayed(runnable, 4000);
+//    }
 }

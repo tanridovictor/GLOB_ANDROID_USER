@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.enseval.gcmuser.API.JSONRequest;
+import com.enseval.gcmuser.API.JSONRequestTransaksi;
 import com.enseval.gcmuser.API.QueryEncryption;
 import com.enseval.gcmuser.API.RetrofitClient;
 import com.enseval.gcmuser.Adapter.CheckoutCompanyAdapter;
@@ -46,9 +47,14 @@ import com.enseval.gcmuser.Model.Payment;
 import com.enseval.gcmuser.Utilities.Currency;
 import com.enseval.gcmuser.R;
 import com.enseval.gcmuser.SharedPrefManager;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import org.json.JSONObject;
+
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 
 import retrofit2.Call;
@@ -58,6 +64,7 @@ import retrofit2.Response;
 import static android.view.View.GONE;
 
 public class CheckoutActivity extends AppCompatActivity {
+    private ArrayList<String> listReturnIdTransaction;
     private ArrayList<Payment> listPayment;
     private ArrayList<Alamat> listAlamat;
     private ArrayList<Alamat> listAlamatBillto;
@@ -91,6 +98,8 @@ public class CheckoutActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_checkout);
+
+        mSocket.connect();
 
         failed = findViewById(R.id.failed);
         refresh = findViewById(R.id.refresh);
@@ -197,7 +206,7 @@ public class CheckoutActivity extends AppCompatActivity {
         });
     }
 
-    /**Method untuk insert order ke master transaksi dan detil transaksi*/
+    //Function untuk insert order ke tabel master transaksi dan tabel detail transaksi
     private void orderRequest(){
         ArrayList<String> listIdTransaksi = new ArrayList<>();
         int shipto = 0, billto = 0, payment = 0;
@@ -231,7 +240,6 @@ public class CheckoutActivity extends AppCompatActivity {
                     ongkir = listongkir.get(j).getOngkir() * getBerat(listCheckoutCompany.get(i).getListCart());
                 }
             }
-            Log.d(TAG, "orderRequest: "+i+" = "+shipto+", "+billto+", "+payment+", "+tgl_pengiriman+", "+ongkir);
             ArrayList<Cart> listCheckout = listCheckoutCompany.get(i).getListCart();
             String getIdTransaksi = "(select concat('GLOB','/M/', TO_CHAR((select id from gcm_company_listing gcl " +
                     "where buyer_id = "+ SharedPrefManager.getInstance(getApplicationContext()).getUser().getCompanyId() +" and status = 'A' and seller_id = "+listCheckoutCompany.get(i).getId()+"),'fm00000'), '/', TO_CHAR(NOW() :: DATE, 'yymm'), TO_CHAR(get_count+1,'fm0000'))" +
@@ -249,7 +257,6 @@ public class CheckoutActivity extends AppCompatActivity {
                     ", "+getSales+","+ongkir+", '"+tgl_pengiriman+"', "+getppn(listCheckoutCompany.get(i).getListCart())+"" +
                     ", "+ongkirSatuan+")";
             listIdTransaksi.add(getIdTransaksi);
-            Log.d(TAG, "orderRequest: "+getIdTransaksi);
             if(i < listCheckoutCompany.size()-1){
                 loop = loop.concat(",");
             }
@@ -261,15 +268,10 @@ public class CheckoutActivity extends AppCompatActivity {
         int count1 = 0;
         String loopQuery = "";
         for(int i=0; i<listCheckoutCompany.size(); i++){
-            Log.d(TAG, "perulangan company ke : "+i);
             ArrayList<Cart> listCheckout = listCheckoutCompany.get(i).getListCart();
-            Log.d(TAG, "jumlah barang: "+listCheckout.size());
             for(int j=0; j<listCheckout.size(); j++){
-                Log.d(TAG, "perulangan barang ke : "+j);
                 long harga = (long) Math.ceil(listCheckout.get(j).getBarang().getKursIdr()*listCheckout.get(j).getBarang().getHarga())*listCheckout.get(j).getQty()*Integer.parseInt(listCheckout.get(j).getBerat());
-                Log.d(TAG, "orderRequest: "+harga);
                 if(listCheckout.get(j).getNegoCount() > 0 && listCheckout.get(j).getHarga_final() != 0 && listCheckout.get(j).getHistory_nego_id()!=0){
-                    Log.d(TAG, "masuk if pertama");
                     loopQuery = loopQuery + "(" +listIdTransaksi.get(i)+", "+listCheckout.get(j).getBarang().getId()+", "+listCheckout.get(j).getQty()+", "+
                             (listCheckout.get(j).getHarga_final()*listCheckout.get(j).getQty()*Integer.parseInt(listCheckout.get(j).getBerat()))+", "+
                             SharedPrefManager.getInstance(getApplicationContext()).getUser().getUserId()+", now(), "+
@@ -279,7 +281,6 @@ public class CheckoutActivity extends AppCompatActivity {
                             listCheckout.get(j).getHarga_final()+", '" +
                             listNote.get(j).getNote()+"' )";
                 }else if(listCheckout.get(j).getNegoCount() == 0 || (listCheckout.get(j).getNegoCount()>0 && listCheckout.get(j).getHarga_final()==0)){
-                    Log.d(TAG, "masuk if kedua");
                     loopQuery = loopQuery + "(" +listIdTransaksi.get(i)+", "+listCheckout.get(j).getBarang().getId()+", "+listCheckout.get(j).getQty()+", "+
                             (Math.ceil(listCheckout.get(j).getBarang().getKursIdr()*listCheckout.get(j).getBarang().getHarga())*listCheckout.get(j).getQty()*Integer.parseInt(listCheckout.get(j).getBerat()))+", "+
                             SharedPrefManager.getInstance(getApplicationContext()).getUser().getUserId()+", now(), "+
@@ -289,18 +290,15 @@ public class CheckoutActivity extends AppCompatActivity {
                             Math.ceil(listCheckout.get(j).getBarang().getKursIdr()*listCheckout.get(j).getBarang().getHarga())+", '" +
                             listNote.get(j).getNote()+"' )";
                 }
-                Log.d(TAG, "kondisi: "+count1+"<"+listCheckout.size()+"-1");
                 if(count1 < listCheckout.size()-1){
                     loopQuery = loopQuery.concat(",");
                 }
-                Log.d(TAG, "query barang ke: "+j+", "+loopQuery);
                 count1++;
             }
             if (count < listCheckoutCompany.size()-1){
                 loopQuery = loopQuery.concat(",");
             }
             count++;
-            Log.d(TAG, "query perusahaan ke: "+i);
         }
         String queryDetail = queryDetilTransaksi.concat(loopQuery);
         if(queryDetail.charAt(queryDetail.length()-1)== ','){
@@ -329,6 +327,12 @@ public class CheckoutActivity extends AppCompatActivity {
                     if(response.isSuccessful()){
                         String status = response.body().getAsJsonObject().get("status").getAsString();
                         if(status.equals("success")){
+                            listReturnIdTransaction = new ArrayList<>();
+                            JsonArray jsonArray = response.body().getAsJsonObject().get("data").getAsJsonArray();
+                            for (int i=0; i<jsonArray.size(); i++){
+                                String idTransaction = jsonArray.get(i).getAsJsonObject().get("transaction_id").getAsString();
+                                listReturnIdTransaction.add(idTransaction);
+                            }
                             loadingDialog.hideDialog();
                             title.setText("Transaksi Berhasil");
                             description.setText("Transaksi anda telah kami terima, Terima Kasih sudah berbelanja");
@@ -339,6 +343,8 @@ public class CheckoutActivity extends AppCompatActivity {
                                     if(SystemClock.elapsedRealtime()-lastClickTime<1000){
                                         return;
                                     }else{
+//                                        socket io
+                                        attemptSend(listReturnIdTransaction);
                                         dialog.dismiss();
                                         Intent intent = new Intent(CheckoutActivity.this, MainActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -407,10 +413,12 @@ public class CheckoutActivity extends AppCompatActivity {
         }
     }
 
+    //Function untuk mendapatkan data ongkos kirim
     private void requestOngkir(){
         String ongkir = "select distinct a.company_id, d.nama_perusahaan, a.shipto_id, b.kota, case when c.harga is null then 0 else c.harga end as ongkir " +
                 "from (select distinct a.shipto_id, b.company_id from gcm_master_cart a inner join gcm_list_barang b on a.barang_id = b.id  where a.company_id = "+SharedPrefManager.getInstance(getApplicationContext()).getUser().getCompanyId()+" and a.status = 'A') as a inner join gcm_master_alamat b on  a.shipto_id = b.id " +
                 "left join gcm_ongkos_kirim c on c.tujuan_kota = b.kota and a.company_id = c.id_company inner join gcm_master_company d on d.id = a.company_id";
+        Log.d(TAG, "requestOngkir: "+ongkir);
         try {
             Call<JsonObject> callOngkir = RetrofitClient
                     .getInstance()
@@ -435,7 +443,6 @@ public class CheckoutActivity extends AppCompatActivity {
                                 Barang barang = new Barang(company_id, nama_perusahaan);
                                 listongkir.add(new Cart(company_id, nama_perusahaan, shipto_id, kota, ongkir));
                             }
-                            Log.d(TAG, "ListCheckoutCompany : "+listCheckoutCompany.size()+", ListOngkir : "+listongkir.size()+", ListAlamat : "+listAlamat.size()+", ListPayment : "+listPayment.size()+", ListAlamatBillto : "+listAlamatBillto.size()+", ListLibur : "+listLibur.size());
 
                             rvCheckoutCompany.setLayoutManager(new LinearLayoutManager(CheckoutActivity.this));
                             rvCheckoutCompany.setItemAnimator(new DefaultItemAnimator());
@@ -454,15 +461,11 @@ public class CheckoutActivity extends AppCompatActivity {
                                     }else {
                                         harga = (long) (harga + listCheckoutCompany.get(i).getListCart().get(j).getBarang().getKursIdr() * listCheckoutCompany.get(i).getListCart().get(j).getBarang().getHarga() * Integer.parseInt(listCheckoutCompany.get(i).getListCart().get(j).getBerat()) * listCheckoutCompany.get(i).getListCart().get(j).getQty());
                                     }
-                                    Log.d(TAG, "oncreate: "+listCheckoutCompany.get(i).getListCart().get(j).getBarang().getKursIdr()+"*"+listCheckoutCompany.get(i).getListCart().get(j).getBarang().getHarga()+"*"+listCheckoutCompany.get(i).getListCart().get(j).getQty()+"*"+Integer.parseInt(listCheckoutCompany.get(i).getListCart().get(j).getBerat()));
                                 }
                                 ongkir = (long) (ongkir + ((listongkir.get(i).getOngkir()*berat)));
                                 float ppn = (getppn(listCheckoutCompany.get(i).getListCart())/100);
                                 hargappn = (long) (hargappn + harga * ppn);
-                                Log.d(TAG, "onCreate: "+harga+", "+ppn);
                             }
-
-                            Log.d(TAG, "totalTagihan: "+total+", "+hargappn+", "+ongkir);
                             long TotalTagihan = (long) (total+hargappn+ongkir);
                             tvTotalTagihan.setText(Currency.getCurrencyFormat().format(TotalTagihan));
                             loadingDialog.hideDialog();
@@ -483,6 +486,7 @@ public class CheckoutActivity extends AppCompatActivity {
         }
     }
 
+    //Function untuk mendapatkan list metode pembayaran
     private void getPayment(){
         String get_payment = "select distinct a.payment_id, d.nama_perusahaan, gmp.payment_name from "+
                 "gcm_seller_payment_listing gspl, gcm_payment_listing gpl, gcm_master_payment gmp, gcm_master_cart a "+
@@ -527,6 +531,7 @@ public class CheckoutActivity extends AppCompatActivity {
         }
     }
 
+    //Function untuk mendapatkan alamat shipto
     private void getShipto(){
         final String get_shipto = "select distinct a.id, i.nama_perusahaan , alamat, b.name as provinsi, c.nama as kota, d.nama as kecamatan, e.nama as kelurahan, kodepos, to_char(f.tgl_permintaan_kirim, 'dd-MON-YYYY') tgl_permintaan_kirim from gcm_master_alamat a inner join gcm_location_province b on a.provinsi = b.id " +
                 "inner join gcm_master_city c on a.kota = c.id inner join gcm_master_kecamatan d on a.kecamatan = d.id inner join gcm_master_kelurahan e on a.kelurahan = e.id inner join gcm_master_cart f on a.id = f.shipto_id inner join gcm_list_barang g on f.barang_id = g.id inner join " +
@@ -588,6 +593,7 @@ public class CheckoutActivity extends AppCompatActivity {
         }
     }
 
+    //Function untuk mendapatkan alamat billto
     private void getBillto(){
         final String get_billto = "select distinct a.id, i.nama_perusahaan , alamat, b.name as provinsi, c.nama as kota, d.nama as kecamatan, e.nama as kelurahan, kodepos, to_char(f.tgl_permintaan_kirim, 'dd-MON-YYYY') tgl_permintaan_kirim from gcm_master_alamat a inner join gcm_location_province b on a.provinsi = b.id " +
                 "inner join gcm_master_city c on a.kota = c.id inner join gcm_master_kecamatan d on a.kecamatan = d.id inner join gcm_master_kelurahan e on a.kelurahan = e.id inner join gcm_master_cart f on a.id = f.billto_id inner join gcm_list_barang g on f.barang_id = g.id inner join " +
@@ -649,6 +655,7 @@ public class CheckoutActivity extends AppCompatActivity {
         }
     }
 
+    //Function untuk mendapatkan data kalender libur
     private void getKalenderLibur(){
         String get_kalender = "SELECT * FROM gcm_kalender_libur where tanggal >= now() - interval '1day' order by tanggal asc";
         try{
@@ -688,6 +695,7 @@ public class CheckoutActivity extends AppCompatActivity {
         }
     }
 
+    //Function untuk mendapatkan data notes dari tabel master cart
     private void getNote(){
         String query = "select id, case when note is null then '' else note end from gcm_master_cart where company_id= "+SharedPrefManager.getInstance(getApplicationContext()).getUser().getCompanyId()+" and status = 'A' order by create_date asc;";
         try {
@@ -726,6 +734,7 @@ public class CheckoutActivity extends AppCompatActivity {
         }
     }
 
+    //Untuk mendapatkan ppn tiap barang
     private float getppn(ArrayList<Cart> listcart){
         float ppn = 0;
         for(Cart cart : listcart){
@@ -734,6 +743,7 @@ public class CheckoutActivity extends AppCompatActivity {
         return ppn;
     }
 
+    //Untuk mendapatkan kurs tiap barang
     private float getkurs(ArrayList<Cart> listcart){
         float kurs = 0;
         for(Cart cart : listcart){
@@ -742,16 +752,17 @@ public class CheckoutActivity extends AppCompatActivity {
         return kurs;
     }
 
+    //Untuk mendapatkan berat tiap barang
     private int getBerat(ArrayList<Cart> listCart){
         int berat = 0;
         long ongkir = 0;
         for(Cart cart : listCart){
             berat += cart.getQty()*Integer.parseInt(cart.getBerat());
-            Log.d(TAG, "getBerat: "+berat);
         }
         return berat;
     }
 
+    //Function untuk check apakah alamat sudah dilakukan mapping oleh seller. jika belum maka transaksi tidak bisa diselesaikan.
     private void checkAlamat(){
         String query = "select * from ( select string_agg(distinct ''||c.nama_perusahaan||''  , ', ') as nama_perusahaan_shipto from " +
                 "(select distinct a.shipto_id, a.company_id, b.company_id as seller_id from gcm_master_cart a " +
@@ -885,5 +896,91 @@ public class CheckoutActivity extends AppCompatActivity {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    private Socket mSocket;
+    {
+        try {
+            mSocket = IO.socket("http://transaction-socket.herokuapp.com");
+        } catch (URISyntaxException e) {}
+    }
+
+    //Function untuk mendapatkan id sales untuk data kirim notifikasi transaksi.
+    private void attemptSend(final ArrayList<String> idTransaksi) {
+        String query = "select string_agg(''||id_sales||'' , ',') as id_sales from gcm_company_listing_sales " +
+                "where buyer_id = "+SharedPrefManager.getInstance(getApplicationContext()).getUser().getCompanyId()+" " +
+                "and status = 'A' ";
+        Log.d(TAG, "attemptSend: "+query);
+        try {
+            Call<JsonObject> callIdSales = RetrofitClient
+                    .getInstance()
+                    .getApi()
+                    .request(new JSONRequest(QueryEncryption.Encrypt(query)));
+            callIdSales.enqueue(new Callback<JsonObject>() {
+                @Override
+                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                    if (response.isSuccessful()){
+                        String status = response.body().getAsJsonObject().get("status").getAsString();
+                        if (status.equals("success")){
+                            JsonArray jsonArray = response.body().getAsJsonObject().get("data").getAsJsonArray();
+                            String idSales = jsonArray.get(0).getAsJsonObject().get("id_sales").getAsString();
+
+//                            JSONObject test = new JSONObject();
+//                            int idCompanySeller = listCheckoutCompany.get(0).getId();
+
+                            String idCompanySeller="";
+                            String IdTrx = "";
+                            int count = 0;
+                            for(int i=0; i<listCheckoutCompany.size(); i++){
+                                idCompanySeller = idCompanySeller + listCheckoutCompany.get(i).getId();
+                                IdTrx = IdTrx+ listCheckoutCompany.get(i).getId()+"-"+idTransaksi.get(i).toString();
+                                if (count < listCheckoutCompany.size()-1){
+                                    idCompanySeller = idCompanySeller.concat(",");
+                                    IdTrx = IdTrx.concat(",");
+                                }
+                                count++;
+                            }
+//                            try {
+//                                test.put("receiver_id", ""+idCompanySeller+"-"+idSales+"");
+//                                test.put("type", "buy");
+//                            }catch (Exception e){
+//                                e.printStackTrace();
+//                            }
+//                            mSocket.emit("new_transaction", test);
+
+                            sendNotifTrx(idSales, idCompanySeller, IdTrx);
+                        }
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<JsonObject> call, Throwable t) {
+
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    //Function untuk hit API kirim notifikasi transaksi ke seller.
+    private void sendNotifTrx(final String id_sales, final String company_id_seller, final String IdTransaksi){
+        final Call<JsonObject> sendNotifTrx = RetrofitClient
+                .getInstanceGLOB()
+                .getApi()
+                .sendNotifTrx(new JSONRequestTransaksi(String.valueOf(id_sales), String.valueOf(company_id_seller), IdTransaksi));
+        sendNotifTrx.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful()){
+                    Log.d(TAG, "Kirim Notifikasi Transaksi: Sukses");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+            }
+        });
     }
 }

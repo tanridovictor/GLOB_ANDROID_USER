@@ -1,16 +1,20 @@
 package com.enseval.gcmuser.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetDialogFragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.enseval.gcmuser.Activity.DetailOrderActivity;
 import com.enseval.gcmuser.Fragment.LoadingDialog;
 import com.enseval.gcmuser.Fragment.OrderBottomSheetDialogFragment;
 import com.enseval.gcmuser.Utilities.Currency;
@@ -27,8 +31,8 @@ public class OngoingOrderAdapter extends RecyclerView.Adapter<OngoingOrderAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvID, tvStatus, tvTotal, tvDate, btnDetail;
-//        private CardView btnTerima;
+        private TextView tvID, tvStatus, tvTotal, tvDate, tvDate2;
+        private CardView btnDetail;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -36,6 +40,7 @@ public class OngoingOrderAdapter extends RecyclerView.Adapter<OngoingOrderAdapte
             tvStatus = itemView.findViewById(R.id.tvStatus);
             tvTotal = itemView.findViewById(R.id.tvTotal);
             tvDate = itemView.findViewById(R.id.tvDate);
+            tvDate2 = itemView.findViewById(R.id.tvDate2);
             btnDetail = itemView.findViewById(R.id.btnDetail);
 //            btnTerima = itemView.findViewById(R.id.btnTerima);
         }
@@ -57,7 +62,8 @@ public class OngoingOrderAdapter extends RecyclerView.Adapter<OngoingOrderAdapte
     @Override
     public void onBindViewHolder(@NonNull final OngoingOrderAdapter.ViewHolder holder, final int position) {
         holder.tvID.setText(orderList.get(position).getTransactionId());
-        holder.tvDate.setText(orderList.get(position).getUpdateDate());
+        holder.tvDate.setText(orderList.get(position).getCreateDate());
+        holder.tvDate2.setText(orderList.get(position).getUpdateDate());
         holder.tvTotal.setText(Currency.getCurrencyFormat().format(orderList.get(position).getHarga_final()+orderList.get(position).getOngkir()+(orderList.get(position).getHarga_final()*orderList.get(position).getPpn_seller()/100)));
         holder.tvStatus.setText("Sedang dalam proses");
 
@@ -65,15 +71,25 @@ public class OngoingOrderAdapter extends RecyclerView.Adapter<OngoingOrderAdapte
         holder.btnDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString("status", "diproses");
-                bundle.putString("transactionId", orderList.get(position).getTransactionId());
-                bundle.putLong("total", orderList.get(position).getHarga_final());
-                bundle.putDouble("ongkir", orderList.get(position).getOngkir());
-                bundle.putFloat("ppn", orderList.get(position).getPpn_seller());
-                BottomSheetDialogFragment bottomSheetDialogFragment = new OrderBottomSheetDialogFragment();
-                bottomSheetDialogFragment.setArguments(bundle);
-                bottomSheetDialogFragment.show(((FragmentActivity)_context).getSupportFragmentManager(), "tes");
+                Log.d("ido", "onClick: "+orderList.get(position).getTransactionId()+" "+orderList.get(position).getHarga_final()+" "+orderList.get(position).getOngkir()+" "+orderList.get(position).getPpn_seller());
+
+                Intent i = new Intent(_context, DetailOrderActivity.class);
+                i.putExtra("status", "diproses");
+                i.putExtra("transactionId", orderList.get(position).getTransactionId());
+                i.putExtra("total",  orderList.get(position).getHarga_final());
+                i.putExtra("ongkir", orderList.get(position).getOngkir());
+                i.putExtra("ppn", orderList.get(position).getPpn_seller());
+                _context.startActivity(i);
+
+//                Bundle bundle = new Bundle();
+//                bundle.putString("status", "diproses");
+//                bundle.putString("transactionId", orderList.get(position).getTransactionId());
+//                bundle.putLong("total", orderList.get(position).getHarga_final());
+//                bundle.putDouble("ongkir", orderList.get(position).getOngkir());
+//                bundle.putFloat("ppn", orderList.get(position).getPpn_seller());
+//                BottomSheetDialogFragment bottomSheetDialogFragment = new OrderBottomSheetDialogFragment();
+//                bottomSheetDialogFragment.setArguments(bundle);
+//                bottomSheetDialogFragment.show(((FragmentActivity)_context).getSupportFragmentManager(), "tes");
             }
         });
 

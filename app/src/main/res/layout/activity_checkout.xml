@@ -364,12 +364,16 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:fontFamily="@font/karla"
+                    android:textSize="16sp"
                     android:text="Total Tagihan"/>
                 <TextView
                     android:id="@+id/tvTotalTagihan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:fontFamily="@font/karla"
+                    android:textSize="16sp"
                     android:gravity="right"
                     android:text="0"/>
 

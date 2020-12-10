@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                app:cardBackgroundColor="@color/colorPrimary">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="16dp">
+                    <TextView
+                        android:id="@+id/tvJudul"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="PO Pembeli"
+                        android:textColor="@color/white"
+                        android:fontFamily="@font/karla"
+                        android:textSize="18dp"
+                        android:layout_weight="1"/>
+                    <ImageButton
+                        android:id="@+id/btnClose"
+                        android:layout_width="30dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/outline_close_24"
+                        android:tint="@color/white"
+                        android:background="@color/fui_transparent"
+                        android:layout_gravity="center"/>
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginHorizontal="32dp"
+                android:text="Nomor PO"
+                android:fontFamily="@font/karla"
+                android:textSize="16sp"/>
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                style="@style/PembayaranTextInputLayoutStyle"
+                android:layout_marginHorizontal="32dp">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/nomorPO"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/textColor"
+                    android:inputType="text"
+                    android:fontFamily="@font/karla"/>
+
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginHorizontal="32dp"
+                android:text="File PO"
+                android:fontFamily="@font/karla"
+                android:textSize="16sp"/>
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginHorizontal="32dp"
+                android:layout_marginVertical="8dp"
+                android:id="@+id/gambarUploadPO"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="32dp"
+                android:layout_marginBottom="8dp"
+                android:id="@+id/txtFilePath"
+                android:fontFamily="@font/karla"/>
+
+            <Button
+                android:id="@+id/btnUploadPO"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_marginHorizontal="32dp"
+                android:text="Choose file"
+                style="@style/btn_style"
+                android:fontFamily="@font/karla"/>
+
+            <Button
+                android:id="@+id/btnKonfirmasi"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="32dp"
+                android:layout_marginVertical="16dp"
+                android:text="Konfirmasi"
+                android:textSize="16sp"
+                style="@style/btn_style"
+                android:fontFamily="@font/karla"/>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

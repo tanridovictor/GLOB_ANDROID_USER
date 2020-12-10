@@ -120,7 +120,7 @@
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="8dp"
         android:gravity="right"
-        android:text="Lupa Akun ?"
+        android:text="Lupa Password?"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"

@@ -26,6 +26,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.enseval.gcmuser.Activity.DetailOrderActivity;
 import com.enseval.gcmuser.Fragment.OrderBottomSheetDialogFragment;
 import com.enseval.gcmuser.Utilities.Currency;
 import com.enseval.gcmuser.Model.Order;
@@ -42,17 +43,18 @@ public class FinishedOrderAdapter extends RecyclerView.Adapter<FinishedOrderAdap
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvID, tvStatus, tvTotal, tvDate, btnDetail, tvStatusPembayaran;
-        private CardView btnPembayaran;
+        private TextView tvID, tvStatus, tvTotal, tvDate, tvDate2;
+        private CardView btnDetail;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvID = itemView.findViewById(R.id.tvID);
             tvStatus = itemView.findViewById(R.id.tvStatus);
             tvTotal = itemView.findViewById(R.id.tvTotal);
             tvDate = itemView.findViewById(R.id.tvDate);
+            tvDate2 = itemView.findViewById(R.id.tvDate2);
             btnDetail = itemView.findViewById(R.id.btnDetail);
-            tvStatusPembayaran = itemView.findViewById(R.id.tvStatusPembayaran);
-            btnPembayaran = itemView.findViewById(R.id.btnPembayaran);
+//            tvStatusPembayaran = itemView.findViewById(R.id.tvStatusPembayaran);
+//            btnPembayaran = itemView.findViewById(R.id.btnPembayaran);
         }
     }
 
@@ -71,10 +73,11 @@ public class FinishedOrderAdapter extends RecyclerView.Adapter<FinishedOrderAdap
 
     @Override
     public void onBindViewHolder(@NonNull final FinishedOrderAdapter.ViewHolder holder, final int position) {
-        holder.tvStatusPembayaran.setVisibility(View.GONE);
-        holder.btnPembayaran.setVisibility(View.GONE);
+//        holder.tvStatusPembayaran.setVisibility(View.GONE);
+//        holder.btnPembayaran.setVisibility(View.GONE);
         holder.tvID.setText(String.format(orderList.get(position).getTransactionId()));
-        holder.tvDate.setText(orderList.get(position).getUpdateDate());
+        holder.tvDate.setText(orderList.get(position).getCreateDate());
+        holder.tvDate2.setText(orderList.get(position).getUpdateDate());
         holder.tvTotal.setText(Currency.getCurrencyFormat().format(orderList.get(position).getHarga_final()+orderList.get(position).getOngkir()+orderList.get(position).getHarga_final()*(orderList.get(position).getPpn_seller()/100)));
         holder.tvStatus.setText("Selesai");
 
@@ -91,15 +94,23 @@ public class FinishedOrderAdapter extends RecyclerView.Adapter<FinishedOrderAdap
         holder.btnDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString("status", "selesai");
-                bundle.putString("transactionId", orderList.get(position).getTransactionId());
-                bundle.putLong("total", orderList.get(position).getHarga_final());
-                bundle.putDouble("ongkir", orderList.get(position).getOngkir());
-                bundle.putFloat("ppn", orderList.get(position).getPpn_seller());
-                BottomSheetDialogFragment bottomSheetDialogFragment = new OrderBottomSheetDialogFragment();
-                bottomSheetDialogFragment.setArguments(bundle);
-                bottomSheetDialogFragment.show(((FragmentActivity)_context).getSupportFragmentManager(), "tes");
+                Intent i = new Intent(_context, DetailOrderActivity.class);
+                i.putExtra("status", "selesai");
+                i.putExtra("transactionId", orderList.get(position).getTransactionId());
+                i.putExtra("total", orderList.get(position).getHarga_final());
+                i.putExtra("ongkir", orderList.get(position).getOngkir());
+                i.putExtra("ppn", orderList.get(position).getPpn_seller());
+                _context.startActivity(i);
+
+//                Bundle bundle = new Bundle();
+//                bundle.putString("status", "selesai");
+//                bundle.putString("transactionId", orderList.get(position).getTransactionId());
+//                bundle.putLong("total", orderList.get(position).getHarga_final());
+//                bundle.putDouble("ongkir", orderList.get(position).getOngkir());
+//                bundle.putFloat("ppn", orderList.get(position).getPpn_seller());
+//                BottomSheetDialogFragment bottomSheetDialogFragment = new OrderBottomSheetDialogFragment();
+//                bottomSheetDialogFragment.setArguments(bundle);
+//                bottomSheetDialogFragment.show(((FragmentActivity)_context).getSupportFragmentManager(), "tes");
             }
         });
 

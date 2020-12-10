@@ -1,12 +1,17 @@
 package com.enseval.gcmuser.OTP;
 
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.SystemClock;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -19,10 +24,14 @@ import android.widget.Toast;
 import com.enseval.gcmuser.API.JSONRequest;
 import com.enseval.gcmuser.API.QueryEncryption;
 import com.enseval.gcmuser.API.RetrofitClient;
+import com.enseval.gcmuser.Activity.LoginActivity;
 import com.enseval.gcmuser.Fragment.LoadingDialog;
 import com.enseval.gcmuser.R;
+import com.enseval.gcmuser.Utilities.OnBackPressedListener;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,78 +39,65 @@ import retrofit2.Response;
 
 public class SendOTPActivity extends AppCompatActivity {
 
-    private TextInputLayout phoneNumber;
-    private Spinner typeSendOTP;
-    private Button btnSendOTP;
-    private String viaOTP, temp_username;
-    private String username, password, PhoneNumber;
-    private int id;
     private long lastClickTime = 0;
-    private boolean isValidNumber = false;
+    private TextView deskripsiNomorTelp;
+    private CardView sms, whatsapp;
+    private int id;
+    private String username, password, PhoneNumber, statusKirim, email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_otp);
 
-        phoneNumber = findViewById(R.id.nomorHandphone);
-        typeSendOTP = findViewById(R.id.spinnViaOTP);
-        btnSendOTP = findViewById(R.id.btnSendOTP);
-
+        id = getIntent().getIntExtra("id", 0);
         username = getIntent().getStringExtra("username");
         password = getIntent().getStringExtra("password");
-        id = getIntent().getIntExtra("id", 0);
+        email = getIntent().getStringExtra("email");
+
+        deskripsiNomorTelp = findViewById(R.id.txtDeskripsi);
+        sms = findViewById(R.id.cvSMS);
+        whatsapp = findViewById(R.id.cvWA);
 
         getNumberPhone();
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.otp_via, R.layout.spinner_item);
-        adapter.setDropDownViewResource(R.layout.spinner_item);
-        typeSendOTP.setAdapter(adapter);
-        typeSendOTP.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        sms.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                viaOTP = typeSendOTP.getSelectedItem().toString();
-                Log.d("cekitViaOTP", viaOTP);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-                typeSendOTP.setPrompt(getResources().getString(R.string.prompt_otp_via));
+            public void onClick(View v) {
+                statusKirim = "SMS";
+                if(SystemClock.elapsedRealtime()-lastClickTime<1000){
+                    return;
+                }
+                else {
+                    sendOTP(PhoneNumber, statusKirim);
+                }
+                lastClickTime=SystemClock.elapsedRealtime();
             }
         });
 
-        btnSendOTP.setOnClickListener(new View.OnClickListener() {
+        whatsapp.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                String valuePhone = String.valueOf(phoneNumber.getEditText().getText());
-                Log.d("ido", String.valueOf(typeSendOTP.getSelectedItemId()));
-                Log.d("ido", "onClick: "+PhoneNumber);
-                if (SystemClock.elapsedRealtime() - lastClickTime < 1000) {
+            public void onClick(View v) {
+                statusKirim = "WA";
+                if(SystemClock.elapsedRealtime()-lastClickTime<1000){
                     return;
-                } else {
-                    Log.d("ido", "onClick: "+typeSendOTP.getSelectedItemId());
-                    check();
-                    if (phoneNumber.getEditText().getText().length() >= 10 && typeSendOTP.getSelectedItemId() != 0) {
-                        Log.d("ido", "onClick: "+valuePhone+" "+phoneNumber);
-                        if(valuePhone.equals(PhoneNumber)) {
-                            sendOTP(valuePhone, viaOTP);
-                        }else{
-                            Toast.makeText(getApplicationContext(), getResources().getString(R.string.attention_incorrect_number), Toast.LENGTH_LONG).show();
-                        }
-                    }
                 }
+                else {
+                    sendOTP(PhoneNumber, statusKirim);
+                }
+                lastClickTime=SystemClock.elapsedRealtime();
             }
         });
     }
 
     private void getNumberPhone(){
         try {
-            String getNumber = "select nama, no_hp from gcm_master_user where " +
+            String query = "select nama, no_hp from gcm_master_user where " +
                     "username = '"+username+"' and password = '"+ QueryEncryption.Encrypt(password) +"'";
             final Call<JsonObject> getPhoneNumber = RetrofitClient
                     .getInstance()
                     .getApi()
-                    .request(new JSONRequest(QueryEncryption.Encrypt(getNumber)));
+                    .request(new JSONRequest(QueryEncryption.Encrypt(query)));
             getPhoneNumber.enqueue(new Callback<JsonObject>() {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
@@ -111,6 +107,7 @@ public class SendOTPActivity extends AppCompatActivity {
                             JsonArray jsonArray = response.body().getAsJsonObject().get("data").getAsJsonArray();
                             PhoneNumber = jsonArray.get(0).getAsJsonObject().get("no_hp").getAsString();
                             Log.d("ido", "Phone Number: "+PhoneNumber);
+                            deskripsiNomorTelp.setText("Kode verifikasi akan dikirimkan ke nomor\n"+PhoneNumber+" melalui : ");
                         }
                     }
                 }
@@ -131,18 +128,52 @@ public class SendOTPActivity extends AppCompatActivity {
         intent.putExtra("via", valueVia);
         intent.putExtra("username", username);
         intent.putExtra("id", id);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("email", email);
         startActivity(intent);
+        finish();
     }
 
-    private void check(){
-        Log.d("ido", "check: "+phoneNumber.getEditText().getText().toString()+" "+typeSendOTP.getSelectedItemId());
-        if(phoneNumber.getEditText().getText().toString().equals("") && typeSendOTP.getSelectedItemId()==0){
-            Toast.makeText(getApplicationContext(), "Anda harus mengisi nomor HP\ndan memilih tipe pengiriman OTP", Toast.LENGTH_LONG).show();
-        }else if(phoneNumber.getEditText().getText().toString().equals("") && typeSendOTP.getSelectedItemId()!=0) {
-            Toast.makeText(getApplicationContext(), "Nomor handphone belum dimasukan", Toast.LENGTH_LONG).show();
-        }else if(!phoneNumber.getEditText().getText().toString().equals("") && typeSendOTP.getSelectedItemId()==0){
-            Toast.makeText(getApplicationContext(), "Tipe OTP belum dipilih", Toast.LENGTH_LONG).show();
+    @Override
+    public void onBackPressed() {
+        boolean isCanShowAlertDialog = false;
+        List<Fragment> fragmentList = getSupportFragmentManager().getFragments();
+        if (fragmentList != null) {
+            //TODO: Perform your logic to pass back press here
+            for (Fragment fragment : fragmentList) {
+                if (fragment instanceof OnBackPressedListener) {
+                    isCanShowAlertDialog = true;
+                    ((OnBackPressedListener) fragment).onBackPressed();
+                }
+            }
         }
+
+        if (!isCanShowAlertDialog) {
+            showExitDialogConfirmation();
+        }
+    }
+
+    void showExitDialogConfirmation() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getResources().getString(R.string.attention_leave_verfiy_otp))
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+        Button positive = alert.getButton(AlertDialog.BUTTON_POSITIVE);
+        positive.setTextColor(Color.BLACK);
+        Button negative = alert.getButton(AlertDialog.BUTTON_NEGATIVE);
+        negative.setTextColor(Color.BLACK);
     }
 }

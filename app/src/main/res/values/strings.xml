@@ -28,8 +28,8 @@
     <string name="otp_match">OTP MATCHED.</string>
     <string name="otp_unmatch">OTP UNMATCHED.</string>
     <string name="otp_phone">Phone Number</string>
-    <string name="otp_verify">Number Verification</string>
-    <string name="otp_text">Enter your mobile number</string>
+    <string name="otp_verify">Verifikasi Nomor Telepon</string>
+    <string name="otp_text">Kode verifikasi akan dikirimkan ke nomor 089516488088 melalui :</string>
     <string name="otp_msg_number">Apakah anda yakin ingin mendapatkan OTP dari nomer </string>
     <string name="otp_format_1">Yth. Pelanggan GLOB di nomor</string>
     <string name="otp_format_2">Berikut OTP anda</string>
@@ -49,8 +49,8 @@
 
     <string-array name="tipe_register">
         <item>---- Pilih Tipe Registrasi ----</item>
-        <item>Buyer</item>
-        <item>Seller</item>
+        <item>Pembeli</item>
+        <item>Penjual</item>
     </string-array>
     <string name="prompt_type_regster"> ---- Select Register Type ---- </string>
     <string-array name="otp_via">
@@ -75,4 +75,16 @@
     <string name="attention_incorrect_number"> Masukan nomor Handphone yang sama saat pendaftaran </string>
 
     <string name="maxNego">Tidak dapat melakukan nego! Nego barang hanya dapat dilakukan <b>2x/hari</b> untuk barang yang sama.</string>
+
+    <string name="pembayaran">Info pembayaran</string>
+
+    <string name="menungguPembayaran"><b>Menunggu Pembayaran</b></string>
+    <string name="menungguKonfirmasi"><b>Menunggu Verifikasi</b></string>
+    <string name="lunas"><b>Sudah Lunas</b></string>
+
+    <string name="unggahPO"><u>Unggah disini</u></string>
+
+    <string name="infoPembayaran1"> Silahkan lakukan transfer ke rekening bank berikut ini :</string>
+    <string name="infoPembayaran2"> Lakukan konfirmasi pembayaran</string>
+    <string name="infoPembayaran3"> Tunggu proses verifikasi pembayaran</string>
 </resources>

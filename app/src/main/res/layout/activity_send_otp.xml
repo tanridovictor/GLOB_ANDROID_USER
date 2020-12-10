@@ -7,103 +7,106 @@
     android:orientation="vertical"
     android:background="@color/bg"
     android:focusableInTouchMode="true"
+    android:layout_gravity="center"
+    android:gravity="center"
     tools:context=".OTP.SendOTPActivity">
 
-    <android.support.v7.widget.CardView
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center"
+        android:layout_marginBottom="60dp"
+        android:src="@drawable/smartphone"/>
+
+    <TextView
+        android:id="@+id/textViewOTP"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:layout_gravity="center"
+        android:fontFamily="@font/karla"
+        android:text="@string/otp_verify"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/txtDeskripsi"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginVertical="16dp"
-        android:layout_marginHorizontal="16dp">
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:fontFamily="@font/karla"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/grey"
+        android:gravity="center"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="60dp"
+        android:layout_marginTop="50dp">
+
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <android.support.v7.widget.CardView
+                android:id="@+id/cvSMS"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginHorizontal="8dp">
+
+                <ImageView
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/sms"/>
+
+            </android.support.v7.widget.CardView>
+
             <TextView
-                android:id="@+id/textViewOTP"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="16dp"
                 android:layout_gravity="center"
-                android:fontFamily="@font/montserrat"
-                android:text="@string/otp_verify"
-                android:textColor="@color/DarkGray"
-                android:textSize="20sp"/>
-
-            <ImageView
-                android:layout_width="150dp"
-                android:layout_height="150dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="60dp"
-                android:src="@drawable/send_mail"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/otp_text"
-                android:textSize="16sp"
-                android:fontFamily="@font/montserrat"
-                android:layout_marginTop="30dp"
-                android:gravity="center"/>
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="We will send you one time\npassword (OTP)"
-                android:textSize="18sp"
-                android:fontFamily="@font/montserrat"
-                android:textColor="@color/DarkGray"
-                android:layout_marginVertical="20dp"
-                android:gravity="center"/>
-
-                <android.support.design.widget.TextInputLayout
-                    android:id="@+id/nomorHandphone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="28dp"
-                    android:layout_marginTop="8dp"
-                    android:focusableInTouchMode="true"
-                    android:layout_marginBottom="5dp">
-
-                    <EditText
-                        android:id="@+id/PhoneNumber"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Input phone number"
-                        android:inputType="number"
-                        android:maxLength="13"
-                        android:ems="10"/>
-
-                </android.support.design.widget.TextInputLayout>
-
-                <Spinner
-                    android:id="@+id/spinnViaOTP"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_gravity="center"
-                    android:layout_marginHorizontal="28dp"
-                    android:layout_marginTop="5dp"
-                    android:paddingLeft="10dp"
-                    android:background="@drawable/spinner"/>
+                android:fontFamily="@font/karla"
+                android:layout_marginTop="8dp"
+                android:text="SMS"/>
 
         </LinearLayout>
 
-        <Button
-            android:id="@+id/btnSendOTP"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="bottom"
-            android:layout_marginStart="28dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="28dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/button_bordered_dark"
-            android:text="@string/otp_request"
-            android:fontFamily="@font/montserrat"
-            android:textAllCaps="false" />
-    </android.support.v7.widget.CardView>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/cvWA"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_marginHorizontal="8dp">
+
+                <ImageView
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/whatsapp"/>
+
+            </android.support.v7.widget.CardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:fontFamily="@font/karla"
+                android:layout_marginTop="8dp"
+                android:text="Whatsapp"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

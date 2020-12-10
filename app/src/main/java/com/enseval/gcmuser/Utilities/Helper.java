@@ -276,6 +276,16 @@ public class Helper {
         return otp;
     }
 
+    public static char[] sendGenerateForgetPass(int length){
+        String numbers = "0A1B2C3D4E5F6G7H8I9JKLMNOPQRSTUVWXYZ";
+        Random r=new Random();
+        char[] fp=new char[length];
+        for (int i =0; i<length; i++){
+            fp[i]= numbers.charAt(r.nextInt(numbers.length()));
+        }
+        return fp;
+    }
+
     public static String DecryptPassword(String text) throws Exception {
         String key = "gcm-e-commerce19";
         String iv = "19gcm-e-commerce";

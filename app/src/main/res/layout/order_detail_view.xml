@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginVertical="16dp"
     android:orientation="vertical"
     android:background="@color/bg">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginHorizontal="16dp">
         <ImageView
             android:id="@+id/imageView"
             android:layout_width="100dp"
@@ -26,6 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -38,20 +39,26 @@
                 android:ellipsize="end"
                 android:gravity="bottom|left"
                 android:maxLines="4"
-                android:text="Nama Barang" />
+                android:text="Nama Barang"
+                android:fontFamily="@font/karla"
+                android:textSize="14sp"/>
 
             <TextView
-                android:id="@+id/complain"
+                android:id="@+id/tvJumlah"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:text="complain"/>
+                android:fontFamily="@font/karla"
+                android:textSize="14sp"
+                android:text="Qty: 3" />
 
             <TextView
                 android:id="@+id/noBatch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
+                android:fontFamily="@font/karla"
+                android:textSize="14sp"
                 android:text="No. Batch"/>
 
             <TextView
@@ -59,54 +66,126 @@
                 android:layout_height="wrap_content"
                 android:text="Exp. Date"
                 android:layout_marginTop="4dp"
+                android:fontFamily="@font/karla"
+                android:textSize="14sp"
                 android:id="@+id/exp"/>
 
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="4dp"
+        android:text="Catatan : "
+        android:layout_marginHorizontal="16dp"
+        android:textStyle="bold"
+        android:fontFamily="@font/karla"
+        android:textSize="14sp"/>
+    <TextView
+        android:id="@+id/tvCatatan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:fontFamily="@font/karla"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/complain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginHorizontal="16dp"
+        android:fontFamily="@font/karla"
+        android:textSize="14sp"
+        android:text="complain"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="16dp"
+        android:background="@color/divider"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
             <TextView
-                android:id="@+id/tvJumlah"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Qty: 3" />
-            <TextView
-                android:layout_width="match_parent"
+                android:id="@+id/kuantitasDipenuhi"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Qty dipenuhi"
+                android:fontFamily="@font/karla"
+                android:textSize="14sp"
+                android:layout_marginTop="4dp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/karla"
+                android:textSize="14sp"
+                android:gravity="center_vertical|end"
                 android:layout_marginTop="4dp"
                 android:id="@+id/qtypenuhi"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Harga"
+                android:fontFamily="@font/karla"
+                android:textSize="14sp"/>
 
             <TextView
                 android:id="@+id/tvHargaPerKg"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp"
-                android:fontFamily="@font/quicksand_medium"
-                android:gravity="center|left"
-                android:text="IDR 1.500.000,00" />
+                android:fontFamily="@font/karla"
+                android:textSize="14sp"
+                android:gravity="center|end"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Total harga"
+                android:fontFamily="@font/karla"
+                android:textSize="14sp"/>
 
             <TextView
                 android:id="@+id/tvHarga"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:layout_marginBottom="4dp"
-                android:fontFamily="@font/quicksand_medium"
-                android:gravity="center|left"
-                android:text="IDR 1.500.000,00" />
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginVertical="4dp"
-                android:text="Catatan : "
-                android:textStyle="bold"
-                android:fontFamily="@font/quicksand_medium"/>
-            <TextView
-                android:id="@+id/tvCatatan"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="asdasdasd"
-                android:fontFamily="@font/quicksand_medium"/>
+                android:fontFamily="@font/karla"
+                android:textSize="14sp"
+                android:gravity="center|end"/>
 
         </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>

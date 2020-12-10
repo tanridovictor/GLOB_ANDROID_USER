@@ -41,7 +41,7 @@ public interface API {
     Call<JsonObject> requestKurs(@Query("base") String base);
 
     //post untuk OTP GMOS
-    @POST("sendotp/message/sendmessage")
+    @POST("sendmessage/message/sendmessage")
     Call<ModelOTP> sendOTPValue(@Body HashMap<String, String> body);
 
     //get untuk OTP GMOS
@@ -51,7 +51,7 @@ public interface API {
     @POST("External/sendNotification")
     Call<ModelNotif> sendNotifNegoPersen(@Body HashMap<String, String> body);
 
-    @POST("External/dataAkun")
+    @POST("External/resetPassword")
     Call<ModelDataAkun> sendDataAkun(@Body HashMap<String, String> body);
 
     @Headers({
@@ -61,4 +61,13 @@ public interface API {
     @POST("fcm/send")
     Call<ResponseBody> sendNotification(@Body NotificationBody body);
 
+
+    @POST("data/status/otp")
+    Call<JsonObject> reqpassavailable(@Body JSONRequest body);
+
+    @POST("External/insertOTP")
+    Call<JsonObject> reqsenddataakun(@Body JSONRequest body);
+
+    @POST("External/sendNotificationTrx")
+    Call<JsonObject> sendNotifTrx(@Body JSONRequestTransaksi body);
 }

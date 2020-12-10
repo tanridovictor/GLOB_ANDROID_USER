@@ -115,7 +115,7 @@ public class CheckoutCompanyAdapter extends RecyclerView.Adapter<CheckoutCompany
     @Override
     public void onBindViewHolder(@NonNull final CheckoutCompanyAdapter.ViewHolder holder, final int position) {
         final Company company = listCheckoutCompany.get(position);
-        //Log.d(TAG, "listAlamatAdapter: "+listAlamat.size());
+        Log.d(TAG, "listAlamatAdapter: "+listAlamat.size());
         SpannableStringBuilder str = new SpannableStringBuilder("Distributor : " + company.getNamaPerusahaan());
         str.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 13, str.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         holder.tvNamaPerusahaan.setText(str);
@@ -135,9 +135,9 @@ public class CheckoutCompanyAdapter extends RecyclerView.Adapter<CheckoutCompany
         //untuk menampilkan dan mengupdate alamat ship-to
         int j = 0;
         while (j<listAlamat.size()){
-            if(listAlamat.get(i).getNama_perusahaan().equals(company.getNamaPerusahaan())){
-                holder.tvAlamatShipto.setText(listAlamat.get(i).getAlamat()+",\n"+listAlamat.get(i).getKelurahan().toLowerCase()+", "+listAlamat.get(i).getKecamatan().toLowerCase()+",\n"+listAlamat.get(i).getKota().toLowerCase()+", "+listAlamat.get(i).getProvinsi()+", "+listAlamat.get(i).getKodepos());
-                holder.tvTanggalKirim.setText(listAlamat.get(i).getTgl_permintaan_kirim());
+            if(listAlamat.get(j).getNama_perusahaan().equals(company.getNamaPerusahaan())){
+                holder.tvAlamatShipto.setText(listAlamat.get(j).getAlamat()+",\n"+listAlamat.get(j).getKelurahan().toLowerCase()+", "+listAlamat.get(j).getKecamatan().toLowerCase()+",\n"+listAlamat.get(j).getKota().toLowerCase()+", "+listAlamat.get(j).getProvinsi()+", "+listAlamat.get(j).getKodepos());
+                holder.tvTanggalKirim.setText(listAlamat.get(j).getTgl_permintaan_kirim());
             }
             j++;
         }
@@ -145,8 +145,8 @@ public class CheckoutCompanyAdapter extends RecyclerView.Adapter<CheckoutCompany
         //untuk menampilkan dan mengupdate alamat bill-to
         int k = 0;
         while (k<listAlamatBillto.size()){
-            if(listAlamatBillto.get(i).getNama_perusahaan().equals(company.getNamaPerusahaan())){
-                holder.tvAlamatBillto.setText(listAlamatBillto.get(i).getAlamat()+",\n"+listAlamatBillto.get(i).getKelurahan().toLowerCase()+", "+listAlamatBillto.get(i).getKecamatan().toLowerCase()+",\n"+listAlamatBillto.get(i).getKota().toLowerCase()+", "+listAlamatBillto.get(i).getProvinsi()+", "+listAlamatBillto.get(i).getKodepos());
+            if(listAlamatBillto.get(k).getNama_perusahaan().equals(company.getNamaPerusahaan())){
+                holder.tvAlamatBillto.setText(listAlamatBillto.get(k).getAlamat()+",\n"+listAlamatBillto.get(k).getKelurahan().toLowerCase()+", "+listAlamatBillto.get(k).getKecamatan().toLowerCase()+",\n"+listAlamatBillto.get(k).getKota().toLowerCase()+", "+listAlamatBillto.get(k).getProvinsi()+", "+listAlamatBillto.get(k).getKodepos());
             }
             k++;
         }
@@ -158,9 +158,9 @@ public class CheckoutCompanyAdapter extends RecyclerView.Adapter<CheckoutCompany
         //untuk menampilkan harga ongkos kirim
         int l = 0;
         while (l<listongkir.size()){
-            Log.d(TAG, "ongkir: "+listongkir.get(i).getNama_perusahaan()+", "+company.getNamaPerusahaan());
-            if(listongkir.get(i).getNama_perusahaan().equals(company.getNamaPerusahaan())){
-                ongkir = (long) (listongkir.get(i).getOngkir()*getBerat(company.getListCart()));
+            Log.d(TAG, "ongkir: "+listongkir.get(l).getNama_perusahaan()+", "+company.getNamaPerusahaan());
+            if(listongkir.get(l).getNama_perusahaan().equals(company.getNamaPerusahaan())){
+                ongkir = (long) (listongkir.get(l).getOngkir()*getBerat(company.getListCart()));
                 Log.d(TAG, "ongkir: "+ongkir);
                 holder.tvOngkir.setText(Currency.getCurrencyFormat().format(ongkir));
             }

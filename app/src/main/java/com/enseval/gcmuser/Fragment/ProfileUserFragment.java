@@ -157,44 +157,60 @@ public class ProfileUserFragment extends Fragment {
                 simpan.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
+
+                        String query = "select * from " +
+                                "(select count (username) as check_username from gcm_master_user gmu where username like '"+username.getText().toString()+"'  and id not in("+SharedPrefManager.getInstance(getContext()).getUser().getUserId()+")) a, " +
+                                "(select count (no_hp) check_nohp from gcm_master_user gmu where no_hp like '"+nomor_hp.getText().toString()+"'  and id not in("+SharedPrefManager.getInstance(getContext()).getUser().getUserId()+")) b, " +
+                                "(select count (email) check_email from gcm_master_user gmu where email like '"+email.getText().toString()+"'  and id not in("+SharedPrefManager.getInstance(getContext()).getUser().getUserId()+")) c ";
+
                         try {
-                            if (passlama.getText().toString().equals("")){
-                                Toast.makeText(getContext(), "Kata Sandi Lama harus diisi terlebih dahulu", Toast.LENGTH_LONG).show();
-                            }else {
-                                if (QueryEncryption.Encrypt(passlama.getText().toString()).equals(passLama[0])) {
-                                    String queryUpdate = "";
-                                    if (password.getText().toString().equals("")) {
-                                        queryUpdate = "update gcm_master_user set username = '" + username.getText().toString() + "', email = '" + email.getText().toString() + "', no_hp = '" + nomor_hp.getText().toString() + "' " +
-                                                "where id = " + SharedPrefManager.getInstance(getContext()).getUser().getUserId() + ";";
-                                    } else {
-                                        queryUpdate = "update gcm_master_user set username = '" + username.getText().toString() + "', email = '" + email.getText().toString() + "', no_hp = '" + nomor_hp.getText().toString() + "', password = '" + QueryEncryption.Encrypt(password.getText().toString()) + "' " +
-                                                "where id = " + SharedPrefManager.getInstance(getContext()).getUser().getUserId() + ";";
+                            loadingDialog.showDialog();
+                            Log.d("ido", "checkUniqData: "+query);
+                            Call<JsonObject> callCheckUniqData = RetrofitClient
+                                    .getInstance()
+                                    .getApi()
+                                    .request(new JSONRequest(QueryEncryption.Encrypt(query)));
+                            callCheckUniqData.enqueue(new Callback<JsonObject>() {
+                                @Override
+                                public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                                    if (response.isSuccessful()){
+                                        String status = response.body().getAsJsonObject().get("status").getAsString();
+                                        Log.d("ido", "onResponse: sukses kok "+status);
+                                        if (status.equals("success")){
+                                            JsonArray jsonArray = response.body().getAsJsonObject().get("data").getAsJsonArray();
+                                            int username_check = jsonArray.get(0).getAsJsonObject().get("check_username").getAsInt();
+                                            int no_hp_check = jsonArray.get(0).getAsJsonObject().get("check_nohp").getAsInt();
+                                            int email_check = jsonArray.get(0).getAsJsonObject().get("check_email").getAsInt();
+                                            if (username_check==0) {
+                                                if (no_hp_check == 0) {
+                                                    if (email_check == 0) {
+                                                        UpdateDataAkun(username.getText().toString(), nomor_hp.getText().toString(), passlama.getText().toString(), password.getText().toString(), email.getText().toString(), passLama);
+                                                    }else{
+                                                        loadingDialog.hideDialog();
+                                                        Toast.makeText(getContext(), "Alamat email anda sudah terdaftar", Toast.LENGTH_LONG).show();
+                                                    }
+                                                }else{
+                                                    loadingDialog.hideDialog();
+                                                    Toast.makeText(getContext(), "Nomor HP anda sudah terdaftar", Toast.LENGTH_LONG).show();
+                                                }
+                                            }else{
+                                                loadingDialog.hideDialog();
+                                                Toast.makeText(getContext(), "Username anda sudah terdaftar", Toast.LENGTH_LONG).show();
+                                            }
+                                        }else{
+                                            loadingDialog.hideDialog();
+                                        }
+                                    }else{
+                                        loadingDialog.hideDialog();
                                     }
-                                    Log.d(TAG, "QueryUpdate: " + queryUpdate);
-
-                                    Call<JsonObject> callUpdate = RetrofitClient
-                                            .getInstance()
-                                            .getApi()
-                                            .request(new JSONRequest(QueryEncryption.Encrypt(queryUpdate)));
-                                    callUpdate.enqueue(new Callback<JsonObject>() {
-                                        @Override
-                                        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                                            Intent i = new Intent(getContext(), MainActivity.class);
-                                            i.putExtra("fragment", "profileFragment");
-                                            startActivity(i);
-                                            getActivity().finish();
-                                            Toast.makeText(getContext(), "Update data berhasil", Toast.LENGTH_SHORT).show();
-                                        }
-
-                                        @Override
-                                        public void onFailure(Call<JsonObject> call, Throwable t) {
-
-                                        }
-                                    });
-                                } else {
-                                    Toast.makeText(getContext(), "Kata Sandi Lama salah", Toast.LENGTH_SHORT).show();
                                 }
-                            }
+
+                                @Override
+                                public void onFailure(Call<JsonObject> call, Throwable t) {
+                                    loadingDialog.hideDialog();
+                                }
+                            });
                         }catch (Exception e){
                             e.printStackTrace();
                         }
@@ -334,6 +350,11 @@ public class ProfileUserFragment extends Fragment {
                             }else if (statusP.equals("I")){
                                 statusPengguna.setText("Belum Aktif");
                             }
+                            if (role.getText().toString().equals("user")){
+                                pengaturanAkun.setVisibility(GONE);
+                            }else{
+                                pengaturanAkun.setVisibility(View.VISIBLE);
+                            }
                         }
                     }
                 }
@@ -409,6 +430,54 @@ public class ProfileUserFragment extends Fragment {
             });
         }catch (Exception e){
 
+        }
+    }
+
+    private void UpdateDataAkun(String username, String nomor_hp, String passlama, String password, String email, String[] passLama){
+        Log.d(TAG, "UpdateDataAkun: "+passlama+" "+passLama[0]);
+        try {
+            if (passlama.equals("")){
+                Toast.makeText(getContext(), "Kata Sandi Lama harus diisi terlebih dahulu", Toast.LENGTH_LONG).show();
+                loadingDialog.hideDialog();
+            }else {
+                if (QueryEncryption.Encrypt(passlama).equals(passLama[0])) {
+                    String queryUpdate = "";
+                    if (password.equals("")) {
+                        queryUpdate = "update gcm_master_user set username = '" + username + "', email = '" + email + "', no_hp = '" + nomor_hp + "' " +
+                                "where id = " + SharedPrefManager.getInstance(getContext()).getUser().getUserId() + ";";
+                    } else {
+                        queryUpdate = "update gcm_master_user set username = '" + username + "', email = '" + email + "', no_hp = '" + nomor_hp + "', password = '" + QueryEncryption.Encrypt(password) + "' " +
+                                "where id = " + SharedPrefManager.getInstance(getContext()).getUser().getUserId() + ";";
+                    }
+                    Log.d(TAG, "QueryUpdate: " + queryUpdate);
+
+                    Call<JsonObject> callUpdate = RetrofitClient
+                            .getInstance()
+                            .getApi()
+                            .request(new JSONRequest(QueryEncryption.Encrypt(queryUpdate)));
+                    callUpdate.enqueue(new Callback<JsonObject>() {
+                        @Override
+                        public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                            loadingDialog.hideDialog();
+                            Intent i = new Intent(getContext(), MainActivity.class);
+                            i.putExtra("fragment", "profileFragment");
+                            startActivity(i);
+                            getActivity().finish();
+                            Toast.makeText(getContext(), "Update data berhasil", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailure(Call<JsonObject> call, Throwable t) {
+                            loadingDialog.hideDialog();
+                        }
+                    });
+                } else {
+                    Toast.makeText(getContext(), "Kata Sandi Lama salah", Toast.LENGTH_SHORT).show();
+                    loadingDialog.hideDialog();
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 }

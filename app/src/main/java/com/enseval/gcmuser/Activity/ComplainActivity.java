@@ -46,6 +46,8 @@ public class ComplainActivity extends AppCompatActivity {
     private long lastClickTime = 0;
     private ImageView close;
 
+    private ArrayList<Integer> posisi = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,9 +57,15 @@ public class ComplainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Komplain");
 
+        if (getIntent().getStringExtra("from").equals("upload")){
+            complainList = getIntent().getParcelableArrayListExtra("complainList");
+            transactionId = getIntent().getStringExtra("transactionId");
+            posisi = getIntent().getIntegerArrayListExtra("posisi");
+        }else{
+            complainList = getIntent().getParcelableArrayListExtra("complainList");
+            transactionId = getIntent().getStringExtra("transactionId");
+        }
         complainedOrderList = new ArrayList<>();
-        complainList = getIntent().getParcelableArrayListExtra("complainList");
-        transactionId = getIntent().getStringExtra("transactionId");
 
         //masukkin list yg diterima ke list model baru
         for(OrderDetail od : complainList){
@@ -69,10 +77,10 @@ public class ComplainActivity extends AppCompatActivity {
         btnKirim = findViewById(R.id.btnKirim);
         close = findViewById(R.id.close);
 
-        title.setText("Komplain Pesanan "+transactionId);
+        title.setText("Komplain Pesanan \n"+transactionId);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        complainAdapter = new ComplainAdapter(this, complainList);
+        complainAdapter = new ComplainAdapter(this, complainList, transactionId, posisi);
         recyclerView.setAdapter(complainAdapter);
 
         checkButtonEnabled(); //cek apakah semua form sudah terisi
@@ -136,7 +144,7 @@ public class ComplainActivity extends AppCompatActivity {
                                 }
                             }
                             query.append("update gcm_master_transaction set status = 'COMPLAINED', update_by = "+SharedPrefManager.getInstance(getApplicationContext()).getUser().getUserId()+
-                                    ", update_date=now(), date_complained=now() where id_transaction = '"+transactionId+"';");
+                                    ", update_date=now(), date_complained=now() where id_transaction = '"+transactionId+"' returning id;");
                             komplainRequest(query.toString());
                             Log.d("ido", "onClick: "+query.toString());
                         }
@@ -183,9 +191,9 @@ public class ComplainActivity extends AppCompatActivity {
             final LoadingDialog loadingDialog = new LoadingDialog(ComplainActivity.this);
             loadingDialog.showDialog();
             Call<JsonObject> komplainCall = RetrofitClient
-                    .getInstance2()
+                    .getInstance()
                     .getApi()
-                    .requestInsert(new JSONRequest(QueryEncryption.Encrypt(query)));
+                    .request(new JSONRequest(QueryEncryption.Encrypt(query)));
 
             komplainCall.enqueue(new Callback<JsonObject>() {
                 @Override

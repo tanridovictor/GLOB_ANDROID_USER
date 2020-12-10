@@ -27,6 +27,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.enseval.gcmuser.Activity.DetailOrderActivity;
 import com.enseval.gcmuser.Fragment.OrderBottomSheetDialogFragment;
 import com.enseval.gcmuser.Utilities.Currency;
 import com.enseval.gcmuser.Model.Order;
@@ -43,8 +44,8 @@ public class WaitingOrderAdapter extends RecyclerView.Adapter<WaitingOrderAdapte
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvID, tvStatus, tvTotal, tvDate, btnDetail;
-        private CardView btnPembayaran;
+        private TextView tvID, tvStatus, tvTotal, tvDate;
+        private CardView btnDetail;
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvID = itemView.findViewById(R.id.tvID);
@@ -52,7 +53,6 @@ public class WaitingOrderAdapter extends RecyclerView.Adapter<WaitingOrderAdapte
             tvTotal = itemView.findViewById(R.id.tvTotal);
             tvDate = itemView.findViewById(R.id.tvDate);
             btnDetail = itemView.findViewById(R.id.btnDetail);
-            btnPembayaran = itemView.findViewById(R.id.btnPembayaran);
         }
     }
 
@@ -76,23 +76,29 @@ public class WaitingOrderAdapter extends RecyclerView.Adapter<WaitingOrderAdapte
         final int dueDate = Integer.parseInt(orderList.get(position).getCreateDate().substring(8,10)) + 2;
         holder.tvTotal.setText(Currency.getCurrencyFormat().format(orderList.get(position).getTotal()+orderList.get(position).getOngkir()+(orderList.get(position).getTotal()*(orderList.get(position).getPpn_seller()/100))));
         Log.d("apriltransaksi", String.valueOf(orderList.get(position).getTotal()));
-        holder.tvStatus.setText("Menunggu konfirmasi sales");
-
-        holder.btnPembayaran.setVisibility(View.INVISIBLE);
+        holder.tvStatus.setText("Menunggu konfirmasi");
 
         //jika detail ditekan, buka OrderBottomSheetDialogFragment
         holder.btnDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString("status", "menunggu");
-                bundle.putString("transactionId", orderList.get(position).getTransactionId());
-                bundle.putLong("total", orderList.get(position).getTotal());
-                bundle.putDouble("ongkir", orderList.get(position).getOngkir());
-                bundle.putFloat("ppn", orderList.get(position).getPpn_seller());
-                BottomSheetDialogFragment bottomSheetDialogFragment = new OrderBottomSheetDialogFragment();
-                bottomSheetDialogFragment.setArguments(bundle);
-                bottomSheetDialogFragment.show(((FragmentActivity)_context).getSupportFragmentManager(), "tes");
+                Intent i = new Intent(_context, DetailOrderActivity.class);
+                i.putExtra("status", "menunggu");
+                i.putExtra("transactionId", orderList.get(position).getTransactionId());
+                i.putExtra("total", orderList.get(position).getTotal());
+                i.putExtra("ongkir", orderList.get(position).getOngkir());
+                i.putExtra("ppn", orderList.get(position).getPpn_seller());
+                _context.startActivity(i);
+                
+//                Bundle bundle = new Bundle();
+//                i.putExtra("status", "menunggu");
+//                i.putExtra("transactionId", orderList.get(position).getTransactionId());
+//                bundle.putLong("total", orderList.get(position).getTotal());
+//                bundle.putDouble("ongkir", orderList.get(position).getOngkir());
+//                bundle.putFloat("ppn", orderList.get(position).getPpn_seller());
+//                BottomSheetDialogFragment bottomSheetDialogFragment = new OrderBottomSheetDialogFragment();
+//                bottomSheetDialogFragment.setArguments(bundle);
+//                bottomSheetDialogFragment.show(((FragmentActivity)_context).getSupportFragmentManager(), "tes");
             }
         });
 

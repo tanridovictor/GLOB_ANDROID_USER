@@ -100,7 +100,7 @@ public class FragmentPagerOngoing extends Fragment {
             Call<JsonObject> orderCall = RetrofitClient
                     .getInstance()
                     .getApi()
-                    .request(new JSONRequest(QueryEncryption.Encrypt("select a.id_transaction, status, a.create_date, to_char(a.date_ongoing, 'dd-MON-YYYY') date_ongoing, case when a.ongkos_kirim is null then 0 else a.ongkos_kirim end, case when sum(harga_final) is null then 0 else sum(harga_final) end as harga_final, sum(harga) as total, a.ppn_seller from gcm_master_transaction a inner join gcm_transaction_detail b " +
+                    .request(new JSONRequest(QueryEncryption.Encrypt("select a.id_transaction, status, to_char(a.create_date, 'dd-MON-YYYY') create_date, to_char(a.date_ongoing, 'dd-MON-YYYY') date_ongoing, case when a.ongkos_kirim is null then 0 else a.ongkos_kirim end, case when sum(harga_final) is null then 0 else sum(harga_final) end as harga_final, sum(harga) as total, a.ppn_seller from gcm_master_transaction a inner join gcm_transaction_detail b " +
                             "on a.id_transaction=b.transaction_id where a.company_id="+
                             SharedPrefManager.getInstance(getActivity()).getUser().getCompanyId()+" and status='ONGOING' group by a.id_transaction, status, a.create_date, a.date_ongoing, a.ongkos_kirim, a.ppn_seller " +
                             "order by a.date_ongoing desc;")));
@@ -123,7 +123,7 @@ public class FragmentPagerOngoing extends Fragment {
                                             "",
                                             jsonObject.get("total").getAsLong(),
                                             jsonObject.get("ongkos_kirim").getAsDouble(),
-                                            jsonObject.get("harga_final").getAsInt(),
+                                            jsonObject.get("harga_final").getAsLong(),
                                             jsonObject.get("ppn_seller").getAsFloat()
                                     ));
                                 } else {
@@ -134,7 +134,7 @@ public class FragmentPagerOngoing extends Fragment {
                                             jsonObject.get("date_ongoing").getAsString(),
                                             jsonObject.get("total").getAsLong(),
                                             jsonObject.get("ongkos_kirim").getAsDouble(),
-                                            jsonObject.get("harga_final").getAsInt(),
+                                            jsonObject.get("harga_final").getAsLong(),
                                             jsonObject.get("ppn_seller").getAsFloat()
                                     ));
                                 }

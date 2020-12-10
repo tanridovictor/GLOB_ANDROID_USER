@@ -17,7 +17,8 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:text="Distributor: GCM"
-        android:textSize="14sp"
+        android:fontFamily="@font/karla"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -222,11 +223,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
+                android:fontFamily="@font/karla"
+                android:textSize="14sp"
                 android:text="Metode Pembayaran"/>
             <TextView
                 android:id="@+id/pembayaran"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/karla"
+                android:textSize="14sp"
                 android:text="Pembayaran"/>
         </LinearLayout>
 
@@ -261,11 +266,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
+                android:fontFamily="@font/karla"
+                android:textSize="14sp"
                 android:text="Alamat Pengiriman"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/alamatShipto"
+                android:textSize="14sp"
+                android:fontFamily="@font/karla"
                 android:text="Alamat"/>
         </LinearLayout>
 
@@ -299,11 +308,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
+                android:fontFamily="@font/karla"
+                android:textSize="14sp"
                 android:text="Alamat Penagihan"/>
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/alamatBillto"
+                android:textSize="14sp"
+                android:fontFamily="@font/karla"
                 android:text="Alamat"/>
         </LinearLayout>
 
@@ -331,11 +344,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
+                android:fontFamily="@font/karla"
+                android:textSize="14sp"
                 android:text="Permintaan Kirim"/>
             <TextView
                 android:id="@+id/permintaanKirim"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/karla"
+                android:textSize="14sp"
                 android:text="Belum ditentukan"/>
         </LinearLayout>
 

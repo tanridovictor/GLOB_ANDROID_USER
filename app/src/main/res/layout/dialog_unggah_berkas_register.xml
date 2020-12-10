@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <android.support.v7.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    app:cardBackgroundColor="@color/colorPrimary">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginHorizontal="16dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tvJudul"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/karla"
+                            android:text="Unggah Berkas"
+                            android:textColor="@color/white"
+                            android:textSize="18dp" />
+
+                        <ImageButton
+                            android:id="@+id/btnClose"
+                            android:layout_width="30dp"
+                            android:layout_height="20dp"
+                            android:layout_gravity="center"
+                            android:background="@color/fui_transparent"
+                            android:src="@drawable/outline_close_24"
+                            android:tint="@color/white" />
+                    </LinearLayout>
+                </android.support.v7.widget.CardView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:fontFamily="@font/karla"
+                    android:text="Tipe Pendaftaran"
+                    android:textSize="16sp" />
+
+                <RadioGroup
+                    android:id="@+id/rbList"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rbPerusahaan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/karla"
+                        android:text="Perusahaan" />
+
+                    <RadioButton
+                        android:id="@+id/rbPerorangan"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:fontFamily="@font/karla"
+                        android:text="Perorangan" />
+
+                </RadioGroup>
+
+                <TextView
+                    android:id="@+id/KTP"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:fontFamily="@font/karla"
+                    android:text="KTP"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/gambarKTP"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginHorizontal="32dp"
+                    android:layout_marginVertical="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnSelectKTP"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="16dp"
+                        android:fontFamily="@font/karla"
+                        android:text="Choose file"
+                        android:layout_marginBottom="16dp"
+                        android:textAllCaps="false" />
+
+                    <TextView
+                        android:id="@+id/txtPathKTP"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="16dp"
+                        android:fontFamily="@font/karla"
+                        android:gravity="center_vertical"
+                        android:text="No file choosen" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/NPWP"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:fontFamily="@font/karla"
+                    android:text="NPWP atau SPPKP"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/gambarNPWP"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginHorizontal="32dp"
+                    android:layout_marginVertical="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnSelectNPWP"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="16dp"
+                        android:fontFamily="@font/karla"
+                        android:text="Choose file"
+                        android:textAllCaps="false" />
+
+                    <TextView
+                        android:id="@+id/txtPathNPWP"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="16dp"
+                        android:fontFamily="@font/karla"
+                        android:gravity="center_vertical"
+                        android:text="No file choosen" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/SIUP"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:fontFamily="@font/karla"
+                    android:text="SIUP atau SIUI"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/gambarSIUP"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginHorizontal="32dp"
+                    android:layout_marginVertical="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnSelectSIUP"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="16dp"
+                        android:fontFamily="@font/karla"
+                        android:text="Choose file"
+                        android:textAllCaps="false" />
+
+                    <TextView
+                        android:id="@+id/txtPathSIUP"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:fontFamily="@font/karla"
+                        android:gravity="center_vertical"
+                        android:text="No file choosen" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/GXP"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:fontFamily="@font/karla"
+                    android:text="Sertifikat GXP"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/gambarGXP"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginHorizontal="32dp"
+                    android:layout_marginVertical="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnSelectGXP"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="16dp"
+                        android:fontFamily="@font/karla"
+                        android:text="Choose file"
+                        android:textAllCaps="false" />
+
+                    <TextView
+                        android:id="@+id/txtPathGXP"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:fontFamily="@font/karla"
+                        android:gravity="center_vertical"
+                        android:text="No file choosen" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/PBF"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="8dp"
+                    android:fontFamily="@font/karla"
+                    android:text="Surat Izin PBF"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/gambarPBF"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginHorizontal="32dp"
+                    android:layout_marginVertical="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnSelectPBF"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginLeft="16dp"
+                        android:fontFamily="@font/karla"
+                        android:text="Choose file"
+                        android:textAllCaps="false" />
+
+                    <TextView
+                        android:id="@+id/txtPathPBF"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="16dp"
+                        android:layout_marginBottom="16dp"
+                        android:fontFamily="@font/karla"
+                        android:gravity="center_vertical"
+                        android:text="No file choosen" />
+
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btnUnggahBerkas"
+                    style="@style/btn_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="16dp"
+                    android:layout_marginVertical="16dp"
+                    android:text="Unggah" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

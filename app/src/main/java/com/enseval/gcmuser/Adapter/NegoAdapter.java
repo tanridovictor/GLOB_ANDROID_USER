@@ -61,6 +61,7 @@ public class NegoAdapter extends RecyclerView.Adapter<NegoAdapter.ViewHolder> {
     private LoadingDialog loadingDialog;
     private float kurs;
     Date dateTime, TimeRespon;
+    long timestamp_respon_now, timestamp_respon;
 
     private API mApi;
 
@@ -72,7 +73,7 @@ public class NegoAdapter extends RecyclerView.Adapter<NegoAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         private LinearLayout linearLayout2, linearLayout3, linearChat;
-        private TextView tvNama, tvHarga, tvHargaNego, tvResponSales, tvStaticHarga, tvStaticRespon, tvStaticJatah, tvSepakat, tvhargadeal, tvhargafinal;
+        private TextView tvNama, tvHarga, tvHargaNego, tvResponSales, tvStaticHarga, tvStaticRespon, tvStaticJatah, tvSepakat, tvhargadeal, tvhargafinal, tvNamaPerusahaan;
         private Button btnSetuju, btnSetujuNegoTerakhir, btnNegoLagi, btnChat;
         private ImageView jatah1, jatah2, jatahTerpakai1, jatahTerpakai2, jatahTerpakai3;
 
@@ -103,11 +104,12 @@ public class NegoAdapter extends RecyclerView.Adapter<NegoAdapter.ViewHolder> {
             btnChat = itemView.findViewById(R.id.btnChat);
             tvhargafinal = itemView.findViewById(R.id.tvHargaFinal);
             tvhargadeal = itemView.findViewById(R.id.tvHargaDeal);
+            tvNamaPerusahaan = itemView.findViewById(R.id.tvNamaPerusahaan);
 
             tvHistoryNego   = itemView.findViewById(R.id.tvHistoryNego);
-            SpannableString content = new SpannableString("History Nego");
-            content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
-            tvHistoryNego.setText(content);
+//            SpannableString content = new SpannableString("History Nego");
+//            content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+//            tvHistoryNego.setText(content);
         }
     }
 
@@ -136,6 +138,11 @@ public class NegoAdapter extends RecyclerView.Adapter<NegoAdapter.ViewHolder> {
         SimpleDateFormat datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String DateTimeS = datetime.format(DateTime);
 
+        timestamp_respon_now = Calendar.getInstance().getTimeInMillis();
+        timestamp_respon = Long.parseLong(listNego.get(position).getTimestamp_respon());
+
+        Log.d(TAG, "onBindViewHolder: "+Calendar.getInstance().getTimeZone().getID());
+
         try {
             SimpleDateFormat time = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
             dateTime = time.parse(listNego.get(position).getTime_respon());
@@ -144,7 +151,8 @@ public class NegoAdapter extends RecyclerView.Adapter<NegoAdapter.ViewHolder> {
             e.printStackTrace();
         }
 
-        holder.tvNama.setText(listNego.get(position).getBarang().getNama()+" Penjual "+listNego.get(position).getBarang().getNamaPerusahaan());
+        holder.tvNamaPerusahaan.setText(listNego.get(position).getBarang().getNamaPerusahaan());
+        holder.tvNama.setText(listNego.get(position).getBarang().getNama());
         holder.tvHarga.setText(Currency.getCurrencyFormat().format(harga) + "/"+listNego.get(position).getBarang().getAlias());
         if (listNego.get(position).getHarga_nego() != 0) {
             holder.tvHargaNego.setText(Currency.getCurrencyFormat().format(listNego.get(position).getHarga_nego()) + "/"+listNego.get(position).getBarang().getAlias());
@@ -159,7 +167,9 @@ public class NegoAdapter extends RecyclerView.Adapter<NegoAdapter.ViewHolder> {
         if(listNego.get(position).getHarga_final() == 0){
             holder.tvhargafinal.setVisibility(View.GONE);
             holder.tvhargadeal.setVisibility(View.GONE);
-        }else if(listNego.get(position).getHarga_final() != 0 && TimeRespon.before(dateTime)){
+        }
+//        else if(listNego.get(position).getHarga_final() != 0 && TimeRespon.before(dateTime)){
+        else if(listNego.get(position).getHarga_final() != 0 && timestamp_respon_now < timestamp_respon){
             holder.tvhargafinal.setVisibility(View.GONE);
             holder.tvhargadeal.setVisibility(View.GONE);
         }else{
@@ -220,7 +230,8 @@ public class NegoAdapter extends RecyclerView.Adapter<NegoAdapter.ViewHolder> {
 //        }
         //rules untuk waktu nego
         //rubah
-        else if(TimeRespon.before(dateTime) || (listNego.get(position).getHarga_nego() != 0 && listNego.get(position).getHargaSales() == 0) ||
+//        else if(TimeRespon.before(dateTime) || (listNego.get(position).getHarga_nego() != 0 && listNego.get(position).getHargaSales() == 0) ||
+        else if(timestamp_respon_now < timestamp_respon || (listNego.get(position).getHarga_nego() != 0 && listNego.get(position).getHargaSales() == 0) ||
                 (listNego.get(position).getHarga_nego_2() != 0 && listNego.get(position).getHarga_sales_2() == 0) ||
                 (listNego.get(position).getHarga_nego_3() != 0 && listNego.get(position).getHarga_sales_3() == 0)){
             holder.tvResponSales.setText("Menunggu respon");
@@ -235,11 +246,11 @@ public class NegoAdapter extends RecyclerView.Adapter<NegoAdapter.ViewHolder> {
             jatahNego(listNego.get(position).getNegoCount(), holder);
             //kondisi jika nego sudah 3x dan belum deal
             if(listNego.get(position).getNegoCount()==3 && listNego.get(position).getHargaKonsumen() != listNego.get(position).getHargaSales()){
-                holder.btnNegoLagi.setVisibility(View.INVISIBLE);
-                holder.btnSetuju.setVisibility(View.INVISIBLE);
+                holder.btnNegoLagi.setVisibility(View.GONE);
+                holder.btnSetuju.setVisibility(View.GONE);
                 holder.linearChat.setVisibility(View.VISIBLE);
                 holder.btnChat.setVisibility(View.VISIBLE);
-                holder.tvResponSales.setText(String.format("Kami hanya dapat memberi harga %s/"+listNego.get(position).getBarang().getAlias()+".\nSilahkan setujui harga atau lanjutkan negosiasi via chat.", Currency.getCurrencyFormat().format(listNego.get(position).getHarga_sales_3())));
+                holder.tvResponSales.setText(String.format("%s/"+listNego.get(position).getBarang().getAlias(), Currency.getCurrencyFormat().format(listNego.get(position).getHarga_sales_3())));
                 String statusNotif = "terima nego";
                 if (listNego.get(position).getBarang().getPersen_nego_1()==0 && listNego.get(position).getBarang().getPersen_nego_2()==0 && listNego.get(position).getBarang().getPersen_nego_3()==0){
                     Log.d(TAG, "notif dikirim admin");
@@ -253,13 +264,13 @@ public class NegoAdapter extends RecyclerView.Adapter<NegoAdapter.ViewHolder> {
             //rubah
             else{
                 if (listNego.get(position).getHarga_sales_1() != 0) {
-                    holder.tvResponSales.setText(String.format("Maaf, harga belum cocok.\nBagaimana jika %s?", Currency.getCurrencyFormat().format(listNego.get(position).getHarga_sales_1())+"/"+listNego.get(position).getBarang().getAlias()));
+                    holder.tvResponSales.setText(String.format("%s", Currency.getCurrencyFormat().format(listNego.get(position).getHarga_sales_1())+"/"+listNego.get(position).getBarang().getAlias()));
                 }
                 if (listNego.get(position).getHarga_sales_2() != 0) {
-                    holder.tvResponSales.setText(String.format("Maaf, harga belum cocok.\nBagaimana jika %s?", Currency.getCurrencyFormat().format(listNego.get(position).getHarga_sales_2())+"/"+listNego.get(position).getBarang().getAlias()));
+                    holder.tvResponSales.setText(String.format("%s", Currency.getCurrencyFormat().format(listNego.get(position).getHarga_sales_2())+"/"+listNego.get(position).getBarang().getAlias()));
                 }
                 if (listNego.get(position).getHarga_sales_3() != 0) {
-                    holder.tvResponSales.setText(String.format("Maaf, harga belum cocok.\nBagaimana jika %s?", Currency.getCurrencyFormat().format(listNego.get(position).getHarga_sales_3())+"/"+listNego.get(position).getBarang().getAlias()));
+                    holder.tvResponSales.setText(String.format("%s", Currency.getCurrencyFormat().format(listNego.get(position).getHarga_sales_3())+"/"+listNego.get(position).getBarang().getAlias()));
                 }
                 String statusNotif = "terima nego";
                 if (listNego.get(position).getBarang().getPersen_nego_1()==0 && listNego.get(position).getBarang().getPersen_nego_2()==0 && listNego.get(position).getBarang().getPersen_nego_3()==0){
@@ -363,9 +374,9 @@ public class NegoAdapter extends RecyclerView.Adapter<NegoAdapter.ViewHolder> {
                                     loadingDialog = new LoadingDialog(_context);
                                     loadingDialog.showDialog();
                                     Call<JsonObject> negoCall = RetrofitClient
-                                            .getInstance2()
+                                            .getInstance()
                                             .getApi()
-                                            .requestInsert(new JSONRequest(QueryEncryption.Encrypt("UPDATE gcm_master_cart set nego_count=nego_count+1," +
+                                            .request(new JSONRequest(QueryEncryption.Encrypt("UPDATE gcm_master_cart set nego_count=nego_count+1," +
                                                     "harga_konsumen="+price+
                                                     ", update_date=now(), update_by="+
                                                     SharedPrefManager.getInstance(_context).getUser().getUserId()+" where company_id="+
@@ -468,6 +479,7 @@ public class NegoAdapter extends RecyclerView.Adapter<NegoAdapter.ViewHolder> {
                 Calendar calendar = Calendar.getInstance();
                 calendar.add(Calendar.HOUR, 1);
                 Date DateTime = calendar.getTime();
+                long TimeStamp = calendar.getTimeInMillis();
                 SimpleDateFormat datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 String Date = datetime.format(DateTime);
 
@@ -534,18 +546,18 @@ public class NegoAdapter extends RecyclerView.Adapter<NegoAdapter.ViewHolder> {
 //                            if (price >= Math.round(hargaRendah)){
 //                                q = "UPDATE gcm_history_nego set harga_nego_2 = " + price + ", harga_sales_2 = " + price + ", harga_final= " + price + ", updated_by_2 = " + SharedPrefManager.getInstance(_context).getUser().getUserId() + ", updated_date_2 = now() where id =" + id_hist + "returning id;";
 //                            }else{
-                                q = "UPDATE gcm_history_nego set harga_nego_2 = " + price + ", updated_by_2 = " + SharedPrefManager.getInstance(_context).getUser().getUserId() + ", updated_date_2 = now() where id =" + id_hist + "returning id;";
+                                q = "UPDATE gcm_history_nego set harga_nego_2 = " + price + ", updated_by_2 = " + SharedPrefManager.getInstance(_context).getUser().getUserId() + ", updated_date_2 = now(), timestamp_updated_date_2 = "+timestamp_respon_now+" where id =" + id_hist + " returning id;";
 //                            }
                         }else {
                             if (listNego.get(position).getBarang().getPersen_nego_2() == 0 && price < Math.round(hargaRendah)) {
-                                q = "UPDATE gcm_history_nego set time_respon = '" + Date + "', harga_nego_2 = " + price + ", harga_sales_2 = " + Math.round(hargaRendah) + ", updated_by_2 = " + SharedPrefManager.getInstance(_context).getUser().getUserId() + ", updated_date_2 = now() where id =" + id_hist + "returning id;";
+                                q = "UPDATE gcm_history_nego set timestamp_respon = '"+TimeStamp+"', time_respon = '" + Date + "', harga_nego_2 = " + price + ", harga_sales_2 = " + Math.round(hargaRendah) + ", updated_by_2 = " + SharedPrefManager.getInstance(_context).getUser().getUserId() + ", updated_date_2 = now(), timestamp_updated_date_2 = "+timestamp_respon_now+" where id =" + id_hist + " returning id;";
                             } else if (listNego.get(position).getBarang().getPersen_nego_2() == 0 && price > Math.round(hargaRendah)) {
-                                q = "UPDATE gcm_history_nego set time_respon = '" + Date + "', harga_nego_2 = " + price + ", harga_sales_2 = " + price + ", harga_final= " + price + ", updated_by_2 = " + SharedPrefManager.getInstance(_context).getUser().getUserId() + ", updated_date_2 = now() where id =" + id_hist + "returning id;";
+                                q = "UPDATE gcm_history_nego set timestamp_respon = '"+TimeStamp+"', time_respon = '" + Date + "', harga_nego_2 = " + price + ", harga_sales_2 = " + price + ", harga_final= " + price + ", updated_by_2 = " + SharedPrefManager.getInstance(_context).getUser().getUserId() + ", updated_date_2 = now(), timestamp_updated_date_2 = "+timestamp_respon_now+" where id =" + id_hist + " returning id;";
                             } else {
                                 if (price < (hargaNego2)) {
-                                    q = "UPDATE gcm_history_nego set time_respon = '" + Date + "', harga_nego_2 = " + price + ", harga_sales_2 = " + hargaNego2 + ", updated_by_2 = " + SharedPrefManager.getInstance(_context).getUser().getUserId() + ", updated_date_2 = now() where id =" + id_hist + "returning id;";
+                                    q = "UPDATE gcm_history_nego set timestamp_respon = '"+TimeStamp+"', time_respon = '" + Date + "', harga_nego_2 = " + price + ", harga_sales_2 = " + hargaNego2 + ", updated_by_2 = " + SharedPrefManager.getInstance(_context).getUser().getUserId() + ", updated_date_2 = now(), timestamp_updated_date_2 = "+timestamp_respon_now+" where id =" + id_hist + " returning id;";
                                 } else {
-                                    q = "UPDATE gcm_history_nego set time_respon = '" + Date + "', harga_nego_2 = " + price + ", harga_sales_2 = " + price + ", harga_final= " + price + ", updated_by_2 = " + SharedPrefManager.getInstance(_context).getUser().getUserId() + ", updated_date_2 = now() where id =" + id_hist + "returning id;";
+                                    q = "UPDATE gcm_history_nego set timestamp_respon = '"+TimeStamp+"', time_respon = '" + Date + "', harga_nego_2 = " + price + ", harga_sales_2 = " + price + ", harga_final= " + price + ", updated_by_2 = " + SharedPrefManager.getInstance(_context).getUser().getUserId() + ", updated_date_2 = now(), timestamp_updated_date_2 = "+timestamp_respon_now+" where id =" + id_hist + " returning id;";
                                     //                            updateOnRange(price, id_hist);
                                 }
                             }
@@ -660,22 +672,22 @@ public class NegoAdapter extends RecyclerView.Adapter<NegoAdapter.ViewHolder> {
 //                            if (price >= Math.round(hargaRendah)){
 //                                q = "UPDATE gcm_history_nego set harga_nego_2 = " + price + ", harga_sales_2 = " + price + ", harga_final= " + price + ", updated_by_2 = " + SharedPrefManager.getInstance(_context).getUser().getUserId() + ", updated_date_2 = now() where id =" + id_hist + "returning id;";
 //                            }else{
-                                q = "UPDATE gcm_history_nego set harga_nego_3 = " + price + ", updated_by_3 = " + SharedPrefManager.getInstance(_context).getUser().getUserId() + ", updated_date_3 = now() where id =" + id_hist + "returning id;";
+                                q = "UPDATE gcm_history_nego set harga_nego_3 = " + price + ", updated_by_3 = " + SharedPrefManager.getInstance(_context).getUser().getUserId() + ", updated_date_3 = now(), timestamp_updated_date_3 = "+timestamp_respon_now+" where id =" + id_hist + "returning id;";
 //                            }
                         }else {
                             if (listNego.get(position).getBarang().getPersen_nego_3() == 0 && price < Math.round(hargaRendah)) {
-                                q = "UPDATE gcm_history_nego set time_respon = '" + Date + "', harga_nego_3 = " + price + ", harga_sales_3 = " + Math.round(hargaRendah) + ", updated_by_3 = " + SharedPrefManager.getInstance(_context).getUser().getUserId() + ", updated_date_3 = now() where id =" + id_hist + "returning id;";
+                                q = "UPDATE gcm_history_nego set timestamp_respon = '"+TimeStamp+"', time_respon = '" + Date + "', harga_nego_3 = " + price + ", harga_sales_3 = " + Math.round(hargaRendah) + ", updated_by_3 = " + SharedPrefManager.getInstance(_context).getUser().getUserId() + ", updated_date_3 = now(), timestamp_updated_date_3 = "+timestamp_respon_now+" where id =" + id_hist + "returning id;";
                             } else if (listNego.get(position).getBarang().getPersen_nego_2() == 0 && price > Math.round(hargaRendah)) {
-                                q = "UPDATE gcm_history_nego set time_respon = '" + Date + "', harga_nego_3 = " + price + ", harga_sales_3 = " + price + ", harga_final= " + price + ", updated_by_3 = " + SharedPrefManager.getInstance(_context).getUser().getUserId() + ", updated_date_3 = now() where id =" + id_hist + "returning id;";
+                                q = "UPDATE gcm_history_nego set timestamp_respon = '"+TimeStamp+"', time_respon = '" + Date + "', harga_nego_3 = " + price + ", harga_sales_3 = " + price + ", harga_final= " + price + ", updated_by_3 = " + SharedPrefManager.getInstance(_context).getUser().getUserId() + ", updated_date_3 = now(), timestamp_updated_date_3 = "+timestamp_respon_now+" where id =" + id_hist + "returning id;";
                             } else {
                                 if (price < (hargaNego3)) {
-                                    q = "update gcm_history_nego set time_respon = '" + Date + "', harga_nego_3 = " + price + ", harga_sales_3 = " + hargaNego3 + "," +
+                                    q = "update gcm_history_nego set timestamp_respon = '"+TimeStamp+"', time_respon = '" + Date + "', harga_nego_3 = " + price + ", harga_sales_3 = " + hargaNego3 + "," +
                                             "updated_by_3 = " + SharedPrefManager.getInstance(_context).getUser().getUserId() + "," +
-                                            "updated_date_3 = now() where id = " + id_hist + "returning id;";
+                                            "updated_date_3 = now(), timestamp_updated_date_3 = "+timestamp_respon_now+" where id = " + id_hist + "returning id;";
                                 } else {
-                                    q = "update gcm_history_nego set time_respon = '" + Date + "', harga_nego_3 = " + price + ", harga_sales_3 = " + price + ", harga_final = " + price + "" +
+                                    q = "update gcm_history_nego set timestamp_respon = '"+TimeStamp+"', time_respon = '" + Date + "', harga_nego_3 = " + price + ", harga_sales_3 = " + price + ", harga_final = " + price + "" +
                                             ", updated_by_3 = " + SharedPrefManager.getInstance(_context).getUser().getUserId() + "," +
-                                            "updated_date_3 = now() where id = " + id_hist + "returning id;";
+                                            "updated_date_3 = now(), timestamp_updated_date_3 = "+timestamp_respon_now+" where id = " + id_hist + "returning id;";
                                     //                            updateOnRange(price, id_hist);
                                 }
                             }
@@ -1013,6 +1025,7 @@ public class NegoAdapter extends RecyclerView.Adapter<NegoAdapter.ViewHolder> {
                                                             btnSetuju.setOnClickListener(new View.OnClickListener() {
                                                                 @Override
                                                                 public void onClick(View v) {
+                                                                    getTokenSeles(position, "kirim nego");
                                                                     Intent intent = new Intent(_context, MainActivity.class);
                                                                     intent.putExtra("fragment", "negoFragment");
                                                                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -1168,12 +1181,13 @@ public class NegoAdapter extends RecyclerView.Adapter<NegoAdapter.ViewHolder> {
                             if (listNego.get(position).getBarang().getPersen_nego_1()==0 && listNego.get(position).getBarang().getPersen_nego_2()==0 && listNego.get(position).getBarang().getPersen_nego_3()==0){
                                 String flag = "sales";
                                 insertNotif(position, flag);
-                                sendNotif(listToken);
+//                                sendNotif(listToken);
+                                sendNotifNegoPersen(position, "nego_sales", "0");
                                 Log.d(TAG, "notif: nego sales");
                             }else{
                                 String flag = "AI";
                                 insertNotif(position, flag);
-                                sendNotifNegoPersen(position);
+                                sendNotifNegoPersen(position, "nego_persen", "3600000");
                             }
 
                         }
@@ -1191,20 +1205,31 @@ public class NegoAdapter extends RecyclerView.Adapter<NegoAdapter.ViewHolder> {
     }
 
     private void insertNotif(int position, String flag){
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR, 1);
+        long timestamp = calendar.getTimeInMillis();
+
+        long timestamp_now = Calendar.getInstance().getTimeInMillis();
         String query = "";
         if (flag.equals("sales")){
-            query = "insert into gcm_notification_nego (barang_id, buyer_id, seller_id, source, status) values (" +
+            query = "insert into gcm_notification_nego (barang_id, buyer_id, seller_id, source, status, timestamp_kirim) values (" +
                     listNego.get(position).getBarang().getId() + ", " +
                     SharedPrefManager.getInstance(_context).getUser().getCompanyId() + ", " +
                     listNego.get(position).getBarang().getCompanyId() + ", " +
-                    "'buyer', 'nego') returning id;";
+                    "'buyer', 'nego', '"+timestamp_now+"') returning id;";
+        }else if (flag.equals("salesApprove")){
+            query = "insert into gcm_notification_nego (barang_id, buyer_id, seller_id, source, status, timestamp_kirim) values (" +
+                    listNego.get(position).getBarang().getId() + ", " +
+                    SharedPrefManager.getInstance(_context).getUser().getCompanyId() + ", " +
+                    listNego.get(position).getBarang().getCompanyId() + ", " +
+                    "'buyer', 'approve', '"+timestamp_now+"') returning id;";
         }else if (flag.equals("AI")) {
-            query = "insert into gcm_notification_nego (barang_id, buyer_id, seller_id, date, source, status) values (" +
+            query = "insert into gcm_notification_nego (barang_id, buyer_id, seller_id, date, source, status, timestamp_kirim) values (" +
                     listNego.get(position).getBarang().getId() + ", " +
                     SharedPrefManager.getInstance(_context).getUser().getCompanyId() + ", " +
                     listNego.get(position).getBarang().getCompanyId() + ", " +
                     "now() + interval '1 hour', " +
-                    "'seller', 'nego') returning id;";
+                    "'seller', 'nego', '"+timestamp+"') returning id;";
         }
         Log.d(TAG, "insertNotif: "+query);
         try {
@@ -1232,9 +1257,7 @@ public class NegoAdapter extends RecyclerView.Adapter<NegoAdapter.ViewHolder> {
         }
     }
 
-    private void sendNotifNegoPersen(int position){
-        String nego_type = "nego_persen";
-        String timeout = "3600000";
+    private void sendNotifNegoPersen(int position, String nego_type, String timeout){
         String id_cart = String.valueOf(listNego.get(position).getIdCart());
         String company_id_buyer = String.valueOf(SharedPrefManager.getInstance(_context).getUser().getCompanyId());
         String company_id_seller = String.valueOf(listNego.get(position).getBarang().getCompanyId());

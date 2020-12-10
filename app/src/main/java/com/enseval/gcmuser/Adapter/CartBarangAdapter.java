@@ -1,5 +1,6 @@
 package com.enseval.gcmuser.Adapter;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -182,6 +183,7 @@ public class CartBarangAdapter extends RecyclerView.Adapter<CartBarangAdapter.Vi
                             Intent intent = new Intent(_context, MainActivity.class);
                             intent.putExtra("fragment", "negoFragment");
                             _context.startActivity(intent);
+                            ((Activity)_context).finish();
                         }
                         lastClickTime = SystemClock.elapsedRealtime();
                     }
@@ -464,12 +466,17 @@ public class CartBarangAdapter extends RecyclerView.Adapter<CartBarangAdapter.Vi
                                         return;
                                     }
                                     else {
+                                        String query = "UPDATE gcm_master_cart SET status='I', update_date=now(), " +
+                                                "update_by="+SharedPrefManager.getInstance(_context).getUser().getUserId()+
+                                                " where company_id="+ SharedPrefManager.getInstance(_context).getUser().getCompanyId()+
+                                                " and barang_id="+barang.getId()+" returning id;";
+                                        Log.d("ido", "cart: "+query);
                                         loadingDialog = new LoadingDialog(_context);
                                         loadingDialog.showDialog();
                                         Call<JsonObject> cartCall = RetrofitClient
-                                                .getInstance2()
+                                                .getInstance()
                                                 .getApi()
-                                                .requestInsert(new JSONRequest(QueryEncryption.Encrypt("UPDATE gcm_master_cart SET status='I', update_date=now(), " +
+                                                .request(new JSONRequest(QueryEncryption.Encrypt("UPDATE gcm_master_cart SET status='I', update_date=now(), " +
                                                         "update_by="+SharedPrefManager.getInstance(_context).getUser().getUserId()+
                                                         " where company_id="+ SharedPrefManager.getInstance(_context).getUser().getCompanyId()+
                                                         " and barang_id="+barang.getId()+" returning id;")));

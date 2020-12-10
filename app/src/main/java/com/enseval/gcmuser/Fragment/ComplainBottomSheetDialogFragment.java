@@ -101,6 +101,7 @@ public class ComplainBottomSheetDialogFragment extends BottomSheetDialogFragment
                 Intent intent = new Intent(getContext(), ComplainActivity.class);
                 intent.putExtra("transactionId", transactionId);
                 intent.putParcelableArrayListExtra("complainList", complainList);
+                intent.putExtra("from", "complain");
                 getContext().startActivity(intent);
             }
         });

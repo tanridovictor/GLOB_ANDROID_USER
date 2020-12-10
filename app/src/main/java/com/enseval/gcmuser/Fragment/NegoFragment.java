@@ -179,7 +179,7 @@ public class NegoFragment extends Fragment {
                     .request(new JSONRequest(QueryEncryption.Encrypt("SELECT a.company_id as id, b.kode_barang, d.kode_seller, e.nama, e.berat, a.barang_id, b.price, f.harga_final, " +
                             "b.price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', d.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, e.category_id, b.company_id, a.nego_count, a.harga_konsumen, a.harga_sales, " +
                             "a.id as id_cart, a.history_nego_id as id_history, a.qty, " +
-                            "f.harga_nego, f.harga_nego_2, f.harga_nego_3, f.harga_sales as harga_sales_1, f.harga_sales_2, f.harga_sales_3, case when f.time_respon is null then '2000-01-01' else f.time_respon end, h.nama_perusahaan, g.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, i.nominal as kurs "+
+                            "f.harga_nego, f.harga_nego_2, f.harga_nego_3, f.harga_sales as harga_sales_1, f.harga_sales_2, f.harga_sales_3, case when f.time_respon is null then '2000-01-01' else f.time_respon end, case when f.timestamp_respon is null then '0000000000000' else f.timestamp_respon end, h.nama_perusahaan, g.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, i.nominal as kurs "+
                             "FROM gcm_master_cart a inner join gcm_list_barang b on a.barang_id=b.id inner join gcm_master_barang e on b.barang_id=e.id " +
                             "left join gcm_master_user c on c.id=a.update_by left join gcm_master_company d on d.id=b.company_id inner join gcm_master_company h on h.id=b.company_id " +
                             "inner join gcm_history_nego f on a.history_nego_id = f.id inner join gcm_master_satuan g on e.satuan = g.id inner join gcm_listing_kurs i on i.company_id = b.company_id "+
@@ -211,6 +211,7 @@ public class NegoFragment extends Fragment {
                                 float persen_nego_2 = jsonObject.get("persen_nego_2").getAsFloat();
                                 float persen_nego_3 = jsonObject.get("persen_nego_3").getAsFloat();
                                 String time_respon = jsonObject.get("time_respon").getAsString();
+                                String timestamp_respon = jsonObject.get("timestamp_respon").getAsString();
                                 kursIdr = jsonObject.get("kurs").getAsFloat();
                                 String kode_barang = jsonObject.get("kode_barang").getAsString();
                                 int harga_final = jsonObject.get("harga_final").getAsInt();
@@ -260,7 +261,7 @@ public class NegoFragment extends Fragment {
                                 nego = new Negosiasi(barang, berat, hargaKonsumen, hargaSales, count,
                                         harga_nego, harga_nego_2, harga_nego_3,
                                         harga_sales_1, harga_sales_2, harga_sales_3,
-                                        responSales, idCart, idHistoryNego, qty, time_respon, harga_final);
+                                        responSales, idCart, idHistoryNego, qty, time_respon, harga_final, timestamp_respon);
                                 listNego.add(nego);
 
                                 //buat adapter nego

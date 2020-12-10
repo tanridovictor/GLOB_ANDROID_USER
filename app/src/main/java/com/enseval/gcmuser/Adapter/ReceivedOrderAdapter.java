@@ -1,5 +1,6 @@
 package com.enseval.gcmuser.Adapter;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,13 +14,16 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.enseval.gcmuser.API.JSONRequest;
 import com.enseval.gcmuser.API.QueryEncryption;
 import com.enseval.gcmuser.API.RetrofitClient;
+import com.enseval.gcmuser.Activity.DetailOrderActivity;
 import com.enseval.gcmuser.Activity.MainActivity;
 import com.enseval.gcmuser.Fragment.ComplainBottomSheetDialogFragment;
 import com.enseval.gcmuser.Fragment.LoadingDialog;
@@ -43,8 +47,9 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView tvID, tvStatus, tvTotal, tvDate, btnDetail;
-        private CardView btnKomplain, btnSelesai;
+        private TextView tvID, tvStatus, tvTotal, tvDate, tvDate2;
+        private CardView btnDetail;
+        private Button btnKomplain, btnSelesai;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -52,6 +57,7 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
             tvStatus = itemView.findViewById(R.id.tvStatus);
             tvTotal = itemView.findViewById(R.id.tvTotal);
             tvDate = itemView.findViewById(R.id.tvDate);
+            tvDate2 = itemView.findViewById(R.id.tvDate2);
             btnDetail = itemView.findViewById(R.id.btnDetail);
             btnKomplain = itemView.findViewById(R.id.btnKomplain);
             btnSelesai = itemView.findViewById(R.id.btnSelesai);
@@ -74,7 +80,8 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
     @Override
     public void onBindViewHolder(@NonNull final ReceivedOrderAdapter.ViewHolder holder, final int position) {
         holder.tvID.setText(String.format(orderList.get(position).getTransactionId()));
-        holder.tvDate.setText(orderList.get(position).getUpdateDate());
+        holder.tvDate.setText(orderList.get(position).getCreateDate());
+        holder.tvDate2.setText(orderList.get(position).getUpdateDate());
         holder.tvTotal.setText(Currency.getCurrencyFormat().format(orderList.get(position).getHarga_final()+orderList.get(position).getOngkir()+orderList.get(position).getHarga_final()*(orderList.get(position).getPpn_seller()/100)));
         holder.tvStatus.setText("Telah diterima");
 
@@ -82,15 +89,23 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
         holder.btnDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString("status", "diterima");
-                bundle.putString("transactionId", orderList.get(position).getTransactionId());
-                bundle.putLong("total", orderList.get(position).getHarga_final());
-                bundle.putDouble("ongkir", orderList.get(position).getOngkir());
-                bundle.putFloat("ppn", orderList.get(position).getPpn_seller());
-                BottomSheetDialogFragment bottomSheetDialogFragment = new OrderBottomSheetDialogFragment();
-                bottomSheetDialogFragment.setArguments(bundle);
-                bottomSheetDialogFragment.show(((FragmentActivity)_context).getSupportFragmentManager(), "tes");
+                Intent i = new Intent(_context, DetailOrderActivity.class);
+                i.putExtra("status", "diterima");
+                i.putExtra("transactionId", orderList.get(position).getTransactionId());
+                i.putExtra("total", orderList.get(position).getHarga_final());
+                i.putExtra("ongkir", orderList.get(position).getOngkir());
+                i.putExtra("ppn", orderList.get(position).getPpn_seller());
+                _context.startActivity(i);
+
+//                Bundle bundle = new Bundle();
+//                bundle.putString("status", "diterima");
+//                bundle.putString("transactionId", orderList.get(position).getTransactionId());
+//                bundle.putLong("total", orderList.get(position).getHarga_final());
+//                bundle.putDouble("ongkir", orderList.get(position).getOngkir());
+//                bundle.putFloat("ppn", orderList.get(position).getPpn_seller());
+//                BottomSheetDialogFragment bottomSheetDialogFragment = new OrderBottomSheetDialogFragment();
+//                bottomSheetDialogFragment.setArguments(bundle);
+//                bottomSheetDialogFragment.show(((FragmentActivity)_context).getSupportFragmentManager(), "tes");
             }
         });
 
@@ -110,28 +125,31 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
         holder.btnSelesai.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(_context);
-                //tampilkan dialog konfirmasi
-                bottomSheetDialog.setContentView(R.layout.konfirmasi_bottom_sheet_dialog);
+                final Dialog dialog = new Dialog(_context);
+                dialog.setContentView(R.layout.dialog_handle);
+                Window window = dialog.getWindow();
+                window.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                ImageView image = dialog.findViewById(R.id.iconImage);
+                TextView btnBatal = dialog.findViewById(R.id.btnBatal);
+                Button btnSetuju = dialog.findViewById(R.id.btnYa);
+                TextView title = dialog.findViewById(R.id.judul);
+                TextView description = dialog.findViewById(R.id.isi);
+                dialog.setCancelable(false);
 
-                Button negative = bottomSheetDialog.findViewById(R.id.negative);
-                Button positive = bottomSheetDialog.findViewById(R.id.positive);
-                TextView message = bottomSheetDialog.findViewById(R.id.tvMessage);
+                title.setText("Transaksi");
+                description.setText("Selesaikan pesanan sekarang? \nKetika pesanan telah diselesaikan, segala bentuk komplain tidak akan diterima.");
+                image.setImageResource(R.drawable.done);
+                btnBatal.setText("BATAL");
+                btnSetuju.setText("SETUJU");
 
-                message.setText("Selesaikan pesanan sekarang? Ketika pesanan telah diselesaikan, segala bentuk komplain tidak akan diterima.");
-
-                negative.setOnClickListener(new View.OnClickListener() {
+                btnBatal.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        bottomSheetDialog.dismiss();
+                        dialog.dismiss();
                     }
                 });
 
-                negative.setText("Batal");
-                positive.setText("Setuju");
-
-                //jika setuju, request untuk update status menjadi finished
-                positive.setOnClickListener(new View.OnClickListener() {
+                btnSetuju.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         try {
@@ -139,14 +157,14 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
                                 return;
                             }
                             else {
-                                bottomSheetDialog.dismiss();
+                                dialog.dismiss();
                                 loadingDialog = new LoadingDialog(_context);
                                 loadingDialog.showDialog();
                                 Call<JsonObject> terimaBarangCall = RetrofitClient
-                                        .getInstance2()
+                                        .getInstance()
                                         .getApi()
-                                        .requestInsert(new JSONRequest(QueryEncryption.Encrypt("UPDATE gcm_master_transaction SET status='FINISHED', date_finished=now() WHERE " +
-                                                "id_transaction='"+orderList.get(position).getTransactionId()+"';")));
+                                        .request(new JSONRequest(QueryEncryption.Encrypt("UPDATE gcm_master_transaction SET status='FINISHED', date_finished=now() WHERE " +
+                                                "id_transaction='"+orderList.get(position).getTransactionId()+"' returning id;")));
 
                                 terimaBarangCall.enqueue(new Callback<JsonObject>() {
                                     @Override
@@ -178,7 +196,7 @@ public class ReceivedOrderAdapter extends RecyclerView.Adapter<ReceivedOrderAdap
                     }
                 });
 
-                bottomSheetDialog.show();
+                dialog.show();
             }
         });
     }

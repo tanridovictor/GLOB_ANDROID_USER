@@ -99,9 +99,9 @@ public class NotificationActivity extends AppCompatActivity {
     }
 
     private void getNotifikasi(){
-        String query = "select a.barang_id, a.nama_barang, a.buyer_id, a.buyer_nama, a.seller_id, to_char(a.date, 'dd MM yyyy HH24:MI') as date, " +
-                "a.status, b.nama_perusahaan as seller_nama from (select a.barang_id, c.nama as nama_barang, a.buyer_id, " +
-                "d.nama_perusahaan as buyer_nama, a.seller_id, a.date, a.status " +
+        String query = "select a.barang_id, a.nama_barang, a.buyer_id, a.buyer_nama, a.seller_id, to_char(a.date, 'dd/MM/yyyy HH24:MI') as date, " +
+                "a.status, b.nama_perusahaan as seller_nama,case when a.timestamp_kirim is null then '0000000000000' else a.timestamp_kirim end from (select a.barang_id, c.nama as nama_barang, a.buyer_id, " +
+                "d.nama_perusahaan as buyer_nama, a.seller_id, a.date, a.status, case when a.timestamp_kirim is null then '0000000000000' else a.timestamp_kirim end " +
                 "from gcm_notification_nego a " +
                 "inner join gcm_list_barang b on a.barang_id = b.id " +
                 "inner join gcm_master_barang c on b.barang_id = c.id " +
@@ -131,7 +131,8 @@ public class NotificationActivity extends AppCompatActivity {
                                         jsonObject.get("date").getAsString(),
                                         jsonObject.get("status").getAsString(),
                                         jsonObject.get("buyer_nama").getAsString(),
-                                        jsonObject.get("barang_id").getAsInt()
+                                        jsonObject.get("barang_id").getAsInt(),
+                                        jsonObject.get("timestamp_kirim").getAsString()
                                 ));
                             }
                             Log.d(TAG, "isi list notif: "+listNotif.size());

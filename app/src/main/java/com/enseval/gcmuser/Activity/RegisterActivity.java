@@ -7,9 +7,11 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.SystemClock;
+import android.provider.MediaStore;
 import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -34,6 +36,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +52,7 @@ import com.enseval.gcmuser.Model.Kecamatan;
 import com.enseval.gcmuser.Model.Kelurahan;
 import com.enseval.gcmuser.Model.Kota;
 import com.enseval.gcmuser.Model.Provinsi;
+import com.enseval.gcmuser.SharedPrefManager;
 import com.enseval.gcmuser.Utilities.Regex;
 import com.enseval.gcmuser.Model.TipeBisnis;
 import com.enseval.gcmuser.R;
@@ -61,6 +66,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -70,6 +76,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -127,6 +134,22 @@ public class RegisterActivity extends AppCompatActivity {
     private Spinner nambahinjenis;
     private LinearLayout dinamicLayout;
 
+
+    //DIALOG UNGGAH BERKAS
+    private ImageButton btnClose;
+    private RadioGroup rbList;
+    private ImageView gambarNPWP, gambarSIUP, gambarGXP, gambarPBF, gambarKTP;
+    private Button btnSelectNPWP, btnSelectSIUP, btnSelectGXP, btnSelectPBF, btnSelectKTP, btnUnggagBerkas;
+    private TextView txtPathNPWP, txtPathSIUP, txtPathGXP, txtPathPBF, txtPathKTP;
+    private TextView KTP, NPWP, SIUP, GXP, PBF;
+    private String tipeUpload;
+    private ArrayList<Uri> ImageList = new ArrayList<Uri>();
+    private ArrayList<String> tipeUploadDoc = new ArrayList<>();
+    private ArrayList<String> ext = new ArrayList<>();
+    private ArrayList<String> urlFile = new ArrayList<>();
+    private TextView txtSudahUpload;
+    private String statusRb;
+
     //cek hasil request permission
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -153,7 +176,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         content = findViewById(R.id.content);
         failed = findViewById(R.id.failed);
-        content.setVisibility(View.VISIBLE);
+        content.setVisibility(VISIBLE);
         failed.setVisibility(View.INVISIBLE);
 
         refresh = findViewById(R.id.refresh);
@@ -254,6 +277,9 @@ public class RegisterActivity extends AppCompatActivity {
         kelurahanSpinner = findViewById(R.id.kelurahanSpinner);
         kelurahanAdapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         close = findViewById(R.id.close);
+        txtSudahUpload = findViewById(R.id.txtSudahUpload);
+        txtSudahUpload.setVisibility(GONE);
+        tvFilename.setVisibility(GONE);
 
         checkValidation();
 
@@ -309,12 +335,17 @@ public class RegisterActivity extends AppCompatActivity {
 
                 if(tipeBisnisSpinner.getSelectedItemPosition()==0){
                     berkas.setText("(Harap pilih tipe bisnis dahulu)");
+                    btnUpload.setEnabled(false);
                 }
                 else if(idBisnis==1){
+                    berkas.setVisibility(View.INVISIBLE);
                     berkas.setText("(NPWP, TDP, SIUP, SPPKP, Izin Farmasi)");
+                    btnUpload.setEnabled(true);
                 }
                 else if(idBisnis>1){
+                    berkas.setVisibility(View.INVISIBLE);
                     berkas.setText("(NPWP, TDP, SIUP, SPPKP)");
+                    btnUpload.setEnabled(true);
                 }
                 checkValidation();
             }
@@ -465,17 +496,279 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
                 else {
-                    if(!doesUserHavePermission()){
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+
+                    final Dialog dialog = new Dialog(RegisterActivity.this);
+                    dialog.setContentView(R.layout.dialog_unggah_berkas_register);
+                    Window window = dialog.getWindow();
+                    window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+                    btnClose = dialog.findViewById(R.id.btnClose);
+                    rbList = dialog.findViewById(R.id.rbList);
+                    gambarNPWP = dialog.findViewById(R.id.gambarNPWP);
+                    gambarSIUP = dialog.findViewById(R.id.gambarSIUP);
+                    gambarGXP = dialog.findViewById(R.id.gambarGXP);
+                    gambarPBF = dialog.findViewById(R.id.gambarPBF);
+                    gambarKTP = dialog.findViewById(R.id.gambarKTP);
+                    btnSelectNPWP = dialog.findViewById(R.id.btnSelectNPWP);
+                    btnSelectSIUP = dialog.findViewById(R.id.btnSelectSIUP);
+                    btnSelectGXP = dialog.findViewById(R.id.btnSelectGXP);
+                    btnSelectPBF = dialog.findViewById(R.id.btnSelectPBF);
+                    btnSelectKTP = dialog.findViewById(R.id.btnSelectKTP);
+                    txtPathNPWP = dialog.findViewById(R.id.txtPathNPWP);
+                    txtPathSIUP = dialog.findViewById(R.id.txtPathSIUP);
+                    txtPathGXP = dialog.findViewById(R.id.txtPathGXP);
+                    txtPathPBF = dialog.findViewById(R.id.txtPathPBF);
+                    txtPathKTP = dialog.findViewById(R.id.txtPathKTP);
+                    btnUnggagBerkas = dialog.findViewById(R.id.btnUnggahBerkas);
+                    KTP = dialog.findViewById(R.id.KTP);
+                    NPWP = dialog.findViewById(R.id.NPWP);
+                    SIUP = dialog.findViewById(R.id.SIUP);
+                    GXP = dialog.findViewById(R.id.GXP);
+                    PBF = dialog.findViewById(R.id.PBF);
+
+                    dialog.setCancelable(false);
+
+                    if (idBisnis == 1){
+                        KTP.setVisibility(GONE);
+                        statusRb = "perusahaan";
+                        btnSelectKTP.setVisibility(GONE);
+                        txtPathKTP.setVisibility(GONE);
+                        gambarNPWP.setVisibility(GONE);
+                        gambarSIUP.setVisibility(GONE);
+                        gambarGXP.setVisibility(GONE);
+                        gambarPBF.setVisibility(GONE);
+                        gambarKTP.setVisibility(GONE);
+                        SIUP.setVisibility(VISIBLE);
+                        btnSelectSIUP.setVisibility(VISIBLE);
+                        txtPathSIUP.setVisibility(VISIBLE);
+                        GXP.setVisibility(VISIBLE);
+                        btnSelectGXP.setVisibility(VISIBLE);
+                        txtPathGXP.setVisibility(VISIBLE);
+                        PBF.setVisibility(VISIBLE);
+                        btnSelectPBF.setVisibility(VISIBLE);
+                        txtPathPBF.setVisibility(VISIBLE);
+                    }else{
+                        statusRb = "perusahaan";
+                        KTP.setVisibility(GONE);
+                        btnSelectKTP.setVisibility(GONE);
+                        txtPathKTP.setVisibility(GONE);
+                        gambarNPWP.setVisibility(GONE);
+                        gambarSIUP.setVisibility(GONE);
+                        gambarGXP.setVisibility(GONE);
+                        gambarPBF.setVisibility(GONE);
+                        gambarKTP.setVisibility(GONE);
+                        GXP.setVisibility(GONE);
+                        btnSelectGXP.setVisibility(GONE);
+                        txtPathGXP.setVisibility(GONE);
+                        PBF.setVisibility(GONE);
+                        btnSelectPBF.setVisibility(GONE);
+                        txtPathPBF.setVisibility(GONE);
+                    }
+
+                    final RadioButton rbPerusahaan = dialog.findViewById(R.id.rbPerusahaan);
+                    rbPerusahaan.setChecked(true);
+                    ImageList.clear();
+                    tipeUploadDoc.clear();
+
+                    btnClose.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dialog.dismiss();
                         }
-                    }
-                    else{
-                        Intent intent = new Intent();
-                        intent.setType("*/*");
-                        intent.setAction(Intent.ACTION_GET_CONTENT);
-                        startActivityForResult(Intent.createChooser(intent,"SELECT FILE"),PICK_FILE);
-                    }
+                    });
+
+                    rbList.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(RadioGroup group, int checkedId) {
+                            switch (checkedId){
+                                case R.id.rbPerusahaan :
+                                    tipeUploadDoc.clear();
+                                    if (idBisnis == 1){
+                                        statusRb = "perusahaan";
+                                        KTP.setVisibility(GONE);
+                                        btnSelectKTP.setVisibility(GONE);
+                                        txtPathKTP.setVisibility(GONE);
+                                        gambarNPWP.setVisibility(GONE);
+                                        gambarSIUP.setVisibility(GONE);
+                                        gambarGXP.setVisibility(GONE);
+                                        gambarPBF.setVisibility(GONE);
+                                        gambarKTP.setVisibility(GONE);
+                                        SIUP.setVisibility(VISIBLE);
+                                        btnSelectSIUP.setVisibility(VISIBLE);
+                                        txtPathSIUP.setVisibility(VISIBLE);
+                                        GXP.setVisibility(VISIBLE);
+                                        btnSelectGXP.setVisibility(VISIBLE);
+                                        txtPathGXP.setVisibility(VISIBLE);
+                                        PBF.setVisibility(VISIBLE);
+                                        btnSelectPBF.setVisibility(VISIBLE);
+                                        txtPathPBF.setVisibility(VISIBLE);
+                                    }else{
+                                        statusRb = "perusahaan";
+                                        KTP.setVisibility(GONE);
+                                        btnSelectKTP.setVisibility(GONE);
+                                        txtPathKTP.setVisibility(GONE);
+                                        gambarNPWP.setVisibility(GONE);
+                                        gambarSIUP.setVisibility(GONE);
+                                        gambarGXP.setVisibility(GONE);
+                                        gambarPBF.setVisibility(GONE);
+                                        gambarKTP.setVisibility(GONE);
+                                        GXP.setVisibility(GONE);
+                                        btnSelectGXP.setVisibility(GONE);
+                                        txtPathGXP.setVisibility(GONE);
+                                        PBF.setVisibility(GONE);
+                                        btnSelectPBF.setVisibility(GONE);
+                                        txtPathPBF.setVisibility(GONE);
+                                        SIUP.setVisibility(VISIBLE);
+                                        btnSelectSIUP.setVisibility(VISIBLE);
+                                        txtPathSIUP.setVisibility(VISIBLE);
+                                    }
+                                    break;
+
+                                case R.id.rbPerorangan :
+                                    statusRb = "perorangan";
+                                    tipeUploadDoc.clear();
+                                    ImageList.clear();
+                                    gambarNPWP.setVisibility(GONE);
+                                    gambarSIUP.setVisibility(GONE);
+                                    gambarGXP.setVisibility(GONE);
+                                    gambarPBF.setVisibility(GONE);
+                                    gambarKTP.setVisibility(GONE);
+                                    SIUP.setVisibility(GONE);
+                                    btnSelectSIUP.setVisibility(GONE);
+                                    txtPathSIUP.setVisibility(GONE);
+                                    GXP.setVisibility(GONE);
+                                    btnSelectGXP.setVisibility(GONE);
+                                    txtPathGXP.setVisibility(GONE);
+                                    PBF.setVisibility(GONE);
+                                    btnSelectPBF.setVisibility(GONE);
+                                    txtPathPBF.setVisibility(GONE);
+                                    KTP.setVisibility(VISIBLE);
+                                    btnSelectKTP.setVisibility(VISIBLE);
+                                    txtPathKTP.setVisibility(VISIBLE);
+                                    break;
+                            }
+                        }
+                    });
+
+                    btnSelectNPWP.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(SystemClock.elapsedRealtime()-lastClickTime<1000){
+                                return;
+                            }
+                            else {
+                                Intent i = new Intent();
+                                i.setType("*/*");
+                                i.setAction(Intent.ACTION_GET_CONTENT);
+                                tipeUpload = "NPWP";
+                                startActivityForResult(Intent.createChooser(i,"SELECT FILE"),PICK_FILE);
+                            }
+                            lastClickTime=SystemClock.elapsedRealtime();
+                        }
+                    });
+
+                    btnSelectKTP.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(SystemClock.elapsedRealtime()-lastClickTime<1000){
+                                return;
+                            }
+                            else {
+                                Intent i = new Intent();
+                                i.setType("*/*");
+                                i.setAction(Intent.ACTION_GET_CONTENT);
+                                tipeUpload = "KTP";
+                                startActivityForResult(Intent.createChooser(i,"SELECT FILE"),PICK_FILE);
+                            }
+                            lastClickTime=SystemClock.elapsedRealtime();
+                        }
+                    });
+
+                    btnSelectSIUP.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(SystemClock.elapsedRealtime()-lastClickTime<1000){
+                                return;
+                            }
+                            else {
+                                Intent i = new Intent();
+                                i.setType("*/*");
+                                i.setAction(Intent.ACTION_GET_CONTENT);
+                                tipeUpload = "SIUP";
+                                startActivityForResult(Intent.createChooser(i,"SELECT FILE"),PICK_FILE);
+                            }
+                            lastClickTime=SystemClock.elapsedRealtime();
+                        }
+                    });
+
+                    btnSelectGXP.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(SystemClock.elapsedRealtime()-lastClickTime<1000){
+                                return;
+                            }
+                            else {
+                                Intent i = new Intent();
+                                i.setType("*/*");
+                                i.setAction(Intent.ACTION_GET_CONTENT);
+                                tipeUpload = "GXP";
+                                startActivityForResult(Intent.createChooser(i,"SELECT FILE"),PICK_FILE);
+                            }
+                            lastClickTime=SystemClock.elapsedRealtime();
+                        }
+                    });
+
+                    btnSelectPBF.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(SystemClock.elapsedRealtime()-lastClickTime<1000){
+                                return;
+                            }
+                            else {
+                                Intent i = new Intent();
+                                i.setType("*/*");
+                                i.setAction(Intent.ACTION_GET_CONTENT);
+                                tipeUpload = "PBF";
+                                startActivityForResult(Intent.createChooser(i,"SELECT FILE"),PICK_FILE);
+                            }
+                            lastClickTime=SystemClock.elapsedRealtime();
+                        }
+                    });
+
+                    btnUnggagBerkas.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if(SystemClock.elapsedRealtime()-lastClickTime<1000){
+                                return;
+                            }
+                            else {
+//                                if (txtPathNPWP.getText().toString().equals("No file choosen")||txtPathSIUP.getText().toString().equals("No file choosen")||
+//                                        txtPathGXP.getText().toString().equals("No file choosen")){
+//                                    Toast.makeText(getApplicationContext(), "Berkas belum lengkap", Toast.LENGTH_LONG).show();
+//                                }else{
+//                                    Log.d(TAG, "masuk kesini: "+txtPathNPWP.getText().toString());
+//                                    unggahBerkas();
+//                                    dialog.dismiss();
+//                                }
+                                checkUnggahBerkas(dialog);
+                            }
+                            lastClickTime=SystemClock.elapsedRealtime();
+                        }
+                    });
+
+                    dialog.show();
+
+//                    if(!doesUserHavePermission()){
+//                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+//                        }
+//                    }
+//                    else{
+//                        Intent intent = new Intent();
+//                        intent.setType("*/*");
+//                        intent.setAction(Intent.ACTION_GET_CONTENT);
+//                        startActivityForResult(Intent.createChooser(intent,"SELECT FILE"),PICK_FILE);
+//                    }
                 }
                 lastClickTime=SystemClock.elapsedRealtime();
             }
@@ -537,7 +830,7 @@ public class RegisterActivity extends AppCompatActivity {
                 }
                 else if(str.length()>20){
                     noNPWP.getEditText().setText(noNPWP.getEditText().getText().toString().substring(0,20));
-                    //noNPWP.getEditText().clearFocus();
+                    //noNPWP.getEditText().clear();
                     noSIUP.requestFocus();
                 }
             }
@@ -719,48 +1012,47 @@ public class RegisterActivity extends AppCompatActivity {
                 //|| kelurahan.isErrorEnabled()
                 || kodepos.isErrorEnabled()
                 || noktp.isErrorEnabled()
-                || filename==null
         ){
             lanjutBtn.setEnabled(false);
         }
         else{
-            if (!filename.substring(filename.lastIndexOf(".")).equals(".rar")){
-                final Dialog dialog = new Dialog(RegisterActivity.this);
-                dialog.setContentView(R.layout.konfirmasi_dialog);
-                Window window = dialog.getWindow();
-                window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                TextView btnBatal = dialog.findViewById(R.id.btnBatal);
-                Button btnSetuju = dialog.findViewById(R.id.btnSetuju);
-                TextView title = dialog.findViewById(R.id.title);
-                TextView description = dialog.findViewById(R.id.description);
-                dialog.setCancelable(false);
-                btnBatal.setVisibility(GONE);
-
-                title.setText("Upload File");
-                description.setText("File yang diupload tidak berupa file rar/zip, harap melakukan upload ulang");
-
-                btnBatal.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        dialog.dismiss();
-                    }
-                });
-
-                btnSetuju.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (SystemClock.elapsedRealtime() - lastClickTime < 1000) {
-                            return;
-                        } else {
-                            dialog.dismiss();
-                        }
-                    }
-                });
-
-                dialog.show();
-            }else {
+//            if (!filename.substring(filename.lastIndexOf(".")).equals(".rar")){
+//                final Dialog dialog = new Dialog(RegisterActivity.this);
+//                dialog.setContentView(R.layout.konfirmasi_dialog);
+//                Window window = dialog.getWindow();
+//                window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//                TextView btnBatal = dialog.findViewById(R.id.btnBatal);
+//                Button btnSetuju = dialog.findViewById(R.id.btnSetuju);
+//                TextView title = dialog.findViewById(R.id.title);
+//                TextView description = dialog.findViewById(R.id.description);
+//                dialog.setCancelable(false);
+//                btnBatal.setVisibility(GONE);
+//
+//                title.setText("Upload File");
+//                description.setText("File yang diupload tidak berupa file rar/zip, harap melakukan upload ulang");
+//
+//                btnBatal.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        dialog.dismiss();
+//                    }
+//                });
+//
+//                btnSetuju.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        if (SystemClock.elapsedRealtime() - lastClickTime < 1000) {
+//                            return;
+//                        } else {
+//                            dialog.dismiss();
+//                        }
+//                    }
+//                });
+//
+//                dialog.show();
+//            }else {
                 lanjutBtn.setEnabled(true);
-            }
+//            }
         }
     }
 
@@ -768,6 +1060,7 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (resultCode == RESULT_OK && requestCode == PICK_FILE && data !=null && data.getData() != null) {
             filepath = data.getData(); //path file yang dipilih
             File file = new File(filepath.toString()); //file yang dipilih
@@ -786,16 +1079,141 @@ public class RegisterActivity extends AppCompatActivity {
                 filename = file.getName();
             }
 
-            tvFilename.setText(filename); //nama file
+            Uri imageuri = filepath;
+            Log.d("ido", "onActivityResult: "+imageuri);
+            ImageList.add(imageuri);
 
-            extension = filename.substring(filename.lastIndexOf(".")); //ekstension file
-            Log.d(TAG, "onActivityResult: "+extension);
+            if (tipeUpload.equals("NPWP")) {
+                tipeUploadDoc.add("NPWP/SPPKP");
+                txtPathNPWP.setText(filename); //nama file
+                try {
+                    Bitmap bitmap = MediaStore
+                            .Images
+                            .Media
+                            .getBitmap(
+                                    getContentResolver(),
+                                    filepath);
+                    gambarNPWP.setImageBitmap(bitmap);
+                    gambarNPWP.setVisibility(View.VISIBLE);
+                }
 
-            checkValidation();
-            if (!filename.substring(filename.lastIndexOf(".")).equals(".rar")){
-                Toast.makeText(getApplicationContext(), "Harus upload file dengan extensi rar/zip", Toast.LENGTH_SHORT).show();
+                catch (IOException e) {
+                    // Log the exception
+                    e.printStackTrace();
+                }
+                ext.add(filename.substring(filename.lastIndexOf("."))); //ekstension file);
+                btnSelectNPWP.setVisibility(GONE);
+            }else if (tipeUpload.equals("KTP")){
+                txtPathKTP.setText(filename);
+                tipeUploadDoc.add("KTP");
+                try {
+                    Bitmap bitmap = MediaStore
+                            .Images
+                            .Media
+                            .getBitmap(
+                                    getContentResolver(),
+                                    filepath);
+                    gambarKTP.setImageBitmap(bitmap);
+                    gambarKTP.setVisibility(View.VISIBLE);
+                }
+
+                catch (IOException e) {
+                    // Log the exception
+                    e.printStackTrace();
+                }
+                ext.add(filename.substring(filename.lastIndexOf("."))); //ekstension file);
+                btnSelectKTP.setVisibility(GONE);
+            }else if (tipeUpload.equals("SIUP")){
+                txtPathSIUP.setText(filename);
+                tipeUploadDoc.add("SIUP/SIUI");
+                try {
+                    Bitmap bitmap = MediaStore
+                            .Images
+                            .Media
+                            .getBitmap(
+                                    getContentResolver(),
+                                    filepath);
+                    gambarSIUP.setImageBitmap(bitmap);
+                    gambarSIUP.setVisibility(View.VISIBLE);
+                }
+
+                catch (IOException e) {
+                    // Log the exception
+                    e.printStackTrace();
+                }
+                ext.add(filename.substring(filename.lastIndexOf("."))); //ekstension file);
+                btnSelectSIUP.setVisibility(GONE);
+            }else if (tipeUpload.equals("GXP")){
+                txtPathGXP.setText(filename);
+                tipeUploadDoc.add("GXP");
+                try {
+                    Bitmap bitmap = MediaStore
+                            .Images
+                            .Media
+                            .getBitmap(
+                                    getContentResolver(),
+                                    filepath);
+                    gambarGXP.setImageBitmap(bitmap);
+                    gambarGXP.setVisibility(View.VISIBLE);
+                }
+
+                catch (IOException e) {
+                    // Log the exception
+                    e.printStackTrace();
+                }
+                ext.add(filename.substring(filename.lastIndexOf("."))); //ekstension file);
+                btnSelectGXP.setVisibility(GONE);
+            }else if (tipeUpload.equals("PBF")){
+                txtPathPBF.setText(filename);
+                tipeUploadDoc.add("PBF");
+                try {
+                    Bitmap bitmap = MediaStore
+                            .Images
+                            .Media
+                            .getBitmap(
+                                    getContentResolver(),
+                                    filepath);
+                    gambarPBF.setImageBitmap(bitmap);
+                    gambarPBF.setVisibility(View.VISIBLE);
+                }
+
+                catch (IOException e) {
+                    // Log the exception
+                    e.printStackTrace();
+                }
+                ext.add(filename.substring(filename.lastIndexOf("."))); //ekstension file);
+                btnSelectPBF.setVisibility(GONE);
             }
         }
+
+//        if (resultCode == RESULT_OK && requestCode == PICK_FILE && data !=null && data.getData() != null) {
+//            filepath = data.getData(); //path file yang dipilih
+//            File file = new File(filepath.toString()); //file yang dipilih
+//
+//            if (filepath.toString().startsWith("content://")) {
+//                Cursor cursor = null;
+//                try {
+//                    cursor = getApplicationContext().getContentResolver().query(filepath, null, null, null, null);
+//                    if (cursor != null && cursor.moveToFirst()) {
+//                        filename = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+//                    }
+//                } finally {
+//                    cursor.close();
+//                }
+//            } else if (filepath.toString().startsWith("file://")) {
+//                filename = file.getName();
+//            }
+//
+//            tvFilename.setText(filename); //nama file
+//
+//            extension = filename.substring(filename.lastIndexOf(".")); //ekstension file
+//            Log.d(TAG, "onActivityResult: "+extension);
+//
+//            checkValidation();
+//            if (!filename.substring(filename.lastIndexOf(".")).equals(".rar")){
+//                Toast.makeText(getApplicationContext(), "Harus upload file dengan extensi rar/zip", Toast.LENGTH_SHORT).show();
+//            }
+//        }
     }
 
     /**Method untuk request tipe bisnis*/
@@ -803,7 +1221,7 @@ public class RegisterActivity extends AppCompatActivity {
         Call <JsonObject> tipeBisnisCall = RetrofitClient
                 .getInstance()
                 .getApi()
-                .request(new JSONRequest(QueryEncryption.Encrypt("SELECT * FROM gcm_master_category;")));
+                .request(new JSONRequest(QueryEncryption.Encrypt("SELECT * FROM gcm_master_category where nama != 'Umum';;")));
 
         tipeBisnisCall.enqueue(new Callback<JsonObject>() {
             @Override
@@ -832,7 +1250,7 @@ public class RegisterActivity extends AppCompatActivity {
                 try {
                     loadingDialog.hideDialog();
                     content.setVisibility(View.INVISIBLE);
-                    failed.setVisibility(View.VISIBLE);
+                    failed.setVisibility(VISIBLE);
 //                    requestTipeBisnis();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -914,7 +1332,8 @@ public class RegisterActivity extends AppCompatActivity {
                                             if (flag.equals("buyer")) {
                                                 sellerRequest();
                                             }else{
-                                                uploadFile();
+//                                                uploadFile();
+                                                registerBuyer();
                                             }
                                         }else{
                                             Toast.makeText(getApplicationContext(), "Nomor KTP anda sudah terdaftar", Toast.LENGTH_LONG).show();
@@ -968,7 +1387,7 @@ public class RegisterActivity extends AppCompatActivity {
                                     fileUrl = String.valueOf(uri);
                                     loadingDialog.showDialog();
 //                                    register(); //lanjut ke register data-data registrasi
-                                    registerBuyer();
+//                                    registerBuyer();
                                     Log.d("", "onSuccess: "+fileUrl);
                                 }
                             });
@@ -1028,7 +1447,7 @@ public class RegisterActivity extends AppCompatActivity {
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
                     content.setVisibility(View.INVISIBLE);
-                    failed.setVisibility(View.VISIBLE);
+                    failed.setVisibility(VISIBLE);
                 }
             });
         } catch (Exception e) {
@@ -1092,7 +1511,8 @@ public class RegisterActivity extends AppCompatActivity {
                     }
                     else {
                         //checkUsername();
-                        uploadFile();
+//                        uploadFile();
+                        registerBuyer();
                     }
                     lastClickTime= SystemClock.elapsedRealtime();
                 } catch (Exception e) {
@@ -1205,7 +1625,7 @@ public class RegisterActivity extends AppCompatActivity {
                     try {
                         loadingDialog.hideDialog();
                         content.setVisibility(View.INVISIBLE);
-                        failed.setVisibility(View.VISIBLE);
+                        failed.setVisibility(VISIBLE);
 //                    requestLokasi();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1258,7 +1678,7 @@ public class RegisterActivity extends AppCompatActivity {
                     try {
                         loadingDialog.hideDialog();
                         content.setVisibility(View.INVISIBLE);
-                        failed.setVisibility(View.VISIBLE);
+                        failed.setVisibility(VISIBLE);
 //                    requestLokasi();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1311,7 +1731,7 @@ public class RegisterActivity extends AppCompatActivity {
                     try {
                         loadingDialog.hideDialog();
                         content.setVisibility(View.INVISIBLE);
-                        failed.setVisibility(View.VISIBLE);
+                        failed.setVisibility(VISIBLE);
 //                    requestLokasi();
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1329,10 +1749,12 @@ public class RegisterActivity extends AppCompatActivity {
         String sellerStatus, sa_role, listingCompany, listingAlamat, insertCompany;
         Integer sa_divisi;
         String pass = password.getEditText().getText().toString();
-        if (valueTipeRegister.equals('S')) {
+        Log.d(TAG, "registerBuyer: "+valueTipeRegister);
+        if (valueTipeRegister.equals("S")) {
             sellerStatus = "I";
             sa_role = "admin";
             sa_divisi = idBisnis;
+            Log.d(TAG, "registerBuyer: kesini ga ya?");
         } else {
             sellerStatus = null;
             sa_role = null;
@@ -1348,14 +1770,15 @@ public class RegisterActivity extends AppCompatActivity {
                 "'" + emailPerusahaan.getEditText().getText().toString() + "', " +
                 "'" + notelp.getEditText().getText().toString() + "', " +
                 idBisnis + "," +
-                "'" + fileUrl + "'," +
+//                "'" + fileUrl + "'," +
+                "'listing'," +
                 "'" + value + "'," +
                 "'" + valueTipeRegister + "', " +
                 sellerStatus + ", " +
                 "null," +
                 "'',null)RETURNING id as id_company),";
 
-        String alamatPerusahaan = "new_insert2 as (insert into gcm_master_alamat (kelurahan, kecamatan, kota, provinsi, " +
+        String alamatPerusahaan = " new_insert2 as (insert into gcm_master_alamat (kelurahan, kecamatan, kota, provinsi, " +
                 "kodepos, no_telp, shipto_active, billto_active, company_id, alamat, flag_active) " +
                 "values( " +
                 "'" + idKelurahan + "'," +
@@ -1370,7 +1793,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         String registrasiAkunBuyer = null;
         try {
-            registrasiAkunBuyer = "new_insert3 as (insert into gcm_master_user " +
+            registrasiAkunBuyer = " new_insert3 as (insert into gcm_master_user " +
                     "(nama, no_ktp, email, no_hp, username, password, status, role, company_id, create_by, update_by, "+
                     "update_date, sa_role, sa_divisi, email_verif, no_hp_verif, blacklist_by, id_blacklist, is_blacklist, notes_blacklist) " +
                     "VALUES ( " +
@@ -1390,28 +1813,37 @@ public class RegisterActivity extends AppCompatActivity {
 
         String registrasiAkunSeller = null;
         try {
-            registrasiAkunSeller = "INSERT INTO gcm_master_user " +
+            registrasiAkunSeller = " new_insert3 as (INSERT INTO gcm_master_user " +
                     "(nama, no_ktp, email, no_hp, username, password, status, role, company_id, create_by, update_by, update_date, "+
                     "sa_role, sa_divisi, email_verif, no_hp_verif, blacklist_by, id_blacklist, is_blacklist, notes_blacklist) " +
                     "VALUES ( " +
-                    "'" + namaPengguna.getEditText().getText().toString() + "'," +
-                    "'" + noktp.getEditText().getText().toString() + "'," +
-                    "'" + emailPengguna.getEditText().getText().toString() + "'," +
-                    "'" + nohp.getEditText().getText().toString() + "'," +
-                    "'" + username.getEditText().getText().toString() + "'," +
-                    "'" + QueryEncryption.Encrypt(pass) + "'," +
-                    "'I'," +
-                    "'admin'," +
+                    "'" + namaPengguna.getEditText().getText().toString() + "', " +
+                    "'" + noktp.getEditText().getText().toString() + "', " +
+                    "'" + emailPengguna.getEditText().getText().toString() + "', " +
+                    "'" + nohp.getEditText().getText().toString() + "', " +
+                    "'" + username.getEditText().getText().toString() + "', " +
+                    "'" + QueryEncryption.Encrypt(pass) + "', " +
+                    "'I', " +
+                    "'admin', " +
                     "(select id_company from new_insert1)" +
-                    ", 0, 0, now(), " + sa_role + ", " + sa_divisi + ", false, false, null, 0, false, '')";
+                    ", 0, 0, now(), " + sa_role + ", " + sa_divisi + ", false, false, null, 0, false, ''))";
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        String queryDokumen = " insert into gcm_listing_dokumen(company_id, url_file, tipe) values";
+        String loopDokumen = "";
+        for (int i=0; i<urlFile.size(); i++){
+            loopDokumen = loopDokumen + " ((select id_company from new_insert1), '"+urlFile.get(i).toString()+"', '"+tipeUploadDoc.get(i).toString()+"')";
+            if (i < urlFile.size() - 1){
+                loopDokumen = loopDokumen.concat(",");
+            }
+        }
+
         if (tipeRegistrasiSpinner.getSelectedItemId()==1) {
-            listingCompany = "new_insert5 as (INSERT INTO gcm_company_listing (buyer_id, seller_id, buyer_number_mapping, seller_number_mapping, "+
+            listingCompany = " new_insert5 as (INSERT INTO gcm_company_listing (buyer_id, seller_id, buyer_number_mapping, seller_number_mapping, "+
                     "blacklist_by, notes_blacklist) VALUES ";
-            listingAlamat = "INSERT INTO gcm_listing_alamat (id_master_alamat, id_buyer, id_seller, kode_shipto_customer, kode_billto_customer) VALUES ";
+            listingAlamat = " new_insert6 as (INSERT INTO gcm_listing_alamat (id_master_alamat, id_buyer, id_seller, kode_shipto_customer, kode_billto_customer) VALUES ";
             String loopCompany = "";
             String loopAlamat = "";
             Log.d(TAG, "showSellerDialog: "+sellerListTemp.size());
@@ -1427,19 +1859,26 @@ public class RegisterActivity extends AppCompatActivity {
                     loopCompany = loopCompany.concat(",");
                 }
                 if (i == Companylist.size() - 1) {
-                    loopCompany = loopCompany.concat(")");
+                    loopCompany = loopCompany.concat("),");
                 }
                 loopAlamat = loopAlamat + "((select id from new_insert2), (select id_company from new_insert1)," + Companylist.get(i).getId() + ", null, null )";
                 if (i < Companylist.size() - 1) {
                     loopAlamat = loopAlamat.concat(",");
                 }
+                if (i == Companylist.size() - 1){
+                    loopAlamat = loopAlamat.concat(")");
+                }
             }
             insertCompany = registrasiPerusahaan.concat(alamatPerusahaan).concat(",").concat(registrasiAkunBuyer)
-                    .concat(listingCompany.concat(loopCompany).concat(listingAlamat).concat(loopAlamat));
+                    .concat(listingCompany.concat(loopCompany).concat(listingAlamat).concat(loopAlamat).concat(queryDokumen.concat(loopDokumen)));
+            Log.d(TAG, "dokumen query: "+insertCompany.concat(queryDokumen.concat(loopDokumen)));
         } else {
-            insertCompany = registrasiPerusahaan.concat(alamatPerusahaan).concat(registrasiAkunSeller);
+//            insertCompany = registrasiPerusahaan.concat(alamatPerusahaan).concat(",").concat(registrasiAkunSeller).concat(queryDokumen.concat(loopDokumen));
+            insertCompany = registrasiPerusahaan+alamatPerusahaan+","+registrasiAkunSeller+queryDokumen+loopDokumen;
         }
         try {
+            Log.d(TAG, "registerBuyer: " + QueryEncryption.Encrypt(insertCompany));
+            Log.d(TAG, "registerBuyer: " + insertCompany);
             Call<JsonObject> registerUser = RetrofitClient
                     .getInstance()
                     .getApi()
@@ -1448,26 +1887,134 @@ public class RegisterActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
                     if(response.isSuccessful()){
-                        loadingDialog.hideDialog();
-                        dialog.hide();
-                        Toast.makeText(RegisterActivity.this, "REGISTRASI BERHASIL", Toast.LENGTH_LONG).show();
-                        Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-                        startActivity(i);
-                        finish();
+                        if (valueTipeRegister.equals("S")){
+                            loadingDialog.hideDialog();
+                            Toast.makeText(RegisterActivity.this, "REGISTRASI BERHASIL", Toast.LENGTH_LONG).show();
+                            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                            startActivity(i);
+                            finish();
+                            Log.d(TAG, "onResponse: berhasil");
+                        }else {
+                            loadingDialog.hideDialog();
+                            dialog.hide();
+                            Toast.makeText(RegisterActivity.this, "REGISTRASI BERHASIL", Toast.LENGTH_LONG).show();
+                            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                            startActivity(i);
+                            finish();
+                            Log.d(TAG, "onResponse: berhasil");
+                        }
                     }else{
                         loadingDialog.hideDialog();
                         Toast.makeText(RegisterActivity.this, "REGISTRASI GAGAL, PERIKSA KONEKSI ANDA", Toast.LENGTH_LONG).show();
+                        Log.d(TAG, "onResponse: gagal");
                     }
+                    Log.d(TAG, "onResponse: cek aja");
                 }
 
                 @Override
                 public void onFailure(Call<JsonObject> call, Throwable t) {
-
+                    Log.d(TAG, "onFailure: jangan2 masuknya kesini");
                 }
             });
-            Log.d(TAG, "registerBuyer: " + insertCompany);
         }catch (Exception e){
             e.printStackTrace();
+        }
+    }
+
+    private void unggahBerkas(){
+        if (filepath != null) {
+
+            // Code for showing progressDialog while uploading
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Unggah berkas");
+            progressDialog.show();
+            for (int i = 0; i < ImageList.size(); i++) {
+                // Defining the child of storageReference
+                final StorageReference ref = storageReference.child("dokumen/" + Calendar.getInstance().getTimeInMillis()
+                        + "-" + ImageList.get(i).getLastPathSegment() + ext.get(i));
+
+                final int finalI = i;
+                ref.putFile(ImageList.get(i)).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        progressDialog.dismiss();
+                        ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                            @Override
+                            public void onSuccess(Uri uri) {
+                                fileUrl = String.valueOf(uri);
+                                urlFile.add(fileUrl);
+                                Log.d(TAG, "onSuccess: " + fileUrl + "-" + tipeUploadDoc.get(finalI));
+                                ImageList.clear();
+                                if (urlFile.size()!=0){
+                                    btnUpload.setVisibility(GONE);
+                                    tvFilename.setVisibility(GONE);
+                                    txtSudahUpload.setVisibility(VISIBLE);
+                                }
+                            }
+                        });
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        progressDialog.dismiss();
+                        Toast.makeText(RegisterActivity.this, "Upload gagal", Toast.LENGTH_LONG).show();
+                    }
+                }).addOnProgressListener(
+                    new OnProgressListener<UploadTask.TaskSnapshot>() {
+
+                        // Progress Listener for loading
+                        // percentage on the dialog box
+                        @Override
+                        public void onProgress(
+                                UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
+                            progressDialog.setMessage("Uploading...");
+                            Log.d(TAG, "onProgress: "+progress);
+                        }
+                    });
+            }
+        }
+    }
+
+    private void checkUnggahBerkas(Dialog dialog){
+        Log.d(TAG, "checkUnggahBerkas: "+statusRb+" "+idBisnis);
+        if (idBisnis == 1){
+            if (statusRb.equals("perusahaan")){
+                if (txtPathNPWP.getText().toString().equals("No file choosen") ||
+                txtPathSIUP.getText().toString().equals("No file choosen") ||
+                txtPathGXP.getText().toString().equals("No file choosen")){
+                    Toast.makeText(getApplicationContext(), "Berkas belum lengkap, silahkan dilengkapi", Toast.LENGTH_LONG).show();
+                }else{
+                    unggahBerkas();
+                    dialog.dismiss();
+                }
+            }else if (statusRb.equals("perorangan")){
+                if (txtPathKTP.getText().toString().equals("No file choosen") ||
+                txtPathNPWP.getText().toString().equals("No file choosen")){
+                    Toast.makeText(getApplicationContext(), "Berkas belum lengkap, silahkan dilengkapi", Toast.LENGTH_LONG).show();
+                }else{
+                    unggahBerkas();
+                    dialog.dismiss();
+                }
+            }
+        }else{
+            if (statusRb.equals("perusahaan")){
+                if (txtPathNPWP.getText().toString().equals("No file choosen") ||
+                        txtPathSIUP.getText().toString().equals("No file choosen")){
+                    Toast.makeText(getApplicationContext(), "Berkas belum lengkap, silahkan dilengkapi", Toast.LENGTH_LONG).show();
+                }else{
+                    unggahBerkas();
+                    dialog.dismiss();
+                }
+            }else if (statusRb.equals("perorangan")){
+                if (txtPathKTP.getText().toString().equals("No file choosen") ||
+                        txtPathNPWP.getText().toString().equals("No file choosen")){
+                    Toast.makeText(getApplicationContext(), "Berkas belum lengkap, silahkan dilengkapi", Toast.LENGTH_LONG).show();
+                }else{
+                    unggahBerkas();
+                    dialog.dismiss();
+                }
+            }
         }
     }
 }

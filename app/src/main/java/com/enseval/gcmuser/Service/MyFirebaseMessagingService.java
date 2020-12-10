@@ -124,6 +124,11 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                                 .setContentTitle("GLOB")
                                 .setContentText("1 Nego berhasil disepakati")
                                 .setSmallIcon(R.mipmap.ic_launcher);
+                    }else{
+                        builder = new Notification.Builder(MyFirebaseMessagingService.this, CHANNEL_ID)
+                                .setContentTitle("GLOB")
+                                .setContentText("Balasan negosiasi dari penjual")
+                                .setSmallIcon(R.mipmap.ic_launcher);
                     }
                 }else{
                     builder = new Notification.Builder(MyFirebaseMessagingService.this, CHANNEL_ID)

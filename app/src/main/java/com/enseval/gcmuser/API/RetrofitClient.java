@@ -11,9 +11,12 @@ public class RetrofitClient {
     private static final String BASE_URL_INSERT = "https://jrs65kbpo5.execute-api.ap-southeast-1.amazonaws.com/"; //url api insert
     private static final String BASE_URL_KURS = "https://api.exchangeratesapi.io/"; //url api kurs
 
+    private static final String BASE_URL_GLOB_API = "https://glob.co.id/";
+
     private static RetrofitClient mInstance;
     private static RetrofitClient mInstance2;
     private static RetrofitClient mInstance3;
+    private static RetrofitClient mInstance4;
     private Retrofit retrofit;
 
     private RetrofitClient(String type) {
@@ -26,6 +29,9 @@ public class RetrofitClient {
         }
         else if(type.equals("KURS")){
             BASE_URL = BASE_URL_KURS;
+        }
+        else if(type.equals("GLOB")){
+            BASE_URL = BASE_URL_GLOB_API;
         }
         retrofit = new Retrofit.Builder()
                 .baseUrl(BASE_URL)
@@ -54,12 +60,19 @@ public class RetrofitClient {
         return mInstance3;
     }
 
+    public static synchronized RetrofitClient getInstanceGLOB() {
+        if (mInstance4 == null) {
+            mInstance4 = new RetrofitClient("GLOB");
+        }
+        return mInstance4;
+    }
+
     public API getApi() {
         return retrofit.create(API.class);
     }
 
     private static Retrofit retrofitOTP = null;
-    public static final String BASE_URL_OTP = "https://www.mospay.id/";
+    public static final String BASE_URL_OTP = "https://www.emos.id/";
     public static final String BASE_USER_ID = "GMOS001";
     public static final String BASE_KEY_ID = "z25k4at3jzob718iqceofgor6a1tbm";
 

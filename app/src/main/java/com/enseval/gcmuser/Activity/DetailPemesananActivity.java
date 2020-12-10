@@ -389,22 +389,22 @@ public class DetailPemesananActivity extends AppCompatActivity {
 
             //Nego dengan SALES
             if (barang.getPersen_nego_1()==0 && barang.getPersen_nego_2()==0 && barang.getPersen_nego_3()==0){
-                if (hargaNego >= hargaRendah){
-                    query = "INSERT INTO gcm_master_cart (company_id, barang_id, qty, create_by, update_by, harga_konsumen, harga_sales, nego_count, shipto_id, billto_id, payment_id) " +
-                            "VALUES (" +
-                            SharedPrefManager.getInstance(getApplicationContext()).getUser().getCompanyId() + ", " +
-                            barang.getId() + ", " +
-                            jmlinsert + ", " +
-                            SharedPrefManager.getInstance(getApplicationContext()).getUser().getUserId() + ", " +
-                            SharedPrefManager.getInstance(getApplicationContext()).getUser().getUserId() + ", " +
-                            String.valueOf(hargaNego * jumlah) + ", " +
-                            String.valueOf(hargaNego * jumlah) + ", " +
-                            "1, " +
-                            id_shipto + ", " +
-                            id_billto + ", " +
-                            id_payment + ") RETURNING id, nego_count;";
-                    Log.d(TAG, "QUERY Nego Sales: " + query);
-                }else {
+//                if (hargaNego >= hargaRendah){
+//                    query = "INSERT INTO gcm_master_cart (company_id, barang_id, qty, create_by, update_by, harga_konsumen, harga_sales, nego_count, shipto_id, billto_id, payment_id) " +
+//                            "VALUES (" +
+//                            SharedPrefManager.getInstance(getApplicationContext()).getUser().getCompanyId() + ", " +
+//                            barang.getId() + ", " +
+//                            jmlinsert + ", " +
+//                            SharedPrefManager.getInstance(getApplicationContext()).getUser().getUserId() + ", " +
+//                            SharedPrefManager.getInstance(getApplicationContext()).getUser().getUserId() + ", " +
+//                            String.valueOf(hargaNego * jumlah) + ", " +
+//                            String.valueOf(hargaNego * jumlah) + ", " +
+//                            "1, " +
+//                            id_shipto + ", " +
+//                            id_billto + ", " +
+//                            id_payment + ") RETURNING id, nego_count;";
+//                    Log.d(TAG, "QUERY Nego Sales: " + query);
+//                }else {
                     query = "INSERT INTO gcm_master_cart (company_id, barang_id, qty, create_by, update_by, harga_konsumen, nego_count, shipto_id, billto_id, payment_id) " +
                             "VALUES (" +
                             SharedPrefManager.getInstance(getApplicationContext()).getUser().getCompanyId() + ", " +
@@ -418,7 +418,7 @@ public class DetailPemesananActivity extends AppCompatActivity {
                             id_billto + ", " +
                             id_payment + ") RETURNING id, nego_count;";
                     Log.d(TAG, "QUERY Nego Sales: " + query);
-                }
+//                }
             }else{
                 //Jika kondisi nego dengan AI
                 if (barang.getPersen_nego_1()==0 && hargaNego<Math.round(hargaRendah)){
@@ -561,8 +561,11 @@ public class DetailPemesananActivity extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.HOUR, 1);
         Date DateTime = calendar.getTime();
+        long TimeStamp = calendar.getTimeInMillis();
         SimpleDateFormat datetime = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String Date = datetime.format(DateTime);
+
+        long timestamp_now = Calendar.getInstance().getTimeInMillis();
 
         String query = "";
 
@@ -574,62 +577,62 @@ public class DetailPemesananActivity extends AppCompatActivity {
 
         //Nego dengan SALES
         if (barang.getPersen_nego_1() == 0 && barang.getPersen_nego_2() == 0 && barang.getPersen_nego_3() == 0){
-            if (hargaNego>=hargarendah){
-                query = "INSERT INTO gcm_history_nego (harga_nego, harga_sales, harga_final, created_by, updated_by, notes) VALUES(" +
-                        hargaNego + ", " +
-                        hargaNego + ", " +
-                        hargaNego + ", " +
-                        SharedPrefManager.getInstance(getApplicationContext()).getUser().getUserId() + ", " +
-                        SharedPrefManager.getInstance(getApplicationContext()).getUser().getUserId() + ", " +
-                        "'') RETURNING id;";
-                Log.d(TAG, "Nego Sales: " + query);
-            }else {
-                query = "INSERT INTO gcm_history_nego (harga_nego, harga_sales, harga_final, created_by, updated_by, notes) VALUES(" +
+//            if (hargaNego>=hargarendah){
+//                query = "INSERT INTO gcm_history_nego (harga_nego, harga_sales, harga_final, created_by, updated_by, notes) VALUES(" +
+//                        hargaNego + ", " +
+//                        hargaNego + ", " +
+//                        hargaNego + ", " +
+//                        SharedPrefManager.getInstance(getApplicationContext()).getUser().getUserId() + ", " +
+//                        SharedPrefManager.getInstance(getApplicationContext()).getUser().getUserId() + ", " +
+//                        "'') RETURNING id;";
+//                Log.d(TAG, "Nego Sales: " + query);
+//            }else {
+                query = "INSERT INTO gcm_history_nego (harga_nego, harga_sales, harga_final, created_by, updated_by, notes, timestamp_created_date, timestamp_updated_date) VALUES(" +
                         hargaNego + ", " +
                         Math.round(harganormal) + ", '0', " +
                         SharedPrefManager.getInstance(getApplicationContext()).getUser().getUserId() + ", " +
                         SharedPrefManager.getInstance(getApplicationContext()).getUser().getUserId() + ", " +
-                        "'') RETURNING id;";
+                        "'', "+timestamp_now+", "+timestamp_now+") RETURNING id;";
                 Log.d(TAG, "Nego Sales: " + query);
-            }
+//            }
         }else{
             if (barang.getPersen_nego_1() == 0 && hargaNego < Math.round(hargarendah)){
                 Log.d(TAG, "fillDataHistory: persenn nego 0");
-                query = "INSERT INTO gcm_history_nego (harga_nego, harga_sales, harga_final, created_by, updated_by, notes, time_respon) values" +
+                query = "INSERT INTO gcm_history_nego (harga_nego, harga_sales, harga_final, created_by, updated_by, notes, time_respon, timestamp_respon, timestamp_created_date, timestamp_updated_date) values" +
                         "('" + hargaNego + "','" +
                         Math.round(hargarendah) + "','0','" +
                         SharedPrefManager.getInstance(getApplicationContext()).getUser().getUserId()+"','"+
                         SharedPrefManager.getInstance(getApplicationContext()).getUser().getUserId()+"','"+
-                        inputNotes.getText().toString() + "','"+Date+"') RETURNING id;";
+                        inputNotes.getText().toString() + "','"+Date+"', "+TimeStamp+", "+timestamp_now+", "+timestamp_now+") RETURNING id;";
                 Log.d(TAG, "fillDataHistory: "+query);
             }else if(barang.getPersen_nego_1() == 0 && hargaNego > Math.round(hargarendah)){
                 Log.d(TAG, "fillDataHistory: persen nego 0, and diatas harga rendah");
-                query = "INSERT INTO gcm_history_nego (harga_nego, harga_sales, harga_final, created_by, updated_by, notes, time_respon) values" +
+                query = "INSERT INTO gcm_history_nego (harga_nego, harga_sales, harga_final, created_by, updated_by, notes, time_respon, timestamp_respon, timestamp_created_date, timestamp_updated_date) values" +
                         "('" + hargaNego + "','" +
                         hargaNego + "',"+hargaNego+",'" +
                         SharedPrefManager.getInstance(getApplicationContext()).getUser().getUserId()+"','"+
                         SharedPrefManager.getInstance(getApplicationContext()).getUser().getUserId()+"','"+
-                        inputNotes.getText().toString() + "','"+Date+"') RETURNING id;";
+                        inputNotes.getText().toString() + "','"+Date+"', "+TimeStamp+", "+timestamp_now+", "+timestamp_now+") RETURNING id;";
                 Log.d(TAG, "fillDataHistory: "+query);
             }
             else {
                 if (hargaNego < (hargaNego1)) {
                     Log.d(TAG, "fillDataHistory: dibawah persen nego 1");
-                    query = "INSERT INTO gcm_history_nego (harga_nego, harga_sales, harga_final, created_by, updated_by, notes, time_respon) values" +
+                    query = "INSERT INTO gcm_history_nego (harga_nego, harga_sales, harga_final, created_by, updated_by, notes, time_respon, timestamp_respon, timestamp_created_date, timestamp_updated_date) values" +
                             "('" + hargaNego + "','" +
                             tmp_harga_sales + "','0','" +
                             SharedPrefManager.getInstance(getApplicationContext()).getUser().getUserId() + "','" +
                             SharedPrefManager.getInstance(getApplicationContext()).getUser().getUserId() + "','" +
-                            inputNotes.getText().toString() + "','" + Date + "') RETURNING id;";
+                            inputNotes.getText().toString() + "','" + Date + "', "+TimeStamp+", "+timestamp_now+", "+timestamp_now+") RETURNING id;";
                     Log.d(TAG, "fillDataHistory: "+query);
                 } else {
                     Log.d(TAG, "fillDataHistory: diatas persen nego 1");
-                    query = "INSERT INTO gcm_history_nego (harga_nego, harga_sales, harga_final, created_by, updated_by, notes, time_respon) values" +
+                    query = "INSERT INTO gcm_history_nego (harga_nego, harga_sales, harga_final, created_by, updated_by, notes, time_respon, timestamp_respon, timestamp_created_date, timestamp_updated_date) values" +
                             "('" + hargaNego + "','" +
                             hargaNego + "','" + hargaNego + "','" +
                             SharedPrefManager.getInstance(getApplicationContext()).getUser().getUserId() + "','" +
                             SharedPrefManager.getInstance(getApplicationContext()).getUser().getUserId() + "','" +
-                            inputNotes.getText().toString() + "','" + Date + "') RETURNING id;";
+                            inputNotes.getText().toString() + "','" + Date + "', "+TimeStamp+", "+timestamp_now+", "+timestamp_now+") RETURNING id;";
                     Log.d(TAG, "fillDataHistory: "+query);
                 }
             }
@@ -913,12 +916,13 @@ public class DetailPemesananActivity extends AppCompatActivity {
                             if (barang.getPersen_nego_1()==0 && barang.getPersen_nego_2()==0 && barang.getPersen_nego_3()==0){
                                 flag = "sales";
                                 insertNotif(flag);
-                                sendNotif(listToken);
+//                                sendNotif(listToken);
+                                sendNotifNegoPersen("nego_sales", "0");
                                 Log.d(TAG, "notif: nego sales");
                             }else{
                                 flag = "AI";
                                 insertNotif(flag);
-                                sendNotifNegoPersen();
+                                sendNotifNegoPersen("nego_persen", "3600000");
                                 Log.d(TAG, "notif: nego AI");
                             }
 
@@ -937,20 +941,24 @@ public class DetailPemesananActivity extends AppCompatActivity {
     }
 
     private void insertNotif(String flag){
+        long timestamp_kirim_sales = Calendar.getInstance().getTimeInMillis();
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.HOUR, 1);
+        long timestamp_kirim_AI = calendar.getTimeInMillis();
         String query = "";
         if (flag.equals("sales")) {
-            query = "insert into gcm_notification_nego (barang_id, buyer_id, seller_id, source, status) values (" +
+            query = "insert into gcm_notification_nego (barang_id, buyer_id, seller_id, source, status, timestamp_kirim) values (" +
                     barang.getId() + ", " +
                     SharedPrefManager.getInstance(getApplicationContext()).getUser().getCompanyId() + ", " +
                     barang.getCompanyId() + ", " +
-                    "'buyer', 'nego') returning id;";
+                    "'buyer', 'nego', "+timestamp_kirim_sales+") returning id;";
         }else if (flag.equals("AI")) {
-            query = "insert into gcm_notification_nego (barang_id, buyer_id, seller_id, date, source, status) values (" +
+            query = "insert into gcm_notification_nego (barang_id, buyer_id, seller_id, date, source, status, timestamp_kirim) values (" +
                     barang.getId() + ", " +
                     SharedPrefManager.getInstance(getApplicationContext()).getUser().getCompanyId() + ", " +
                     barang.getCompanyId() + ", " +
                     "now() + interval '1 hour', " +
-                    "'seller', 'nego') returning id;";
+                    "'seller', 'nego', "+timestamp_kirim_AI+") returning id;";
         }
         Log.d(TAG, "insertNotif: "+query);
         try {
@@ -978,10 +986,8 @@ public class DetailPemesananActivity extends AppCompatActivity {
         }
     }
 
-    private void sendNotifNegoPersen(){
+    private void sendNotifNegoPersen(String nego_type, String timeout){
         Log.d(TAG, "sendNotifNegoPersen: "+valueNegoID);
-        String nego_type = "nego_persen";
-        String timeout = "3600000";
         String id_cart = String.valueOf(valueNegoID);
         String company_id_buyer = String.valueOf(SharedPrefManager.getInstance(getApplicationContext()).getUser().getCompanyId());
         String company_id_seller = String.valueOf(barang.getCompanyId());

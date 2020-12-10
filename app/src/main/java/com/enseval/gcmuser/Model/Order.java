@@ -15,7 +15,7 @@ public class Order {
     private String statusPayment;
     @SerializedName("ongkos_kirim")
     private double ongkir;
-    private int harga_final;
+    private Long harga_final;
     private float ppn_seller;
 
     public Order(String transactionId, String status, String createDate, String updateDate, long total, double ongkir, float ppn_seller) {
@@ -28,7 +28,7 @@ public class Order {
         this.ppn_seller = ppn_seller;
     }
 
-    public Order(String transactionId, String status, String createDate, String updateDate, long total, double ongkir, int harga_final, float ppn_seller) {
+    public Order(String transactionId, String status, String createDate, String updateDate, long total, double ongkir, Long harga_final, float ppn_seller) {
         this.transactionId = transactionId;
         this.status = status;
         this.createDate = createDate;
@@ -84,7 +84,7 @@ public class Order {
         return statusPayment;
     }
 
-    public int getHarga_final() {
+    public Long getHarga_final() {
         return harga_final;
     }
 

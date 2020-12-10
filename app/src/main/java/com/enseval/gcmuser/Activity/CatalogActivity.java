@@ -128,21 +128,57 @@ public class CatalogActivity extends AppCompatActivity {
             String keyword = getIntent().getStringExtra("keyword");
             if (SharedPrefManager.getInstance(getApplicationContext()).isLoggedin()) {
                 if (SharedPrefManager.getInstance(getApplicationContext()).getUser().getTipeBisnis() == 1) {
-                    barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', c.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs FROM gcm_master_barang a " +
-                            "inner join gcm_list_barang b on a.id=b.barang_id inner join gcm_master_company c on b.company_id=c.id inner join  gcm_master_satuan d on a.satuan=d.id inner join gcm_listing_kurs e on e.company_id=b.company_id where a.status='A' and b.status='A' " +
-                            "and lower(a.nama) like '%"+keyword.toLowerCase()+"%' " +
-                            "and b.company_id in("+SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+") and now() between e.tgl_start and e.tgl_end order by nama asc;");
+//                    barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', c.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs FROM gcm_master_barang a " +
+//                            "inner join gcm_list_barang b on a.id=b.barang_id inner join gcm_master_company c on b.company_id=c.id inner join  gcm_master_satuan d on a.satuan=d.id inner join gcm_listing_kurs e on e.company_id=b.company_id where a.status='A' and b.status='A' " +
+//                            "and lower(a.nama) like '%"+keyword.toLowerCase()+"%' " +
+//                            "and b.company_id in("+SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+") and now() between e.tgl_start and e.tgl_end order by nama asc;");
+                    barangRequest("select * from ( " +
+                            "(SELECT a.nama, b.barang_id, b.id, b.kode_barang, c.kode_seller, price, price_terendah, " +
+                            "case when price = price_terendah then 'no' else 'yes' end as negotiable, " +
+                            "foto, flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs " +
+                            "FROM gcm_listing_kurs e, gcm_master_satuan d, gcm_master_company c, gcm_master_barang a " +
+                            "inner join gcm_list_barang b on a.id=b.barang_id where a.status='A' and b.status='A' " +
+                            "and b.company_id = c.id and d.id = a.satuan and e.company_id = b.company_id and " +
+                            "b.company_id in ("+SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+") and lower(a.nama) like '%"+keyword.toLowerCase()+"%' and category_id != 5 and now() between e.tgl_start and e.tgl_end) " +
+                            "union all " +
+                            "(SELECT distinct on (b.barang_id) a.nama, b.barang_id, b.id, b.kode_barang, c.kode_seller, price, price_terendah, " +
+                            "case when price = price_terendah then 'no' else 'yes' end as negotiable, " +
+                            "foto, flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs " +
+                            "FROM gcm_listing_kurs e, gcm_master_satuan d, gcm_master_company c, gcm_master_barang a " +
+                            "inner join gcm_list_barang b on a.id=b.barang_id where a.status='A' and b.status='A' " +
+                            "and b.company_id = c.id and lower(a.nama) like '%"+keyword.toLowerCase()+"%' and d.id = a.satuan and e.company_id = b.company_id and b.company_id in ("+SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+") " +
+                            "and category_id = 5 and now() between e.tgl_start and e.tgl_end order by b.barang_id, price desc ) " +
+                            ") as produk order by produk.nama asc");
                 }else {
-                    barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', c.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs FROM gcm_master_barang a " +
-                            "inner join gcm_list_barang b on a.id=b.barang_id inner join gcm_master_company c on b.company_id=c.id inner join  gcm_master_satuan d on a.satuan=d.id inner join gcm_listing_kurs e on e.company_id=b.company_id where a.status='A' and b.status='A' " +
-                            "and lower(a.nama) like '%"+keyword.toLowerCase()+"%' " +
-                            "and b.company_id in("+SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+") and category_id!= 1 and now() between e.tgl_start and e.tgl_end order by nama asc;");
+//                    barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', c.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs FROM gcm_master_barang a " +
+//                            "inner join gcm_list_barang b on a.id=b.barang_id inner join gcm_master_company c on b.company_id=c.id inner join  gcm_master_satuan d on a.satuan=d.id inner join gcm_listing_kurs e on e.company_id=b.company_id where a.status='A' and b.status='A' " +
+//                            "and lower(a.nama) like '%"+keyword.toLowerCase()+"%' " +
+//                            "and b.company_id in("+SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+") and category_id!= 1 and now() between e.tgl_start and e.tgl_end order by nama asc;");
+                    barangRequest("select * from (" +
+                            "SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, " +
+                            "case when price = price_terendah then 'no' else 'yes' end as negotiable, " +
+                            "foto, flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs " +
+                            "FROM gcm_listing_kurs e, gcm_master_satuan d, gcm_master_company c, gcm_master_barang a " +
+                            "inner join gcm_list_barang b on a.id=b.barang_id where a.status='A' and b.status='A' " +
+                            "and b.company_id = c.id and d.id = a.satuan and e.company_id = b.company_id and " +
+                            "b.company_id in ("+SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+") and lower(a.nama) like '%"+keyword.toLowerCase()+"%' and category_id not in (1,5)  and now() between e.tgl_start and e.tgl_end " +
+                            "union all " +
+                            "SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, " +
+                            "case when price = price_terendah then 'no' else 'yes' end as negotiable, " +
+                            "foto, flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs " +
+                            "FROM gcm_listing_kurs e, gcm_master_satuan d, gcm_master_company c, gcm_master_barang a " +
+                            "inner join gcm_list_barang b on a.id=b.barang_id where a.status='A' and b.status='A' " +
+                            "and b.company_id = c.id and and lower(a.nama) like '%"+keyword.toLowerCase()+"%' d.id = a.satuan and e.company_id = b.company_id and " +
+                            "b.company_id in ("+SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+") and category_id = 5 and b.departmen_sales = "+SharedPrefManager.getInstance(getApplicationContext()).getUser().getTipeBisnis()+"" +
+                            " and now() between e.tgl_start and e.tgl_end " +
+                            ") as produk order by produk.nama asc");
                 }
-            }else {
-                barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', c.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs FROM gcm_master_barang a " +
-                        "inner join gcm_list_barang b on a.id=b.barang_id inner join gcm_master_company c on b.company_id=c.id inner join gcm_listing_kurs e on e.company_id=b.company_id where a.status='A' and b.status='A' and lower(nama) like '%"+keyword.toLowerCase()+"%' " +
-                        "and now() between e.tgl_start and e.tgl_end order by nama asc;");
             }
+//            else {
+//                barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', c.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs FROM gcm_master_barang a " +
+//                        "inner join gcm_list_barang b on a.id=b.barang_id inner join gcm_master_company c on b.company_id=c.id inner join gcm_listing_kurs e on e.company_id=b.company_id where a.status='A' and b.status='A' and lower(nama) like '%"+keyword.toLowerCase()+"%' " +
+//                        "and now() between e.tgl_start and e.tgl_end order by nama asc;");
+//            }
             etSearch.setText(keyword);
             etSearch.setSelection(0);
             etSearch.addTextChangedListener(handleSearch);
@@ -155,18 +191,39 @@ public class CatalogActivity extends AppCompatActivity {
             tvKategori.setVisibility(View.VISIBLE);
             if (SharedPrefManager.getInstance(getApplicationContext()).isLoggedin()) {
                 if (SharedPrefManager.getInstance(getApplicationContext()).getUser().getTipeBisnis() == 1) {
-                    barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', c.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs FROM gcm_master_barang a " +
-                            "inner join gcm_list_barang b on a.id=b.barang_id inner join gcm_master_company c on b.company_id=c.id " +
-                            "inner join  gcm_master_satuan d on a.satuan=d.id inner join gcm_listing_kurs e on e.company_id=b.company_id where a.status='A' and b.status='A' and category_id="+kategori.getId()+" and b.company_id in(" +
-                            SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+") and now() between e.tgl_start and e.tgl_end order by nama asc;");
+                    if (kategori.getId() == 5){
+                        barangRequest("SELECT distinct on (b.barang_id) a.nama, b.barang_id, b.id, b.kode_barang, c.kode_seller, price, price_terendah, " +
+                                "case when price = price_terendah then 'no' else 'yes' end as negotiable, " +
+                                "foto, flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs " +
+                                "FROM gcm_listing_kurs e, gcm_master_satuan d, gcm_master_company c, gcm_master_barang a " +
+                                "inner join gcm_list_barang b on a.id=b.barang_id where a.status='A' and b.status='A' " +
+                                "and b.company_id = c.id and d.id = a.satuan and e.company_id = b.company_id and b.company_id in ("+SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+") " +
+                                "and category_id = 5 and now() between e.tgl_start and e.tgl_end order by b.barang_id, price desc ");
+                    }else{
+                        barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', c.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs FROM gcm_master_barang a " +
+                                "inner join gcm_list_barang b on a.id=b.barang_id inner join gcm_master_company c on b.company_id=c.id " +
+                                "inner join  gcm_master_satuan d on a.satuan=d.id inner join gcm_listing_kurs e on e.company_id=b.company_id where a.status='A' and b.status='A' and category_id="+kategori.getId()+" and b.company_id in(" +
+                                SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+") and now() between e.tgl_start and e.tgl_end order by nama asc;");
+                    }
                 } else {
-                    barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', c.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs FROM gcm_master_barang a " +
-                            "inner join gcm_list_barang b on a.id=b.barang_id inner join gcm_master_company c on b.company_id=c.id " +
-                            "inner join  gcm_master_satuan d on a.satuan=d.id inner join gcm_listing_kurs e on e.company_id=b.company_id where a.status='A' and b.status='A' and category_id="+kategori.getId()+" and b.company_id in(" +
-                            SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+") and category_id!= 1 and now() between e.tgl_start and e.tgl_end order by nama asc;");
+                    if (kategori.getId() == 5){
+                        barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, " +
+                                "case when price = price_terendah then 'no' else 'yes' end as negotiable, " +
+                                "foto, flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs " +
+                                "FROM gcm_listing_kurs e, gcm_master_satuan d, gcm_master_company c, gcm_master_barang a " +
+                                "inner join gcm_list_barang b on a.id=b.barang_id where a.status='A' and b.status='A' " +
+                                "and b.company_id = c.id and d.id = a.satuan and e.company_id = b.company_id and " +
+                                "b.company_id in ("+SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+") and category_id = 5 and b.departmen_sales = "+SharedPrefManager.getInstance(getApplicationContext()).getUser().getTipeBisnis()+"" +
+                                " and now() between e.tgl_start and e.tgl_end");
+                    }else{
+                        barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', c.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs FROM gcm_master_barang a " +
+                                "inner join gcm_list_barang b on a.id=b.barang_id inner join gcm_master_company c on b.company_id=c.id " +
+                                "inner join  gcm_master_satuan d on a.satuan=d.id inner join gcm_listing_kurs e on e.company_id=b.company_id where a.status='A' and b.status='A' and category_id="+kategori.getId()+" and b.company_id in(" +
+                                SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+") and category_id!= 1 and now() between e.tgl_start and e.tgl_end order by nama asc;");
+                    }
                 }
             }else {
-                barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', c.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs FROM gcm_master_barang a " +
+                barangRequest("SELECT x.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', c.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs FROM gcm_master_barang a " +
                         "inner join gcm_list_barang b on a.id=b.barang_id inner join gcm_master_company c on b.company_id=c.id inner join  gcm_master_satuan d on a.satuan=d.id inner join gcm_listing_kurs e on e.company_id=b.company_id where a.status='A' and b.status='A' and category_id="+kategori.getId()+
                         "and now() between e.tgl_start and e.tgl_end order by nama asc;");
             }
@@ -220,28 +277,64 @@ public class CatalogActivity extends AppCompatActivity {
 //                                        "lower(nama) like '%"+s.toString()+"%'" +
 //                                        "and b.company_id in("+strSellerStatusKevin+") "+
 //                                        "order by nama asc;");
-                                barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', c.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs FROM gcm_master_barang a " +
-                                        "inner join gcm_list_barang b on a.id=b.barang_id inner join gcm_master_company c on b.company_id=c.id inner join  gcm_master_satuan d on a.satuan=d.id inner join gcm_listing_kurs e on e.company_id=b.company_id where a.status='A' and b.status='A' and " +
-                                        "lower(a.nama) like '%"+s.toString()+"%'" +
-                                        "and b.company_id in("+SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+") "+
-                                        "and now() between e.tgl_start and e.tgl_end order by nama asc;");
+//                                barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', c.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs FROM gcm_master_barang a " +
+//                                        "inner join gcm_list_barang b on a.id=b.barang_id inner join gcm_master_company c on b.company_id=c.id inner join  gcm_master_satuan d on a.satuan=d.id inner join gcm_listing_kurs e on e.company_id=b.company_id where a.status='A' and b.status='A' and " +
+//                                        "lower(a.nama) like '%"+s.toString()+"%'" +
+//                                        "and b.company_id in("+SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+") "+
+//                                        "and now() between e.tgl_start and e.tgl_end order by nama asc;");
+                                barangRequest("select * from ( " +
+                                        "(SELECT a.nama, b.barang_id, b.id, b.kode_barang, c.kode_seller, price, price_terendah, " +
+                                        "case when price = price_terendah then 'no' else 'yes' end as negotiable, " +
+                                        "foto, flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs " +
+                                        "FROM gcm_listing_kurs e, gcm_master_satuan d, gcm_master_company c, gcm_master_barang a " +
+                                        "inner join gcm_list_barang b on a.id=b.barang_id where a.status='A' and b.status='A' " +
+                                        "and b.company_id = c.id and d.id = a.satuan and e.company_id = b.company_id and " +
+                                        "b.company_id in ("+SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+") and lower(a.nama) like '%"+s.toString().toLowerCase()+"%' and category_id != 5 and now() between e.tgl_start and e.tgl_end) " +
+                                        "union all " +
+                                        "(SELECT distinct on (b.barang_id) a.nama, b.barang_id, b.id, b.kode_barang, c.kode_seller, price, price_terendah, " +
+                                        "case when price = price_terendah then 'no' else 'yes' end as negotiable, " +
+                                        "foto, flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs " +
+                                        "FROM gcm_listing_kurs e, gcm_master_satuan d, gcm_master_company c, gcm_master_barang a " +
+                                        "inner join gcm_list_barang b on a.id=b.barang_id where a.status='A' and b.status='A' " +
+                                        "and b.company_id = c.id and lower(a.nama) like '%"+s.toString().toLowerCase()+"%' and d.id = a.satuan and e.company_id = b.company_id and b.company_id in ("+SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+") " +
+                                        "and category_id = 5 and now() between e.tgl_start and e.tgl_end order by b.barang_id, price desc ) " +
+                                        ") as produk order by produk.nama asc");
                             } else {
 //                                barangRequest("SELECT nama, b.id, price, price_terendah, foto, category_id, b.company_id FROM gcm_master_barang a " +
 //                                    "inner join gcm_list_barang b on a.id=b.barang_id where b.status='A' and " +
 //                                    "lower(nama) like '%"+s.toString()+"%'" +
 //                                    "and b.company_id in("+strSellerStatusKevin+")"+
 //                                    "and category_id="+SharedPrefManager.getInstance(getApplicationContext()).getUser().getTipeBisnis()+" order by nama asc;");
-                                barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', c.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs FROM gcm_master_barang a " +
-                                        "inner join gcm_list_barang b on a.id=b.barang_id inner join gcm_master_company c on b.company_id=c.id inner join gcm_master_satuan d on a.satuan=d.id inner join gcm_listing_kurs e on e.company_id=b.company_id where a.status='A' and b.status='A' and " +
-                                        "lower(a.nama) like '%"+s.toString()+"%'" +
-                                        "and b.company_id in("+SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+")"+
-                                        "and category_id!= 1 and now() between e.tgl_start and e.tgl_end order by nama asc;");
+//                                barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', c.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs FROM gcm_master_barang a " +
+//                                        "inner join gcm_list_barang b on a.id=b.barang_id inner join gcm_master_company c on b.company_id=c.id inner join gcm_master_satuan d on a.satuan=d.id inner join gcm_listing_kurs e on e.company_id=b.company_id where a.status='A' and b.status='A' and " +
+//                                        "lower(a.nama) like '%"+s.toString()+"%'" +
+//                                        "and b.company_id in("+SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+")"+
+//                                        "and category_id!= 1 and now() between e.tgl_start and e.tgl_end order by nama asc;");
+                                barangRequest("select * from (" +
+                                        "SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, " +
+                                        "case when price = price_terendah then 'no' else 'yes' end as negotiable, " +
+                                        "foto, flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs " +
+                                        "FROM gcm_listing_kurs e, gcm_master_satuan d, gcm_master_company c, gcm_master_barang a " +
+                                        "inner join gcm_list_barang b on a.id=b.barang_id where a.status='A' and b.status='A' " +
+                                        "and b.company_id = c.id and d.id = a.satuan and e.company_id = b.company_id and " +
+                                        "b.company_id in ("+SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+") and lower(a.nama) like '%"+s.toString().toLowerCase()+"%' and category_id not in (1,5)  and now() between e.tgl_start and e.tgl_end " +
+                                        "union all " +
+                                        "SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, " +
+                                        "case when price = price_terendah then 'no' else 'yes' end as negotiable, " +
+                                        "foto, flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs " +
+                                        "FROM gcm_listing_kurs e, gcm_master_satuan d, gcm_master_company c, gcm_master_barang a " +
+                                        "inner join gcm_list_barang b on a.id=b.barang_id where a.status='A' and b.status='A' " +
+                                        "and b.company_id = c.id and lower(a.nama) like '%"+s.toString().toLowerCase()+"%' and d.id = a.satuan and e.company_id = b.company_id and " +
+                                        "b.company_id in ("+SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+") and category_id = 5 and b.departmen_sales = "+SharedPrefManager.getInstance(getApplicationContext()).getUser().getTipeBisnis()+"" +
+                                        " and now() between e.tgl_start and e.tgl_end " +
+                                        ") as produk order by produk.nama asc");
                             }
-                        } else {
-                            barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', c.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs"+
-                                    " FROM gcm_master_barang a inner join gcm_list_barang b on a.id=b.barang_id inner join gcm_master_company c on b.company_id=c.id inner join  gcm_master_satuan d on a.satuan=d.id inner join gcm_listing_kurs e on e.company_id=b.company_id"+
-                                    " where a.status='A' and b.status='A' and lower(a.nama) like '%"+s.toString()+"%' and now() between e.tgl_start and e.tgl_end order by nama asc;");
                         }
+//                        else {
+//                            barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', c.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs"+
+//                                    " FROM gcm_master_barang a inner join gcm_list_barang b on a.id=b.barang_id inner join gcm_master_company c on b.company_id=c.id inner join  gcm_master_satuan d on a.satuan=d.id inner join gcm_listing_kurs e on e.company_id=b.company_id"+
+//                                    " where a.status='A' and b.status='A' and lower(a.nama) like '%"+s.toString()+"%' and now() between e.tgl_start and e.tgl_end order by nama asc;");
+//                        }
                     }
                     else if(tipe.equals("kategori")){
                         if (SharedPrefManager.getInstance(getApplicationContext()).isLoggedin()) {
@@ -251,11 +344,25 @@ public class CatalogActivity extends AppCompatActivity {
 //                                        "and lower(nama) like '%"+s.toString()+"%' and category_id="+kategori.getId()+" " +
 //                                        "and b.company_id in("+strSellerStatusKevin+") "+
 //                                        "order by nama asc;");
-                                barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', c.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs FROM gcm_master_barang a " +
-                                        "inner join gcm_list_barang b on a.id=b.barang_id inner join gcm_master_company c on b.company_id=c.id inner join gcm_master_satuan d on a.satuan=d.id inner join gcm_listing_kurs e on e.company_id = b.company_id where a.status='A' and b.status='A' " +
-                                        "and lower(a.nama) like '%"+s.toString()+"%' and category_id="+kategori.getId()+" " +
-                                        "and b.company_id in("+SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+") and now() between e.tgl_start and e.tgl_end "+
-                                        "order by nama asc;");
+//                                barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', c.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs FROM gcm_master_barang a " +
+//                                        "inner join gcm_list_barang b on a.id=b.barang_id inner join gcm_master_company c on b.company_id=c.id inner join gcm_master_satuan d on a.satuan=d.id inner join gcm_listing_kurs e on e.company_id = b.company_id where a.status='A' and b.status='A' " +
+//                                        "and lower(a.nama) like '%"+s.toString()+"%' and category_id="+kategori.getId()+" " +
+//                                        "and b.company_id in("+SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+") and now() between e.tgl_start and e.tgl_end "+
+//                                        "order by nama asc;");
+                                if (kategori.getId() == 5){
+                                    barangRequest("SELECT distinct on (b.barang_id) a.nama, b.barang_id, b.id, b.kode_barang, c.kode_seller, price, price_terendah, " +
+                                            "case when price = price_terendah then 'no' else 'yes' end as negotiable, " +
+                                            "foto, flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs " +
+                                            "FROM gcm_listing_kurs e, gcm_master_satuan d, gcm_master_company c, gcm_master_barang a " +
+                                            "inner join gcm_list_barang b on a.id=b.barang_id where a.status='A' and b.status='A' " +
+                                            "and b.company_id = c.id and d.id = a.satuan and e.company_id = b.company_id and b.company_id in ("+SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+") " +
+                                            "and lower(a.nama) like '%"+s.toString()+"%'and category_id = 5 and now() between e.tgl_start and e.tgl_end order by b.barang_id, price desc ");
+                                }else{
+                                    barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', c.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs FROM gcm_master_barang a " +
+                                            "inner join gcm_list_barang b on a.id=b.barang_id inner join gcm_master_company c on b.company_id=c.id " +
+                                            "inner join  gcm_master_satuan d on a.satuan=d.id inner join gcm_listing_kurs e on e.company_id=b.company_id where a.status='A' and b.status='A' and lower(a.nama) like '%"+s.toString()+"%' and category_id="+kategori.getId()+" and b.company_id in(" +
+                                            SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+") and now() between e.tgl_start and e.tgl_end order by nama asc;");
+                                }
                             } else {
 //                                barangRequest("SELECT nama, b.id, price, price_terendah, foto, category_id, b.company_id FROM gcm_master_barang a " +
 //                                    "inner join gcm_list_barang b on a.id=b.barang_id where b.status='A' " +
@@ -263,18 +370,36 @@ public class CatalogActivity extends AppCompatActivity {
 //                                    "and b.company_id in("+strSellerStatusKevin+")"+
 //                                    "and category_id="+SharedPrefManager.getInstance(getApplicationContext()).getUser().getTipeBisnis()+" "+
 //                                    "order by nama asc;");
-                                barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', c.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs FROM gcm_master_barang a " +
-                                        "inner join gcm_list_barang b on a.id=b.barang_id inner join gcm_master_company c on b.company_id=c.id inner join gcm_master_satuan d on a.satuan=d.id inner join gcm_listing_kurs e on e.company_id = b.company_id where a.status='A' and b.status='A' " +
-                                        "and lower(a.nama) like '%"+s.toString()+"%' and category_id="+kategori.getId()+" " +
-                                        "and b.company_id in("+SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+")"+
-                                        "and category_id!= 1 "+
-                                        "and now() between e.tgl_start and e.tgl_end order by nama asc;");
+//                                barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', c.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs FROM gcm_master_barang a " +
+//                                        "inner join gcm_list_barang b on a.id=b.barang_id inner join gcm_master_company c on b.company_id=c.id inner join gcm_master_satuan d on a.satuan=d.id inner join gcm_listing_kurs e on e.company_id = b.company_id where a.status='A' and b.status='A' " +
+//                                        "and lower(a.nama) like '%"+s.toString()+"%' and category_id="+kategori.getId()+" " +
+//                                        "and b.company_id in("+SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+")"+
+//                                        "and category_id!= 1 "+
+//                                        "and now() between e.tgl_start and e.tgl_end order by nama asc;");
+                                if (kategori.getId() == 5){
+                                    barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, " +
+                                            "case when price = price_terendah then 'no' else 'yes' end as negotiable, " +
+                                            "foto, flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs " +
+                                            "FROM gcm_listing_kurs e, gcm_master_satuan d, gcm_master_company c, gcm_master_barang a " +
+                                            "inner join gcm_list_barang b on a.id=b.barang_id where a.status='A' and b.status='A' " +
+                                            "and b.company_id = c.id and d.id = a.satuan and e.company_id = b.company_id and " +
+                                            "b.company_id in ("+SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+") and category_id = 5 and b.departmen_sales = "+SharedPrefManager.getInstance(getApplicationContext()).getUser().getTipeBisnis()+"" +
+                                            " and lower(a.nama) like '%"+s.toString()+"%' and now() between e.tgl_start and e.tgl_end");
+                                }else{
+                                    barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', c.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs FROM gcm_master_barang a " +
+                                            "inner join gcm_list_barang b on a.id=b.barang_id inner join gcm_master_company c on b.company_id=c.id inner join gcm_master_satuan d on a.satuan=d.id inner join gcm_listing_kurs e on e.company_id = b.company_id where a.status='A' and b.status='A' " +
+                                            "and lower(a.nama) like '%"+s.toString()+"%' and category_id="+kategori.getId()+" " +
+                                            "and b.company_id in("+SharedPrefManager.getInstance(getApplicationContext()).getActiveSeller()+")"+
+                                            "and category_id!= 1 "+
+                                            "and now() between e.tgl_start and e.tgl_end order by nama asc;");
+                                }
                             }
-                        } else {
-                            barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', c.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs"+
-                                    " FROM gcm_master_barang a inner join gcm_list_barang b on a.id=b.barang_id inner join gcm_master_company c on b.company_id=c.id inner join gcm_master_satuan d on a.satuan=d.id inner join gcm_listing_kurs e on e.company_id=b.company_id" +
-                                    " where a.status='A' and b.status='A' and lower(a.nama) like '%"+s.toString()+"%' and category_id="+kategori.getId()+" and now() between e.tgl_start and e.tgl_end order by nama asc;");
                         }
+//                        else {
+//                            barangRequest("SELECT a.nama, b.id, b.kode_barang, c.kode_seller, price, price_terendah, (select concat('https://www.glob.co.id/admin/assets/images/product/', c.id,'/',b.kode_barang,'.png')) as foto, case when b.flag_foto is null then '' else b.flag_foto end as flag_foto, category_id, b.company_id, c.nama_perusahaan, d.alias, b.persen_nego_1, b.persen_nego_2, b.persen_nego_3, e.nominal as kurs"+
+//                                    " FROM gcm_master_barang a inner join gcm_list_barang b on a.id=b.barang_id inner join gcm_master_company c on b.company_id=c.id inner join gcm_master_satuan d on a.satuan=d.id inner join gcm_listing_kurs e on e.company_id=b.company_id" +
+//                                    " where a.status='A' and b.status='A' and lower(a.nama) like '%"+s.toString()+"%' and category_id="+kategori.getId()+" and now() between e.tgl_start and e.tgl_end order by nama asc;");
+//                        }
                     }
                 }
             };

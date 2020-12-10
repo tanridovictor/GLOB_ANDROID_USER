@@ -107,13 +107,12 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_detail_nego.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="127">
-              <caret line="633" column="67" selection-start-line="633" selection-start-column="67" selection-end-line="633" selection-end-column="67" />
+            <state relative-caret-position="178">
+              <caret line="734" column="20" selection-start-line="734" selection-start-column="20" selection-end-line="734" selection-end-column="20" />
               <folding>
                 <element signature="e#440#25604#0" />
                 <element signature="e#692#3052#0" />
                 <element signature="e#1051#1976#0" />
-                <element signature="e#36299#45910#0" />
                 <element signature="e#45932#55543#0" />
               </folding>
             </state>
@@ -194,6 +193,9 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="PUSH_TAGS">
+      <GitPushTagMode />
+    </option>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
@@ -437,7 +439,14 @@
       <option name="project" value="LOCAL" />
       <updated>1607586562672</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="initial commit">
+      <created>1607586726568</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1607586726568</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TodoView">
@@ -466,8 +475,8 @@
       <window_info anchor="bottom" id="TODO" order="2" sideWeight="0.49924356" weight="0.32405892" />
       <window_info anchor="bottom" id="Android Profiler" order="3" weight="0.32569557" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.68085104" />
-      <window_info anchor="bottom" id="Terminal" order="5" sideWeight="0.49319214" visible="true" weight="0.32569557" />
-      <window_info active="true" anchor="bottom" id="Event Log" order="6" sideWeight="0.50680786" side_tool="true" visible="true" weight="0.32569557" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="5" sideWeight="0.49319214" visible="true" weight="0.32569557" />
+      <window_info anchor="bottom" id="Event Log" order="6" sideWeight="0.50680786" side_tool="true" weight="0.32569557" />
       <window_info anchor="bottom" id="Flutter Performance" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" sideWeight="0.49319214" weight="0.3289689" />
       <window_info anchor="bottom" id="Build" order="9" sideWeight="0.49016643" weight="0.2569558" />
@@ -935,13 +944,12 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/res/layout/activity_detail_nego.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="127">
-          <caret line="633" column="67" selection-start-line="633" selection-start-column="67" selection-end-line="633" selection-end-column="67" />
+        <state relative-caret-position="178">
+          <caret line="734" column="20" selection-start-line="734" selection-start-column="20" selection-end-line="734" selection-end-column="20" />
           <folding>
             <element signature="e#440#25604#0" />
             <element signature="e#692#3052#0" />
             <element signature="e#1051#1976#0" />
-            <element signature="e#36299#45910#0" />
             <element signature="e#45932#55543#0" />
           </folding>
         </state>

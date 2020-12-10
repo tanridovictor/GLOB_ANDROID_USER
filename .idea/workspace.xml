@@ -18,106 +18,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="1e12108c-6534-4f5c-914e-5c7fb160a733" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/API/JSONRequestTransaksi.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Activity/DetailOrderActivity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Activity/KodeResetPassActivity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Activity/KonfirmasiPembayaranActivity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Activity/ResetPasswordActivity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Activity/TestMainActivity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Activity/UploadBuktiActivity.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/RekeningAdapter.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Model/Komplain.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Model/Rekening.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable-v24/sms.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/done.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/done1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/image.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/sendplanepaper.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/smartphone.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/terimabarang.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/whatsapp.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_detail_order.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_kode_reset_pass.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_konfirmasi_pembayaran.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_reset_password.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_test_main.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_upload_bukti.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/alert_dialog.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/dialog_image_po.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/dialog_payment_information.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/dialog_po_pembeli.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/dialog_unggah_berkas_register.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/dialog_unggah_bukti_complain.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/layout/list_rekening.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/app.iml" beforeDir="false" afterPath="$PROJECT_DIR$/app/app.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/API/API.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/API/API.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/API/JSONRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/API/JSONRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/API/RetrofitClient.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/API/RetrofitClient.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Activity/CheckoutActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Activity/CheckoutActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Activity/ComplainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Activity/ComplainActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Activity/DetailHistoryNego.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Activity/DetailHistoryNego.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Activity/DetailPemesananActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Activity/DetailPemesananActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Activity/LoginActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Activity/LoginActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Activity/NotificationActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Activity/NotificationActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Activity/RegisterActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Activity/RegisterActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/CartBarangAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/CartBarangAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/CheckoutCompanyAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/CheckoutCompanyAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/ComplainAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/ComplainAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/ComplainedOrderAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/ComplainedOrderAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/DistributorAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/DistributorAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/FinishedOrderAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/FinishedOrderAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/NegoAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/NegoAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/NotifikasiAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/NotifikasiAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/OngoingOrderAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/OngoingOrderAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/OrderDetailAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/OrderDetailAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/ReceivedOrderAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/ReceivedOrderAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/SendOrderAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/SendOrderAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/WaitingOrderAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/WaitingOrderAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/canceledOrderAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Adapter/canceledOrderAdapter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Fragment/ComplainBottomSheetDialogFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Fragment/ComplainBottomSheetDialogFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Fragment/FragmentPagerCanceled.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Fragment/FragmentPagerCanceled.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Fragment/FragmentPagerComplained.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Fragment/FragmentPagerComplained.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Fragment/FragmentPagerFinished.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Fragment/FragmentPagerFinished.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Fragment/FragmentPagerOngoing.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Fragment/FragmentPagerOngoing.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Fragment/FragmentPagerReceived.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Fragment/FragmentPagerReceived.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Fragment/FragmentPagerSend.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Fragment/FragmentPagerSend.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Fragment/HomeFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Fragment/HomeFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Fragment/NegoFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Fragment/NegoFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Fragment/OrderBottomSheetDialogFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Fragment/OrderBottomSheetDialogFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Fragment/ProfileUserFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Fragment/ProfileUserFragment.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Model/Negosiasi.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Model/Negosiasi.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Model/Notifikasi.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Model/Notifikasi.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Model/Order.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Model/Order.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Model/OrderDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Model/OrderDetail.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/OTP/OTPActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/OTP/OTPActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/OTP/SendOTPActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/OTP/SendOTPActivity.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Service/MyFirebaseMessagingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Service/MyFirebaseMessagingService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Utilities/Helper.java" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/com/enseval/gcmuser/Utilities/Helper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_checkout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_checkout.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_complain.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_complain.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_detail_nego.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_detail_nego.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_login.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_otp_layout.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_otp_layout.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_register.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_register.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_send_otp.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/activity_send_otp.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/checkout_company_view.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/checkout_company_view.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/complain_barang_input_view.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/complain_barang_input_view.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/complained_order_view.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/complained_order_view.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/dialog_lupa_password.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/dialog_lupa_password.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/finished_order_view.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/finished_order_view.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/fragment_order_pager.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/fragment_order_pager.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/nego_detail_view.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/nego_detail_view.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/ongoing_order_view.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/ongoing_order_view.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/order_detail_view.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/order_detail_view.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/received_order_view.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/received_order_view.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/send_order_view.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/send_order_view.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/layout/waiting_order_view.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/layout/waiting_order_view.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/build/classes/" />
     <ignored path="$PROJECT_DIR$/.gradle/" />
@@ -529,7 +430,14 @@
       <option name="project" value="LOCAL" />
       <updated>1607583808956</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="initial commit">
+      <created>1607586562672</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1607586562672</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TodoView">
@@ -543,7 +451,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1382" height="744" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info id="Captures" order="0" sideWeight="0.5020747" side_tool="true" weight="0.19515885" />
       <window_info id="Project" order="1" sideWeight="0.4970297" visible="true" weight="0.1785174" />
@@ -559,8 +466,8 @@
       <window_info anchor="bottom" id="TODO" order="2" sideWeight="0.49924356" weight="0.32405892" />
       <window_info anchor="bottom" id="Android Profiler" order="3" weight="0.32569557" />
       <window_info anchor="bottom" id="Debug" order="4" weight="0.68085104" />
-      <window_info anchor="bottom" id="Terminal" order="5" sideWeight="0.49319214" weight="0.32569557" />
-      <window_info anchor="bottom" id="Event Log" order="6" sideWeight="0.50680786" side_tool="true" weight="0.32569557" />
+      <window_info anchor="bottom" id="Terminal" order="5" sideWeight="0.49319214" visible="true" weight="0.32569557" />
+      <window_info active="true" anchor="bottom" id="Event Log" order="6" sideWeight="0.50680786" side_tool="true" visible="true" weight="0.32569557" />
       <window_info anchor="bottom" id="Flutter Performance" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" sideWeight="0.49319214" weight="0.3289689" />
       <window_info anchor="bottom" id="Build" order="9" sideWeight="0.49016643" weight="0.2569558" />
